@@ -1,21 +1,21 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {HomePage} from './home.page';
+import {FavoritesPage} from './favorites.page';
 
-describe('HomePage', () => {
-    let component: HomePage;
-    let fixture: ComponentFixture<HomePage>;
+describe('FavoritesPage', () => {
+    let component: FavoritesPage;
+    let fixture: ComponentFixture<FavoritesPage>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [HomePage],
+            declarations: [FavoritesPage],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(HomePage);
+        fixture = TestBed.createComponent(FavoritesPage);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
