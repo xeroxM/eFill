@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {MapStyleService} from '../services/map-style.service';
 
 declare var google: any;
 
@@ -13,19 +14,30 @@ export class GoogleMapsComponent implements OnInit {
 
     map: any;
 
-    constructor() {
+    constructor(public mapStyleService: MapStyleService) {
     }
 
     public showMap() {
-        const location = new google.maps.LatLng(52, -0.11);
+        const location = new google.maps.LatLng(50.927860, 6.927865);
 
         const options = {
             center: location,
-            zoom: 10
+            zoom: 13,
+            disableDefaultUI: true,
+            clickableIcons: false,
+            mapTypeIds: 'day_map'
         };
 
         this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+        this.addMarker(location, this.map);
+        this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+        this.map.setMapTypeId('day_map');
+    }
 
+    public addMarker(position, map) {
+        return new google.maps.Marker({
+            position, map
+        });
     }
 
     ngOnInit() {
