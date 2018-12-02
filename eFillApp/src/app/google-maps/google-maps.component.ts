@@ -1,15 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {
-    GoogleMaps,
-    GoogleMap,
-    GoogleMapsEvent,
-    GoogleMapOptions,
-    CameraPosition,
-    MarkerOptions,
-    Marker,
-    Environment
-} from '@ionic-native/google-maps/ngx';
-import {ProvideApikeyService} from '../../services/provide-apikey.service';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+
+declare var google: any;
 
 @Component({
     selector: 'app-google-maps',
@@ -17,45 +8,29 @@ import {ProvideApikeyService} from '../../services/provide-apikey.service';
     styleUrls: ['./google-maps.component.scss']
 })
 export class GoogleMapsComponent implements OnInit {
-    map: GoogleMap;
 
-    constructor(public apiKeySerive: ProvideApikeyService) {
+    @ViewChild('map') mapRef: ElementRef;
+
+    map: any;
+
+    constructor() {
     }
 
-    loadMap() {
+    public showMap() {
+        const location = new google.maps.LatLng(52, -0.11);
 
-        // This code is necessary for browser
-        this.apiKeySerive.provideApiKey();
-
-        const mapOptions: GoogleMapOptions = {
-            camera: {
-                target: {
-                    lat: 50.927885,
-                    lng: 6.927923
-                },
-                zoom: 18,
-                tilt: 30
-            }
+        const options = {
+            center: location,
+            zoom: 10
         };
 
-        this.map = GoogleMaps.create('map_canvas', mapOptions);
+        this.map = new google.maps.Map(this.mapRef.nativeElement, options);
 
-        const marker: Marker = this.map.addMarkerSync({
-            title: 'Uni Köln',
-            icon: 'red',
-            animation: 'DROP',
-            position: {
-                lat: 50.927885,
-                lng: 6.927923
-            }
-        });
-        marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-            alert('clicked');
-        });
     }
 
     ngOnInit() {
-        this.loadMap();
+        this.showMap();
+        console.log(this.mapRef);
     }
 
 }

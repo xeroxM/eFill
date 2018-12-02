@@ -32,4 +32,5 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-provide-apikey.service.ts
+index.html
+

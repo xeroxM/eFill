@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {MapPage} from './map.page';
 import {GoogleMapsComponent} from '../google-maps/google-maps.component';
 
+
 @NgModule({
     declarations: [MapPage, GoogleMapsComponent],
     imports: [
@@ -13,9 +14,6 @@ import {GoogleMapsComponent} from '../google-maps/google-maps.component';
         CommonModule,
         FormsModule,
         RouterModule.forChild([{path: '', component: MapPage}]),
-    ],
-    exports: [
-        GoogleMapsComponent
     ]
 })
 export class MapPageModule {
