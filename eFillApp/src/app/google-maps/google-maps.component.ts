@@ -11,7 +11,7 @@ declare var google: any;
 export class GoogleMapsComponent implements OnInit {
 
     @ViewChild('map') mapRef: ElementRef;
-
+    @ViewChild('directionsPanel') directionsPanel: ElementRef;
     map: any;
 
     constructor(public mapStyleService: MapStyleService) {
@@ -40,8 +40,32 @@ export class GoogleMapsComponent implements OnInit {
         });
     }
 
+    startNavigating() {
+
+        let directionsService = new google.maps.DirectionsService;
+        let directionsDisplay = new google.maps.DirectionsRenderer;
+
+        directionsDisplay.setMap(this.map);
+        directionsDisplay.setPanel(this.directionsPanel.nativeElement);
+
+        directionsService.route({
+            origin: {lat: 50.927860, lng: 6.927865},
+            destination: {lat: 50.941357, lng: 6.958307},
+            travelMode: google.maps.TravelMode['DRIVING']
+        }, (res, status) => {
+
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(res);
+            } else {
+                console.warn(status);
+            }
+
+        });
+    }
+
     ngOnInit() {
         this.showMap();
+        this.startNavigating();
         console.log(this.mapRef);
     }
 
