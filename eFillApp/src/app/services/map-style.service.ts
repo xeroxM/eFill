@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-declare var google: any;
+declare let google: any;
 
 @Injectable({
     providedIn: 'root'
