@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {MapStyleService} from '../services/map-style.service';
+import {MapStyleService} from '../services/map-style/map-style.service';
+import {NavigationService} from '../services/navigation/navigation.service';
 
 declare let google: any;
 
@@ -12,9 +13,10 @@ export class GoogleMapsComponent implements OnInit {
 
     @ViewChild('map') mapRef: ElementRef;
     @ViewChild('directionsPanel') directionsPanel: ElementRef;
+
     map: any;
 
-    constructor(public mapStyleService: MapStyleService) {
+    constructor(public mapStyleService: MapStyleService, public navigationService: NavigationService) {
     }
 
     public showMap() {
@@ -40,32 +42,9 @@ export class GoogleMapsComponent implements OnInit {
         });
     }
 
-    startNavigating() {
-
-        const directionsService = new google.maps.DirectionsService;
-        const directionsDisplay = new google.maps.DirectionsRenderer;
-
-        directionsDisplay.setMap(this.map);
-        directionsDisplay.setPanel(this.directionsPanel.nativeElement);
-
-        directionsService.route({
-            origin: {lat: 50.927860, lng: 6.927865},
-            destination: {lat: 50.941357, lng: 6.958307},
-            travelMode: google.maps.TravelMode['DRIVING']
-        }, (res, status) => {
-
-            if (status === google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(res);
-            } else {
-                console.warn(status);
-            }
-
-        });
-    }
-
     ngOnInit() {
         this.showMap();
-        this.startNavigating();
+        this.navigationService.startNavigation(this.map, this.directionsPanel);
     }
 
 }
