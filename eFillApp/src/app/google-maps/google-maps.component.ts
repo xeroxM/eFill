@@ -14,17 +14,17 @@ export class GoogleMapsComponent implements OnInit {
     @ViewChild('map') mapRef: ElementRef;
     @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
-    map: any;
+    public map: any;
 
     constructor(public mapStyleService: MapStyleService, public navigationService: NavigationService) {
     }
 
     public showMap() {
-        const location = new google.maps.LatLng(50.927860, 6.927865);
+        const location = new google.maps.LatLng(51.133481, 10.018343);
 
         const options = {
             center: location,
-            zoom: 13,
+            zoom: 5.8,
             disableDefaultUI: true,
             clickableIcons: false,
             mapTypeIds: 'day_map'
@@ -42,9 +42,13 @@ export class GoogleMapsComponent implements OnInit {
         });
     }
 
+    public setToCurrentLocation() {
+        this.navigationService.getCurrentLocation(this.map);
+    }
+
     ngOnInit() {
         this.showMap();
-        this.navigationService.startNavigation(this.map, this.directionsPanel);
+        // this.navigationService.startNavigation(this.map, this.directionsPanel);
     }
 
 }

@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 declare let google: any;
 
@@ -7,7 +8,19 @@ declare let google: any;
 })
 export class NavigationService {
 
-    constructor() {
+    public geoLocLat: number;
+    public geoLocLong: number;
+
+    constructor(public geolocation: Geolocation) {
+    }
+
+    public getCurrentLocation(map) {
+        this.geolocation.getCurrentPosition().then(pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+            map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+            map.setZoom(14);
+        });
     }
 
     public startNavigation(map, panel) {

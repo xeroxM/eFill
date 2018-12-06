@@ -1,8 +1,14 @@
 <ion-content>
-    <ion-card>
+    <!--ion-card>
         <ion-card-content>
             <div #directionsPanel></div>
         </ion-card-content>
-    </ion-card>
-    <div #map id="map"></div>
+    </ion-card-->
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="setToCurrentLocation()" color="light" mini>
+            <ion-icon name="locate"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <div #map id="map">
+    </div>
 </ion-content>
