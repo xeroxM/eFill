@@ -4,16 +4,16 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="setToCurrentLocation()" color="light" mini>
-            <ion-icon name="locate"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
     <ion-list [hidden]="autocompleteItems.length == 0">
         <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
             {{ item.description }}
         </ion-item>
     </ion-list>
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="setToCurrentLocation()" color="light" mini>
+            <ion-icon name="locate"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
     <!--ion-card>
         <ion-card-content>
             <div #directionsPanel></div>

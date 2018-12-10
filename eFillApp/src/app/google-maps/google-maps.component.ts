@@ -52,16 +52,17 @@ export class GoogleMapsComponent implements OnInit {
         };
 
         this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-        this.addMarker(location, this.map);
         this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
         this.map.setMapTypeId('day_map');
+        //this.addMarker(location, this.map);
+
     }
 
-    public addMarker(position, map) {
+    /*public addMarker(position, map) {
         return new google.maps.Marker({
             position, map
         });
-    }
+    }*/
 
     public setToCurrentLocation() {
         this.navigationService.getCurrentLocation(this.map);
@@ -72,7 +73,7 @@ export class GoogleMapsComponent implements OnInit {
             this.autocompleteItems = [];
             return;
         }
-        this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+        this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input, componentRestrictions: {country: 'de'} },
             (predictions, status) => {
                 this.autocompleteItems = [];
                 if(predictions){
@@ -83,9 +84,9 @@ export class GoogleMapsComponent implements OnInit {
                     });
                 }
             });
-    }
+      }
 
-    selectSearchResult(item){
+      selectSearchResult(item){
         this.clearMarkers();
         this.autocompleteItems = [];
 
@@ -103,15 +104,15 @@ export class GoogleMapsComponent implements OnInit {
                 this.map.setCenter(results[0].geometry.location);
             }
         })
-    }
+      }
 
-    clearMarkers(){
+      clearMarkers(){
         for (var i = 0; i < this.markers.length; i++) {
             console.log(this.markers[i])
             this.markers[i].setMap(null);
         }
         this.markers = [];
-    }
+      }
 
     ngOnInit() {
         this.showMap();
