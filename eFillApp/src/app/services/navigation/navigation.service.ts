@@ -1,6 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
-import {LoadingController} from '@ionic/angular';
 
 declare let google: any;
 
@@ -18,14 +17,11 @@ export class NavigationService {
     public autocomplete: any;
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
-    public nearbyItems: any = [];
-    public loading: any;
 
     constructor(
         public geolocation: Geolocation,
         public navigationService: NavigationService,
-        public zone: NgZone,
-        public loadingCtrl: LoadingController) {
+        public zone: NgZone) {
         this.geocoder = new google.maps.Geocoder;
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -33,7 +29,6 @@ export class NavigationService {
         this.autocomplete = {input: ''};
         this.autocompleteItems = [];
         this.markers = [];
-        // this.loading = this.loadingCtrl.create();
     }
 
     public getCurrentLocation(map) {

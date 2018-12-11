@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef, NgZone} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
-import {LoadingController} from '@ionic/angular';
 
 declare let google: any;
 
@@ -22,14 +21,11 @@ export class GoogleMapsComponent implements OnInit {
     public autocomplete: any;
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
-    public nearbyItems: any = [];
-    public loading: any;
 
     constructor(
         public mapStyleService: MapStyleService,
         public navigationService: NavigationService,
-        public zone: NgZone,
-        public loadingCtrl: LoadingController) {
+        public zone: NgZone) {
         this.geocoder = new google.maps.Geocoder;
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -37,7 +33,6 @@ export class GoogleMapsComponent implements OnInit {
         this.autocomplete = {input: ''};
         this.autocompleteItems = [];
         this.markers = [];
-        // this.loading = this.loadingCtrl.create();
     }
 
     public showMap() {
