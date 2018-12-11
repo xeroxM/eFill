@@ -1,7 +1,9 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {DataImportService} from '../data-import/data-import.service';
 
 declare let google: any;
+declare let MarkerClusterer: any;
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +20,14 @@ export class NavigationService {
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
 
+    public markers = [];
+    public coords = [];
+    public markerCluster: any;
+
     constructor(
         public geolocation: Geolocation,
-        public navigationService: NavigationService,
-        public zone: NgZone) {
+        public zone: NgZone,
+        public importData: DataImportService) {
         this.geocoder = new google.maps.Geocoder;
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -40,11 +46,24 @@ export class NavigationService {
         });
     }
 
+    public loadStationLocations(map) {
+        this.importData.getCoordinates().subscribe(data => {
+            this.coords = data;
+            for (let i = 0; i < this.coords.length; i++) {
+                const location = new google.maps.LatLng(this.coords[i].lat, this.coords[i].long);
+                const marker = this.addMarker(location, map);
+                this.markers.push(marker);
+            }
+            this.markerCluster = new MarkerClusterer(map, this.markers);
+        });
+    }
+
     public addMarker(position, map) {
         return new google.maps.Marker({
             position, map
         });
     }
+
 
     public updateSearchResults() {
         if (this.autocomplete.input === null) {

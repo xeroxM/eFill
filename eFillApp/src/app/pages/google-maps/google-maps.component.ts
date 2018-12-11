@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
+import {DataImportService} from '../../services/data-import/data-import.service';
 
 declare let google: any;
 
@@ -47,6 +48,7 @@ export class GoogleMapsComponent implements OnInit {
 
     ngOnInit() {
         this.showMap();
+        this.navigationService.loadStationLocations(this.map);
         // this.navigationService.startNavigation(this.map, this.directionsPanel);
     }
 
