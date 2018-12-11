@@ -1,9 +1,9 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DataImportService} from '../data-import/data-import.service';
+import * as MarkerClusterer from '@google/markerclustererplus';
 
 declare let google: any;
-declare let MarkerClusterer: any;
 
 @Injectable({
     providedIn: 'root'
