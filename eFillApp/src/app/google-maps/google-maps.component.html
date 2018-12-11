@@ -1,16 +1,12 @@
-<ion-header>
-    <ion-toolbar color="primary">
-        <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
-    </ion-toolbar>
-</ion-header>
-<ion-content>
+<ion-content scroll="false">
     <ion-fab vertical="bottom" horizontal="end">
         <ion-fab-button (click)="setToCurrentLocation()" color="light" mini>
             <ion-icon name="locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-list [hidden]="autocompleteItems.length == 0">
-        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+    <ion-list [hidden]="this.navigationService.autocompleteItems.length < 1">
+        <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
+                  (click)="setToSelectedLocation(item)">
             {{ item.description }}
         </ion-item>
     </ion-list>

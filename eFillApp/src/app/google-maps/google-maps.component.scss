@@ -1,14 +1,20 @@
-.scroll {
+/*.scroll {
   height: 100%
-}
+}*/
 
 #map {
   height: 100%;
-  width: 100%;
 }
-ion-card {
+
+/*ion-card {
   max-height: 200px;
   overflow: scroll;
+  position: absolute;
+  z-index: 1;
+}*/
+
+ion-list {
+  width: 100%;
   position: absolute;
   z-index: 1;
 }

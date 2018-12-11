@@ -1,3 +1,10 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-input [(ngModel)]="this.navigationService.autocomplete.input"
+                   (ionInput)="this.navigationService.updateSearchResults()"
+                   placeholder="Search for a place"></ion-input>
+    </ion-toolbar>
+</ion-header>
 <ion-content>
     <app-google-maps></app-google-maps>
 </ion-content>
