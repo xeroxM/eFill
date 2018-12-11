@@ -57,7 +57,7 @@ export class NavigationService {
             return;
         }
 
-        this.GoogleAutocomplete.getPlacePredictions({input: this.autocomplete.input},
+        this.GoogleAutocomplete.getPlacePredictions({input: this.autocomplete.input, componentRestrictions: {country: 'de'}},
             (predictions, status) => {
                 this.autocompleteItems = [];
                 if (predictions) {

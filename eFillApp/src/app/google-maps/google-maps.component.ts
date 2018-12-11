@@ -52,7 +52,6 @@ export class GoogleMapsComponent implements OnInit {
         };
 
         this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-        this.navigationService.addMarker(location, this.map);
         this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
         this.map.setMapTypeId('day_map');
     }
