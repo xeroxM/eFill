@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef, NgZone} from '@angular/core';
-import {MapStyleService} from '../services/map-style/map-style.service';
-import {NavigationService} from '../services/navigation/navigation.service';
+import {MapStyleService} from '../../services/map-style/map-style.service';
+import {NavigationService} from '../../services/navigation/navigation.service';
 import {LoadingController} from '@ionic/angular';
 
 declare let google: any;

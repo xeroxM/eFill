@@ -9,7 +9,6 @@ import {TabsPageRoutingModule} from './tabs.router.module';
 import {TabsPage} from './tabs.page';
 import {FavoritesPageModule} from '../favorites/favorites.module';
 import {MapPageModule} from '../map/map.module';
-import {HomePageModule} from '../home/home.module';
 
 @NgModule({
     imports: [
@@ -17,7 +16,6 @@ import {HomePageModule} from '../home/home.module';
         CommonModule,
         FormsModule,
         TabsPageRoutingModule,
-        HomePageModule,
         MapPageModule,
         FavoritesPageModule
     ],
