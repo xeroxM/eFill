@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, NgZone} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
 
@@ -15,24 +15,10 @@ export class GoogleMapsComponent implements OnInit {
     @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
     public map: any;
-    public markers: any;
-    public geocoder: any;
-    public GooglePlaces: any;
-    public autocomplete: any;
-    public GoogleAutocomplete: any;
-    public autocompleteItems: any;
 
     constructor(
         public mapStyleService: MapStyleService,
-        public navigationService: NavigationService,
-        public zone: NgZone) {
-        this.geocoder = new google.maps.Geocoder;
-        const elem = document.createElement('div');
-        this.GooglePlaces = new google.maps.places.PlacesService(elem);
-        this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-        this.autocomplete = {input: ''};
-        this.autocompleteItems = [];
-        this.markers = [];
+        public navigationService: NavigationService) {
     }
 
     public showMap() {
