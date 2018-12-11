@@ -20,7 +20,7 @@ export class NavigationService {
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
 
-    public markers: any;
+    public stationMarkers = [];
     public coords = [];
     public markerCluster: any;
 
@@ -52,9 +52,9 @@ export class NavigationService {
             for (let i = 0; i < this.coords.length; i++) {
                 const location = new google.maps.LatLng(this.coords[i].lat, this.coords[i].long);
                 const marker = this.addMarker(location, map);
-                this.markers.push(marker);
+                this.stationMarkers.push(marker);
             }
-            this.markerCluster = new MarkerClusterer(map, this.markers);
+            this.markerCluster = new MarkerClusterer(map, this.stationMarkers);
         });
     }
 
