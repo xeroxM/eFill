@@ -20,7 +20,7 @@ export class NavigationService {
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
 
-    public markers = [];
+    public markers: any;
     public coords = [];
     public markerCluster: any;
 
