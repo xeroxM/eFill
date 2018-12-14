@@ -6,6 +6,9 @@
         <ion-input [(ngModel)]="this.navigationService.autocomplete.input"
                    (ionInput)="this.navigationService.updateSearchResults()"
                    placeholder="Hier suchen"></ion-input>
+        <ion-buttons slot="end">
+            <ion-icon name="car" href="/tabs/(route:route)"></ion-icon>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content>
