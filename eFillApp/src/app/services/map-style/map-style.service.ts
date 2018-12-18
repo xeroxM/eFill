@@ -228,4 +228,37 @@ export class MapStyleService {
         ]
     );
 
+    public clusterStyles = [
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m1.png',
+            height: 50,
+            width: 50
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m2.png',
+            height: 53,
+            width: 53
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m3.png',
+            height: 66,
+            width: 66
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m4.png',
+            height: 78,
+            width: 78
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m5.png',
+            height: 78,
+            width: 78
+        },
+    ];
+
 }

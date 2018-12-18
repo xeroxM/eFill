@@ -2,6 +2,7 @@ import {Injectable, NgZone} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
+import {MapStyleService} from '../map-style/map-style.service';
 
 declare let google: any;
 
@@ -24,49 +25,15 @@ export class NavigationService {
     public coords = [];
     public markerCluster: any;
 
-    public clusterStyles = [
-        {
-            textColor: 'black',
-            url: 'assets/cluster/m1.png',
-            height: 50,
-            width: 50
-        },
-        {
-            textColor: 'black',
-            url: 'assets/cluster/m2.png',
-            height: 50,
-            width: 50
-        },
-        {
-            textColor: 'black',
-            url: 'assets/cluster/m3.png',
-            height: 50,
-            width: 50
-        },
-        {
-            textColor: 'black',
-            url: 'assets/cluster/m4.png',
-            height: 50,
-            width: 50
-        },
-        {
-            textColor: 'black',
-            url: 'assets/cluster/m5.png',
-            height: 50,
-            width: 50
-        },
-    ];
-
     public mcOptions = {
-        gridSize: 50,
-        styles: this.clusterStyles,
-        maxZoom: 15
+        styles: this.mapStyleService.clusterStyles,
     };
 
     constructor(
         public geolocation: Geolocation,
         public zone: NgZone,
-        public importData: DataImportService) {
+        public importData: DataImportService,
+        public mapStyleService: MapStyleService) {
         this.geocoder = new google.maps.Geocoder;
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -93,7 +60,7 @@ export class NavigationService {
                 const marker = this.addMarker(location, map);
                 this.stationMarkers.push(marker);
             }
-            // this.markerCluster = new MarkerClusterer(map, this.stationMarkers, this.mcOptions);
+            this.markerCluster = new MarkerClusterer(map, this.stationMarkers, this.mcOptions);
         });
     }
 
