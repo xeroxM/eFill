@@ -24,6 +24,45 @@ export class NavigationService {
     public coords = [];
     public markerCluster: any;
 
+    public clusterStyles = [
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m1.png',
+            height: 50,
+            width: 50
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m2.png',
+            height: 50,
+            width: 50
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m3.png',
+            height: 50,
+            width: 50
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m4.png',
+            height: 50,
+            width: 50
+        },
+        {
+            textColor: 'black',
+            url: 'assets/cluster/m5.png',
+            height: 50,
+            width: 50
+        },
+    ];
+
+    public mcOptions = {
+        gridSize: 50,
+        styles: this.clusterStyles,
+        maxZoom: 15
+    };
+
     constructor(
         public geolocation: Geolocation,
         public zone: NgZone,
@@ -54,7 +93,7 @@ export class NavigationService {
                 const marker = this.addMarker(location, map);
                 this.stationMarkers.push(marker);
             }
-            this.markerCluster = new MarkerClusterer(map, this.stationMarkers);
+            // this.markerCluster = new MarkerClusterer(map, this.stationMarkers, this.mcOptions);
         });
     }
 
