@@ -4,6 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {TabsPage} from './tabs.page';
 import {MapPage} from '../map/map.page';
 import {FavoritesPage} from '../favorites/favorites.page';
+import {RoutePage} from '../route/route.page';
 
 const routes: Routes = [
     {
@@ -24,6 +25,11 @@ const routes: Routes = [
                 path: 'favorites',
                 outlet: 'favorites',
                 component: FavoritesPage
+            },
+            {
+                path: 'route',
+                outlet: 'route',
+                component: RoutePage
             }
         ]
     },

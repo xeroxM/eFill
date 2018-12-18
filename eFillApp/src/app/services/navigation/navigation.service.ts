@@ -139,6 +139,7 @@ export class NavigationService {
                 });
                 this.markers.push(marker);
                 map.setCenter(results[0].geometry.location);
+                this.autocomplete.input = results[0].formatted_address;
             }
         });
     }

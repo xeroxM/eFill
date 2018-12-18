@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {MapPage} from './map.page';
 import {GoogleMapsComponent} from '../google-maps/google-maps.component';
+import {RoutePageModule} from '../route/route.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {GoogleMapsComponent} from '../google-maps/google-maps.component';
         IonicModule,
         CommonModule,
         FormsModule,
+        RoutePageModule,
         RouterModule.forChild([{path: '', component: MapPage}]),
     ]
 })
