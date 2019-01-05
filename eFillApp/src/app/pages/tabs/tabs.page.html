@@ -1,16 +1,10 @@
 <ion-tabs>
 
-    <ion-tab tab="home">
-        <ion-router-outlet name="home"></ion-router-outlet>
-    </ion-tab>
     <ion-tab tab="map">
         <ion-router-outlet name="map"></ion-router-outlet>
     </ion-tab>
     <ion-tab tab="favorites">
         <ion-router-outlet name="favorites"></ion-router-outlet>
-    </ion-tab>
-    <ion-tab tab="route">
-        <ion-router-outlet name="route"></ion-router-outlet>
     </ion-tab>
 
     <ion-tab-bar slot="bottom">
@@ -23,11 +17,6 @@
         <ion-tab-button tab="favorites" href="/tabs/(favorites:favorites)">
             <ion-icon name="star"></ion-icon>
             <ion-label>Favorites</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="route" href="/tabs/(route:route)">
-            <ion-icon name="car"></ion-icon>
-            <ion-label>Routes</ion-label>
         </ion-tab-button>
 
     </ion-tab-bar>

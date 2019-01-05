@@ -22,14 +22,14 @@ const routes: Routes = [
                 component: MapPage
             },
             {
+                path: 'route',
+                outlet: 'map',
+                component: RoutePage
+            },
+            {
                 path: 'favorites',
                 outlet: 'favorites',
                 component: FavoritesPage
-            },
-            {
-                path: 'route',
-                outlet: 'route',
-                component: RoutePage
             }
         ]
     },

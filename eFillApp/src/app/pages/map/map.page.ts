@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NavigationService} from '../../services/navigation/navigation.service';
+import {NavController} from '@ionic/angular';
 
 @Component({
     selector: 'app-about',
@@ -8,7 +9,12 @@ import {NavigationService} from '../../services/navigation/navigation.service';
 })
 export class MapPage {
 
-    constructor(public navigationService: NavigationService) {
+    constructor(public navigationService: NavigationService,
+                public navCtrl: NavController) {
+    }
+
+    public moveToSetRoute() {
+        this.navCtrl.navigateForward('/tabs/(map:route)');
     }
 
 }
