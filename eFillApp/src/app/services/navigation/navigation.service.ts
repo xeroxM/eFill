@@ -64,13 +64,6 @@ export class NavigationService {
         });
     }
 
-    public addMarker(position, map) {
-        return new google.maps.Marker({
-            position, map
-        });
-    }
-
-
     public updateSearchResults() {
         if (this.autocomplete.input === null) {
             this.autocompleteItems = [];
@@ -84,6 +77,9 @@ export class NavigationService {
                     this.zone.run(() => {
                         predictions.forEach((prediction) => {
                             this.autocompleteItems.push(prediction);
+                            /*if (this.autocompleteItems.length >= 5) {
+                                this.autocompleteItems.slice(0, 5);
+                            }*/
                         });
                     });
                 }
@@ -111,14 +107,6 @@ export class NavigationService {
         });
     }
 
-    public clearMarkers() {
-        for (let i = 0; i < this.markers.length; i++) {
-            console.log(this.markers[i]);
-            this.markers[i].setMap(null);
-        }
-        this.markers = [];
-    }
-
     public startNavigation(map, panel) {
 
         const directionsService = new google.maps.DirectionsService;
@@ -142,5 +130,18 @@ export class NavigationService {
         });
     }
 
+    public addMarker(position, map) {
+        return new google.maps.Marker({
+            position, map
+        });
+    }
+
+    public clearMarkers() {
+        for (let i = 0; i < this.markers.length; i++) {
+            console.log(this.markers[i]);
+            this.markers[i].setMap(null);
+        }
+        this.markers = [];
+    }
 
 }

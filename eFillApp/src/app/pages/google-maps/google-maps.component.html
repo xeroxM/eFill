@@ -4,7 +4,7 @@
             <ion-icon name="locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-list [hidden]="this.navigationService.autocomplete.input < 1">
+    <ion-list [hidden]="this.navigationService.autocomplete.input < 1" no-padding>
         <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                   (click)="setToSelectedLocation(item)">
             {{ item.description }}
