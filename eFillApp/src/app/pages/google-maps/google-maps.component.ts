@@ -27,7 +27,7 @@ export class GoogleMapsComponent implements OnInit {
 
         const options = {
             center: location,
-            zoom: 5.8,
+            zoom: 5.4,
             disableDefaultUI: true,
             clickableIcons: false,
             mapTypeIds: 'day_map'
