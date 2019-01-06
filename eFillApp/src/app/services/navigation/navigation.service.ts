@@ -132,7 +132,8 @@ export class NavigationService {
 
     public addMarker(position, map) {
         return new google.maps.Marker({
-            position, map
+            position, map,
+            icon: 'assets/icon/charging.png'
         });
     }
 

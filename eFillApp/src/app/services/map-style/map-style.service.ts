@@ -47,10 +47,26 @@ export class MapStyleService {
             },
             {
                 'featureType': 'administrative.land_parcel',
+                'stylers': [
+                    {
+                        'visibility': 'off'
+                    }
+                ]
+            },
+            {
+                'featureType': 'administrative.land_parcel',
                 'elementType': 'labels.text.fill',
                 'stylers': [
                     {
                         'color': '#64779e'
+                    }
+                ]
+            },
+            {
+                'featureType': 'administrative.neighborhood',
+                'stylers': [
+                    {
+                        'visibility': 'off'
                     }
                 ]
             },
@@ -87,6 +103,15 @@ export class MapStyleService {
                 'stylers': [
                     {
                         'color': '#283d6a'
+                    }
+                ]
+            },
+            {
+                'featureType': 'poi',
+                'elementType': 'labels.text',
+                'stylers': [
+                    {
+                        'visibility': 'off'
                     }
                 ]
             },
@@ -132,6 +157,15 @@ export class MapStyleService {
                 'stylers': [
                     {
                         'color': '#304a7d'
+                    }
+                ]
+            },
+            {
+                'featureType': 'road',
+                'elementType': 'labels',
+                'stylers': [
+                    {
+                        'visibility': 'off'
                     }
                 ]
             },
@@ -231,6 +265,15 @@ export class MapStyleService {
                 'stylers': [
                     {
                         'color': '#0e1626'
+                    }
+                ]
+            },
+            {
+                'featureType': 'water',
+                'elementType': 'labels.text',
+                'stylers': [
+                    {
+                        'visibility': 'off'
                     }
                 ]
             },
