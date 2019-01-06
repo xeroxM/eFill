@@ -7,9 +7,9 @@
                    (ionInput)="this.navigationService.updateSearchResults()"
                    placeholder="Hier suchen"></ion-input>
         <ion-buttons slot="end">
-            <ion-tab-button tab="map" (click)="moveToSetRoute()">
+            <ion-button tab="map" (click)="moveToSetRoute()" class="routeButton">
                 <ion-icon name="car"></ion-icon>
-            </ion-tab-button>
+            </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
