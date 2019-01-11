@@ -15,8 +15,6 @@ export class GoogleMapsComponent implements OnInit {
     @ViewChild('map') mapRef: ElementRef;
     @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
-    public map: any;
-
     constructor(
         public mapStyleService: MapStyleService,
         public navigationService: NavigationService) {
@@ -33,22 +31,14 @@ export class GoogleMapsComponent implements OnInit {
             mapTypeIds: 'day_map'
         };
 
-        this.map = new google.maps.Map(this.mapRef.nativeElement, options);
-        this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
-        this.map.setMapTypeId('day_map');
-    }
-
-    public setToCurrentLocation() {
-        this.navigationService.getCurrentLocation(this.map);
-    }
-
-    public setToSelectedLocation(item) {
-        this.navigationService.selectSearchResult(item, this.map);
+        this.navigationService.map = new google.maps.Map(this.mapRef.nativeElement, options);
+        this.navigationService.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+        this.navigationService.map.setMapTypeId('day_map');
     }
 
     ngOnInit() {
         this.showMap();
-        this.navigationService.loadStationLocations(this.map);
+        this.navigationService.loadStationLocations();
         // this.navigationService.startNavigation(this.map, this.directionsPanel);
     }
 

@@ -14,10 +14,17 @@ export class NavigationService {
     public geoLocLat: number;
     public geoLocLong: number;
 
+    public map: any;
+
     public markers: any;
     public geocoder: any;
     public GooglePlaces: any;
-    public autocomplete: any;
+    public autocompletePlaceSearch: any;
+    public autocompleteStartPoint: any;
+    public autocompleteEndPoint: any;
+    public showItemsPlaceSearch = true;
+    public showItemsStartPoint = true;
+    public showItemsEndPoint = true;
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
 
@@ -38,39 +45,41 @@ export class NavigationService {
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
         this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-        this.autocomplete = {input: ''};
+        this.autocompletePlaceSearch = {input: ''};
+        this.autocompleteStartPoint = {input: ''};
+        this.autocompleteEndPoint = {input: ''};
         this.autocompleteItems = [];
         this.markers = [];
     }
 
-    public getCurrentLocation(map) {
+    public getCurrentLocation() {
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
-            map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-            map.setZoom(14);
+            this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+            this.map.setZoom(14);
         });
     }
 
-    public loadStationLocations(map) {
+    public loadStationLocations() {
         this.importData.getCoordinates().subscribe(data => {
             this.coords = data;
             for (let i = 0; i < this.coords.length; i++) {
                 const location = new google.maps.LatLng(this.coords[i].lat, this.coords[i].long);
-                const marker = this.addMarker(location, map);
+                const marker = this.addMarker(location, this.map);
                 this.stationMarkers.push(marker);
             }
-            this.markerCluster = new MarkerClusterer(map, this.stationMarkers, this.mcOptions);
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptions);
         });
     }
 
-    public updateSearchResults() {
-        if (this.autocomplete.input === null) {
+    public updateSearchResults(autocomplete) {
+        if (autocomplete.input === null) {
             this.autocompleteItems = [];
             return;
         }
 
-        this.GoogleAutocomplete.getPlacePredictions({input: this.autocomplete.input, componentRestrictions: {country: 'de'}},
+        this.GoogleAutocomplete.getPlacePredictions({input: autocomplete.input, componentRestrictions: {country: 'de'}},
             (predictions, status) => {
                 this.autocompleteItems = [];
                 if (predictions) {
@@ -86,33 +95,36 @@ export class NavigationService {
             });
     }
 
-    public selectSearchResult(item, map) {
+    public selectSearchResult(item, autocomplete) {
         this.clearMarkers();
         this.autocompleteItems = [];
 
         this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
             if (status === 'OK' && results[0]) {
-                // let position = {
-                //     lat: results[0].geometry.location.lat,
-                //     lng: results[0].geometry.location.lng
-                // };
-                const marker = new google.maps.Marker({
-                    position: results[0].geometry.location,
-                    map: map
-                });
-                this.markers.push(marker);
-                map.setCenter(results[0].geometry.location);
-                this.autocomplete.input = results[0].formatted_address;
+
+                if (autocomplete === this.autocompletePlaceSearch) {
+                    // let position = {
+                    //     lat: results[0].geometry.location.lat,
+                    //     lng: results[0].geometry.location.lng
+                    // };
+                    const marker = new google.maps.Marker({
+                        position: results[0].geometry.location,
+                        map: this.map
+                    });
+                    this.markers.push(marker);
+                    this.map.setCenter(results[0].geometry.location);
+                }
+                autocomplete.input = results[0].formatted_address;
             }
         });
     }
 
-    public startNavigation(map, panel) {
+    public startNavigation(panel) {
 
         const directionsService = new google.maps.DirectionsService;
         const directionsDisplay = new google.maps.DirectionsRenderer;
 
-        directionsDisplay.setMap(map);
+        directionsDisplay.setMap(this.map);
         directionsDisplay.setPanel(panel.nativeElement);
 
         directionsService.route({

@@ -3,8 +3,12 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-input [(ngModel)]="this.navigationService.autocomplete.input"
-                   (ionInput)="this.navigationService.updateSearchResults()"
+        <ion-input [(ngModel)]="this.navigationService.autocompletePlaceSearch.input"
+                   (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompletePlaceSearch)"
+                   (ionFocus)="this.navigationService.showItemsStartPoint = false;
+                               this.navigationService.showItemsEndPoint = false;
+                               this.navigationService.showItemsPlaceSearch = true;
+                               this.navigationService.autocompleteItems = []"
                    placeholder="Hier suchen"></ion-input>
         <ion-buttons slot="end">
             <ion-button tab="map" (click)="moveToSetRoute()" class="routeButton">
