@@ -111,7 +111,6 @@ export class NavigationService {
     }
 
     public selectSearchResult(item, autocomplete) {
-        this.clearMarkers();
         this.autocompleteItems = [];
 
         this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
@@ -122,12 +121,8 @@ export class NavigationService {
                     //     lat: results[0].geometry.location.lat,
                     //     lng: results[0].geometry.location.lng
                     // };
-                    const marker = new google.maps.Marker({
-                        position: results[0].geometry.location,
-                        map: this.map
-                    });
-                    this.markers.push(marker);
                     this.map.setCenter(results[0].geometry.location);
+                    this.map.setZoom(13);
                 }
                 autocomplete.input = results[0].formatted_address;
             }
@@ -171,5 +166,4 @@ export class NavigationService {
         }
         this.markers = [];
     }
-
 }
