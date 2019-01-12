@@ -1,4 +1,4 @@
-import {Injectable, NgZone} from '@angular/core';
+import {ElementRef, Injectable, NgZone, ViewChild} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
@@ -9,7 +9,10 @@ declare let google: any;
 @Injectable({
     providedIn: 'root'
 })
+
 export class NavigationService {
+
+    @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
     public geoLocLat: number;
     public geoLocLong: number;
@@ -81,6 +84,18 @@ export class NavigationService {
                     }
                     infowindow.open(this.map, marker);
                     this.currentWindow = infowindow;
+
+                    infowindow.addListener('click', () => {
+                        this.geolocation.getCurrentPosition().then(pos => {
+                            this.geoLocLat = pos.coords.latitude;
+                            this.geoLocLong = pos.coords.longitude;
+                        });
+
+                        this.startNavigation(this.directionsPanel, this.geoLocLat, this.geoLocLong,
+                            this.stationInformation[i].lat, this.stationInformation[i].long);
+
+                        console.log('helo');
+                    });
                 });
             }
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptions);
@@ -129,7 +144,7 @@ export class NavigationService {
         });
     }
 
-    public startNavigation(panel) {
+    public startNavigation(panel, originlat, originlong, destinationlat, destinationlong) {
 
         const directionsService = new google.maps.DirectionsService;
         const directionsDisplay = new google.maps.DirectionsRenderer;
@@ -138,8 +153,8 @@ export class NavigationService {
         directionsDisplay.setPanel(panel.nativeElement);
 
         directionsService.route({
-            origin: {lat: 50.927860, lng: 6.927865},
-            destination: {lat: 50.941357, lng: 6.958307},
+            origin: {lat: originlat, lng: originlong},
+            destination: {lat: destinationlat, lng: destinationlong},
             travelMode: google.maps.TravelMode['DRIVING']
         }, (res, status) => {
 
