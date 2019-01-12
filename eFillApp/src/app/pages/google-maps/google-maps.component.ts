@@ -13,7 +13,7 @@ declare let google: any;
 export class GoogleMapsComponent implements OnInit {
 
     @ViewChild('map') mapRef: ElementRef;
-    @ViewChild('directionsPanel') directionsPanel: ElementRef;
+    // @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
     constructor(
         public mapStyleService: MapStyleService,

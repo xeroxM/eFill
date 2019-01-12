@@ -12,8 +12,6 @@ declare let google: any;
 
 export class NavigationService {
 
-    @ViewChild('directionsPanel') directionsPanel: ElementRef;
-
     public geoLocLat: number;
     public geoLocLong: number;
 
@@ -36,6 +34,9 @@ export class NavigationService {
     public currentWindow = null;
     public markerCluster: any;
 
+    public directionsService: any;
+    public directionsDisplay: any;
+
     public mcOptions = {
         styles: this.mapStyleService.clusterStyles,
     };
@@ -54,6 +55,12 @@ export class NavigationService {
         this.autocompleteEndPoint = {input: ''};
         this.autocompleteItems = [];
         this.markers = [];
+        this.directionsService = new google.maps.DirectionsService;
+        this.directionsDisplay = new google.maps.DirectionsRenderer;
+
+        window['getRouteToStation'] = (stationlat, stationlong) => {
+            this.getRouteToStation(stationlat, stationlong);
+        };
     }
 
     public getCurrentLocation() {
@@ -74,32 +81,29 @@ export class NavigationService {
 
                 this.stationMarkers.push(marker);
 
-                const infowindow = new google.maps.InfoWindow({
-                    content: this.stationInformation[i].operator
-                });
-
                 marker.addListener('click', () => {
                     if (this.currentWindow != null) {
                         this.currentWindow.close();
                     }
+                    const peter = `this.getRouteToStation(this.stationInformation[${i}].lat, this.stationInformation[${i}].long)`;
+                    const infowindow = new google.maps.InfoWindow({
+                        content:
+                            `<div>${this.stationInformation[i].operator}</div><br/>` +
+                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>`
+                    });
+
                     infowindow.open(this.map, marker);
                     this.currentWindow = infowindow;
+                    // this.getRouteToStation(this.stationInformation[i].lat, this.stationInformation[i].long);
 
-                    infowindow.addListener('click', () => {
-                        this.geolocation.getCurrentPosition().then(pos => {
-                            this.geoLocLat = pos.coords.latitude;
-                            this.geoLocLong = pos.coords.longitude;
-                        });
-
-                        this.startNavigation(this.directionsPanel, this.geoLocLat, this.geoLocLong,
-                            this.stationInformation[i].lat, this.stationInformation[i].long);
-
-                        console.log('helo');
-                    });
                 });
             }
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptions);
         });
+    }
+
+    public clickTest(event: any) {
+        console.log(event);
     }
 
 
@@ -144,26 +148,30 @@ export class NavigationService {
         });
     }
 
-    public startNavigation(panel, originlat, originlong, destinationlat, destinationlong) {
+    public startNavigation(originlat, originlong, destinationlat, destinationlong) {
 
-        const directionsService = new google.maps.DirectionsService;
-        const directionsDisplay = new google.maps.DirectionsRenderer;
-
-        directionsDisplay.setMap(this.map);
-        directionsDisplay.setPanel(panel.nativeElement);
-
-        directionsService.route({
+        this.directionsService.route({
             origin: {lat: originlat, lng: originlong},
             destination: {lat: destinationlat, lng: destinationlong},
             travelMode: google.maps.TravelMode['DRIVING']
         }, (res, status) => {
 
             if (status === google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(res);
+                this.directionsDisplay.setMap(this.map);
+                this.directionsDisplay.setDirections(res);
             } else {
                 console.warn(status);
             }
 
+        });
+    }
+
+    public getRouteToStation(stationlat, stationlong) {
+        this.geolocation.getCurrentPosition().then(pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+            this.startNavigation(this.geoLocLat, this.geoLocLong,
+                stationlat, stationlong);
         });
     }
 
