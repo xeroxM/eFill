@@ -2,9 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-interface Coordinates {
+interface StationInformation {
     long: number;
     lat: number;
+    operator: string;
+    address: string;
+    place: string;
 }
 
 @Injectable({
@@ -17,8 +20,7 @@ export class DataImportService {
     constructor(private http: HttpClient) {
     }
 
-    getCoordinates(): Observable<Coordinates[]> {
-        return this.http.get<Coordinates[]>(this.url);
+    getCoordinates(): Observable<StationInformation[]> {
+        return this.http.get<StationInformation[]>(this.url);
     }
-
 }

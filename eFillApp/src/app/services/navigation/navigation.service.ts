@@ -29,7 +29,8 @@ export class NavigationService {
     public autocompleteItems: any;
 
     public stationMarkers = [];
-    public coords = [];
+    public stationInformation = [];
+    public currentWindow = null;
     public markerCluster: any;
 
     public mcOptions = {
@@ -63,15 +64,29 @@ export class NavigationService {
 
     public loadStationLocations() {
         this.importData.getCoordinates().subscribe(data => {
-            this.coords = data;
-            for (let i = 0; i < this.coords.length; i++) {
-                const location = new google.maps.LatLng(this.coords[i].lat, this.coords[i].long);
+            this.stationInformation = data;
+            for (let i = 0; i < this.stationInformation.length; i++) {
+                const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
                 const marker = this.addMarker(location, this.map);
+
                 this.stationMarkers.push(marker);
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: this.stationInformation[i].operator
+                });
+
+                marker.addListener('click', () => {
+                    if (this.currentWindow != null) {
+                        this.currentWindow.close();
+                    }
+                    infowindow.open(this.map, marker);
+                    this.currentWindow = infowindow;
+                });
             }
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptions);
         });
     }
+
 
     public updateSearchResults(autocomplete) {
         if (autocomplete.input === null) {
