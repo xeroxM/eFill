@@ -4,6 +4,7 @@ import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
+import {Test} from 'tslint';
 
 declare let google: any;
 
@@ -74,6 +75,14 @@ export class NavigationService {
         });
     }
 
+    public getInput(autocomplete){
+        autocomplete.input = 'Mein Standort';
+        this.geolocation.getCurrentPosition().then( pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+        });
+    }
+
     public loadStationLocations() {
         this.importData.getCoordinates().subscribe(data => {
             this.stationInformation = data;
@@ -117,14 +126,10 @@ export class NavigationService {
 
         this.GoogleAutocomplete.getPlacePredictions({input: autocomplete.input, componentRestrictions: {country: 'de'}},
             (predictions, status) => {
-                this.autocompleteItems = [];
                 if (predictions) {
                     this.zone.run(() => {
                         predictions.forEach((prediction) => {
                             this.autocompleteItems.push(prediction);
-                            /*if (this.autocompleteItems.length >= 5) {
-                                this.autocompleteItems.slice(0, 5);
-                            }*/
                         });
                     });
                 }
@@ -138,10 +143,6 @@ export class NavigationService {
             if (status === 'OK' && results[0]) {
 
                 if (autocomplete === this.autocompletePlaceSearch) {
-                    // let position = {
-                    //     lat: results[0].geometry.location.lat,
-                    //     lng: results[0].geometry.location.lng
-                    // };
                     this.map.setCenter(results[0].geometry.location);
                     this.map.setZoom(13);
                 }
@@ -151,23 +152,22 @@ export class NavigationService {
     }
 
     public startNavigation(originlat, originlong, destinationlat, destinationlong) {
-        let start;
-        let end;
+        let start, end;
         if (originlong === null) {
             start = originlat;
-            end = destinationlat;
         } else {
             start = {lat:  originlat, lng: originlong};
+        }
+        if (destinationlong === null) {
+            end = destinationlat;
+        } else {
             end = {lat: destinationlat, lng: destinationlong};
         }
-        console.log(start);
-        console.log(end);
         const request = {
             origin: start,
             destination: end,
             travelMode: google.maps.TravelMode['DRIVING']
         };
-        console.log(request);
         this.directionsService.route(request, (res, status) => {
 
             if (status === google.maps.DirectionsStatus.OK) {
@@ -190,17 +190,34 @@ export class NavigationService {
     }
 
     public convertObj(origin, destination) {
-
-        this.navCtrl.navigateForward('/tabs/(map:map)')
+        let originlat, originlong, destinationlat, destinationlong;
+        this.geolocation.getCurrentPosition().then( pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+        });
         const originStr = JSON.stringify(origin);
-        let originSub = originStr.substring(10);
+        const originSub = originStr.substring(10);
         const originReg = originSub.search('\"');
-        originSub = originSub.substring(0, originReg);
+        originlat = originSub.substring(0, originReg);
         const destinationStr = JSON.stringify(destination);
-        let destinationSub = destinationStr.substring(10);
+        const destinationSub = destinationStr.substring(10);
         const destinationReg = destinationSub.search('\"');
-        destinationSub = destinationSub.substring(0, destinationReg);
-        this.startNavigation(originSub, null, destinationSub, null)
+        destinationlat = destinationSub.substring(0, destinationReg);
+        if (originlat === 'Mein Standort') {
+            originlat = this.geoLocLat;
+            originlong = this.geoLocLong;
+            destinationlong = null;
+        } else if (destinationlat === 'Mein Standort') {
+            destinationlat = this.geoLocLat;
+            destinationlong = this.geoLocLong;
+            originlong = null;
+        } else {
+            originlong = null;
+            destinationlong = null;
+        }
+        console.log(originlat + ' ' + originlong + ' ' + destinationlat + ' ' + destinationlong);
+        this.navCtrl.navigateForward('/tabs/(map:map)');
+        this.startNavigation(originlat, originlong, destinationlat, destinationlong);
 
     }
 

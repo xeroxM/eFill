@@ -32,6 +32,7 @@
                    placeholder="Endpunkt"></ion-input>
     </ion-toolbar>
     <ion-list *ngIf="this.navigationService.showItemsStartPoint" [hidden]="this.navigationService.autocompleteStartPoint.input < 1" no-padding>
+        <ion-item (click)="this.navigationService.getInput(this.navigationService.autocompleteStartPoint)">Mein Standort</ion-item>
         <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                   (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteStartPoint)">
             {{ item.description }}
