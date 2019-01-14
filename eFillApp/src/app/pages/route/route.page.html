@@ -43,4 +43,7 @@
             {{ item.description }}
         </ion-item>
     </ion-list>
+    <button ion-button round
+            (click)="this.navigationService.convertObj(this.navigationService.autocompleteStartPoint, this.navigationService.autocompleteEndPoint)">
+        <ion-icon slot="start" name="navigate"></ion-icon>Starten</button>
 </ion-content>

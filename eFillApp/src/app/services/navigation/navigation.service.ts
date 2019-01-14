@@ -3,6 +3,7 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
+import {NavController} from '@ionic/angular';
 
 declare let google: any;
 
@@ -42,6 +43,7 @@ export class NavigationService {
     };
 
     constructor(
+        public navCtrl: NavController,
         public geolocation: Geolocation,
         public zone: NgZone,
         public importData: DataImportService,
@@ -149,12 +151,24 @@ export class NavigationService {
     }
 
     public startNavigation(originlat, originlong, destinationlat, destinationlong) {
-
-        this.directionsService.route({
-            origin: {lat: originlat, lng: originlong},
-            destination: {lat: destinationlat, lng: destinationlong},
+        let start;
+        let end;
+        if (originlong === null) {
+            start = originlat;
+            end = destinationlat;
+        } else {
+            start = {lat:  originlat, lng: originlong};
+            end = {lat: destinationlat, lng: destinationlong};
+        }
+        console.log(start);
+        console.log(end);
+        const request = {
+            origin: start,
+            destination: end,
             travelMode: google.maps.TravelMode['DRIVING']
-        }, (res, status) => {
+        };
+        console.log(request);
+        this.directionsService.route(request, (res, status) => {
 
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
@@ -173,6 +187,21 @@ export class NavigationService {
             this.startNavigation(this.geoLocLat, this.geoLocLong,
                 stationlat, stationlong);
         });
+    }
+
+    public convertObj(origin, destination) {
+
+        this.navCtrl.navigateForward('/tabs/(map:map)')
+        const originStr = JSON.stringify(origin);
+        let originSub = originStr.substring(10);
+        const originReg = originSub.search('\"');
+        originSub = originSub.substring(0, originReg);
+        const destinationStr = JSON.stringify(destination);
+        let destinationSub = destinationStr.substring(10);
+        const destinationReg = destinationSub.search('\"');
+        destinationSub = destinationSub.substring(0, destinationReg);
+        this.startNavigation(originSub, null, destinationSub, null)
+
     }
 
     public addMarker(position, map) {
