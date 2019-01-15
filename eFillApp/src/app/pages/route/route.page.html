@@ -10,7 +10,8 @@
 </ion-header>
 <ion-content>
     <ion-toolbar>
-        <ion-icon slot="start" name="radio-button-on"></ion-icon>
+        <ion-icon [hidden]="this.navigationService.autocompleteStartPoint.input !== 'Mein Standort'" slot="start" name="radio-button-on"></ion-icon>
+        <ion-icon [hidden]="this.navigationService.autocompleteStartPoint.input === 'Mein Standort'" slot="start" name="radio-button-off"></ion-icon>
         <ion-input [(ngModel)]="this.navigationService.autocompleteStartPoint.input"
                    (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteStartPoint)"
                    (ionFocus)="this.navigationService.showItemsStartPoint = true;
