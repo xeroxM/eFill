@@ -31,6 +31,8 @@ export class NavigationService {
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
 
+    public routeIsNotSet = true;
+
     public stationMarkers = [];
     public stationInformation = [];
     public currentWindow = null;
@@ -75,9 +77,9 @@ export class NavigationService {
         });
     }
 
-    public getInput(autocomplete){
+    public getInput(autocomplete) {
         autocomplete.input = 'Mein Standort';
-        this.geolocation.getCurrentPosition().then( pos => {
+        this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
         });
@@ -134,6 +136,11 @@ export class NavigationService {
                     });
                 }
             });
+        if (this.autocompleteStartPoint.input.length > 1 && this.autocompleteEndPoint.input.length > 1) {
+            this.routeIsNotSet = false;
+        } else {
+            this.routeIsNotSet = true;
+        }
     }
 
     public selectSearchResult(item, autocomplete) {
@@ -156,7 +163,7 @@ export class NavigationService {
         if (originlong === null) {
             start = originlat;
         } else {
-            start = {lat:  originlat, lng: originlong};
+            start = {lat: originlat, lng: originlong};
         }
         if (destinationlong === null) {
             end = destinationlat;
@@ -191,7 +198,7 @@ export class NavigationService {
 
     public convertObj(origin, destination) {
         let originlat, originlong, destinationlat, destinationlong;
-        this.geolocation.getCurrentPosition().then( pos => {
+        this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
         });
@@ -216,7 +223,7 @@ export class NavigationService {
             destinationlong = null;
         }
         console.log(originlat + ' ' + originlong + ' ' + destinationlat + ' ' + destinationlong);
-        this.navCtrl.navigateForward('/tabs/(map:map)');
+        this.navCtrl.navigateBack('/tabs/(map:map)');
         this.startNavigation(originlat, originlong, destinationlat, destinationlong);
 
     }
