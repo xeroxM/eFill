@@ -38,7 +38,7 @@
     </ion-toolbar>
 
     <ion-list *ngIf="this.navigationService.showItemsStartPoint"
-              [hidden]="this.navigationService.autocompleteStartPoint.input <= 1" no-padding>
+              [hidden]="this.navigationService.autocompleteStartPoint.input < 1" no-padding>
         <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                   (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteStartPoint)">
             {{ item.description }}
@@ -46,7 +46,7 @@
     </ion-list>
 
     <ion-list *ngIf="this.navigationService.showItemsEndPoint"
-              [hidden]="this.navigationService.autocompleteEndPoint.input <= 1" no-padding>
+              [hidden]="this.navigationService.autocompleteEndPoint.input < 1" no-padding>
         <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                   (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteEndPoint)">
             {{ item.description }}

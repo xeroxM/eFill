@@ -128,6 +128,7 @@ export class NavigationService {
 
         this.GoogleAutocomplete.getPlacePredictions({input: autocomplete.input, componentRestrictions: {country: 'de'}},
             (predictions, status) => {
+                this.autocompleteItems = [];
                 if (predictions) {
                     this.zone.run(() => {
                         predictions.forEach((prediction) => {
