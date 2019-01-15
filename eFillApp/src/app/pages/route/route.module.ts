@@ -20,7 +20,8 @@ const routes: Routes = [
         FormsModule,
         ReactiveFormsModule,
         IonicModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'})
     ],
     declarations: [RoutePage]
 })

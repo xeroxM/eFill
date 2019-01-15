@@ -13,7 +13,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: '/tabs/(map:map)',
+                redirectTo: '/tabs/(favorites:favorites)',
                 pathMatch: 'full',
             },
             {
@@ -32,11 +32,6 @@ const routes: Routes = [
                 component: FavoritesPage
             }
         ]
-    },
-    {
-        path: '',
-        redirectTo: '/tabs/(map:map)',
-        pathMatch: 'full'
     }
 ];
 

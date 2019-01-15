@@ -13,7 +13,6 @@ declare let google: any;
 export class GoogleMapsComponent implements OnInit {
 
     @ViewChild('map') mapRef: ElementRef;
-    // @ViewChild('directionsPanel') directionsPanel: ElementRef;
 
     constructor(
         public mapStyleService: MapStyleService,
@@ -39,7 +38,6 @@ export class GoogleMapsComponent implements OnInit {
     ngOnInit() {
         this.showMap();
         this.navigationService.loadStationLocations();
-        // this.navigationService.startNavigation(this.map, this.directionsPanel);
     }
 
 }
