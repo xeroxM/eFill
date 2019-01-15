@@ -1,10 +1,9 @@
-import {ElementRef, Injectable, NgZone, ViewChild} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
-import {Test} from 'tslint';
 
 declare let google: any;
 
@@ -30,8 +29,6 @@ export class NavigationService {
     public showItemsEndPoint = true;
     public GoogleAutocomplete: any;
     public autocompleteItems: any;
-
-    public routeIsNotSet = true;
 
     public stationMarkers = [];
     public stationInformation = [];
@@ -115,11 +112,6 @@ export class NavigationService {
         });
     }
 
-    public clickTest(event: any) {
-        console.log(event);
-    }
-
-
     public updateSearchResults(autocomplete) {
         if (autocomplete.input === null) {
             this.autocompleteItems = [];
@@ -137,11 +129,6 @@ export class NavigationService {
                     });
                 }
             });
-        if (this.autocompleteStartPoint.input.length > 1 && this.autocompleteEndPoint.input.length > 1) {
-            this.routeIsNotSet = false;
-        } else {
-            this.routeIsNotSet = true;
-        }
     }
 
     public selectSearchResult(item, autocomplete) {

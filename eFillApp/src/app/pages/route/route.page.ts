@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationService} from '../../services/navigation/navigation.service';
 import {NavController} from '@ionic/angular';
+import {FormBuilder, ReactiveFormsModule, FormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'app-route',
@@ -9,10 +10,16 @@ import {NavController} from '@ionic/angular';
 })
 export class RoutePage implements OnInit {
 
-    constructor(public navigationService: NavigationService, public navCtrl: NavController) {
+    public routeForm: FormGroup;
+
+    constructor(public navigationService: NavigationService, public navCtrl: NavController, public fb: FormBuilder) {
     }
 
     ngOnInit() {
+        this.routeForm = this.fb.group({
+            start_point: ['', Validators.required],
+            end_point: ['', Validators.required]
+        });
     }
 
 }

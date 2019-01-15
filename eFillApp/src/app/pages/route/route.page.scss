@@ -1,3 +1,26 @@
 .locationButton {
   padding-left: 5px;
 }
+
+.startButton {
+  margin-top: 10px;
+}
+
+.search {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+ion-input {
+  margin-left: 5px;
+}
+
+ion-list {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+ion-fab {
+  width: 100%;
+}
