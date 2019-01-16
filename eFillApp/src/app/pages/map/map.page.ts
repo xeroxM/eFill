@@ -11,6 +11,7 @@ export class MapPage {
 
     constructor(public navigationService: NavigationService,
                 public navCtrl: NavController) {
+        this.navCtrl.navigateForward('/tabs/(map:map)');
     }
 
     public moveToSetRoute() {
