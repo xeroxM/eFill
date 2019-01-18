@@ -28,6 +28,10 @@
                 <ion-icon name="md-locate"></ion-icon>
             </ion-button>
         </ion-buttons>
+        <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteStartPoint.input < 1">
+            <ion-button (click)="this.navigationService.autocompleteStartPoint.input = ''">
+                <ion-icon name="close"></ion-icon>
+            </ion-button></ion-buttons>
     </ion-toolbar>
     <ion-fab>
         <ion-list *ngIf="this.navigationService.showItemsStartPoint"
@@ -48,6 +52,10 @@
                                this.navigationService.showItemsPlaceSearch = false;
                                this.navigationService.autocompleteItems = []"
                    placeholder="Endpunkt" formControlName="end_point"></ion-input>
+        <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteEndPoint.input < 1">
+            <ion-button (click)="this.navigationService.autocompleteEndPoint.input = ''">
+            <ion-icon name="close"></ion-icon>
+        </ion-button></ion-buttons>
     </ion-toolbar>
     <ion-fab>
         <ion-list *ngIf="this.navigationService.showItemsEndPoint"
