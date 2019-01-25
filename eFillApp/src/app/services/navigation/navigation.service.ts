@@ -119,7 +119,7 @@ export class NavigationService {
         }
 
         this.GoogleAutocomplete.getPlacePredictions({input: autocomplete.input, componentRestrictions: {country: 'de'}},
-            (predictions, status) => {
+            (predictions) => {
                 this.autocompleteItems = [];
                 if (predictions) {
                     this.zone.run(() => {
@@ -141,7 +141,9 @@ export class NavigationService {
                     this.map.setCenter(results[0].geometry.location);
                     this.map.setZoom(13);
                 }
-                autocomplete.input = results[0].formatted_address;
+                this.zone.run(() => {
+                    autocomplete.input = results[0].formatted_address;
+                });
             }
         });
     }

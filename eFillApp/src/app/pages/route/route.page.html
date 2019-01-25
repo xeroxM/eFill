@@ -14,12 +14,12 @@
                   name="radio-button-on"></ion-icon>
         <ion-icon [hidden]="this.navigationService.autocompleteStartPoint.input === 'Mein Standort'" slot="start"
                   name="radio-button-off"></ion-icon>
-        <ion-input [(ngModel)]="this.navigationService.autocompleteStartPoint.input"
+        <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteStartPoint.input"
                    (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteStartPoint)"
                    (ionFocus)="this.navigationService.showItemsStartPoint = true;
                                this.navigationService.showItemsEndPoint = false;
                                this.navigationService.showItemsPlaceSearch = false;
-                               this.navigationService.autocompleteItems = []"
+                               this.navigationService.autocompleteItems = [];"
                    placeholder="Startpunkt" formControlName="start_point">
         </ion-input>
         <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteStartPoint.input < 1">
@@ -46,12 +46,13 @@
 
     <ion-toolbar class="search">
         <ion-icon slot="start" name="pin"></ion-icon>
-        <ion-input [(ngModel)]="this.navigationService.autocompleteEndPoint.input"
+        <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteEndPoint.input"
                    (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteEndPoint)"
                    (ionFocus)="this.navigationService.showItemsStartPoint = false;
                                this.navigationService.showItemsEndPoint = true;
                                this.navigationService.showItemsPlaceSearch = false;
-                               this.navigationService.autocompleteItems = []"
+                               this.navigationService.autocompleteItems = [];
+                               test(this.navigationService.autocompleteEndPoint.input)"
                    placeholder="Endpunkt" formControlName="end_point"></ion-input>
         <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteEndPoint.input < 1">
             <ion-button (click)="this.navigationService.autocompleteEndPoint.input = ''">
@@ -63,7 +64,7 @@
         <ion-list *ngIf="this.navigationService.showItemsEndPoint"
                   [hidden]="this.navigationService.autocompleteEndPoint.input < 1" no-padding>
             <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
-                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteEndPoint)">
+                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteEndPoint);">
                 {{ item.description }}
             </ion-item>
         </ion-list>
