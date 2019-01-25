@@ -51,8 +51,7 @@
                    (ionFocus)="this.navigationService.showItemsStartPoint = false;
                                this.navigationService.showItemsEndPoint = true;
                                this.navigationService.showItemsPlaceSearch = false;
-                               this.navigationService.autocompleteItems = [];
-                               test(this.navigationService.autocompleteEndPoint.input)"
+                               this.navigationService.autocompleteItems = [];"
                    placeholder="Endpunkt" formControlName="end_point"></ion-input>
         <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteEndPoint.input < 1">
             <ion-button (click)="this.navigationService.autocompleteEndPoint.input = ''">
