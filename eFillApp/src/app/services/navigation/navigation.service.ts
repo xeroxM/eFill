@@ -38,6 +38,8 @@ export class NavigationService {
     public directionsService: any;
     public directionsDisplay: any;
 
+    public isNight: boolean;
+
     public mcOptions = {
         styles: this.mapStyleService.clusterStyles,
     };
@@ -231,5 +233,17 @@ export class NavigationService {
             this.markers[i].setMap(null);
         }
         this.markers = [];
+    }
+
+    public changeMapStyle() {
+        if (this.isNight) {
+            this.isNight = false;
+            this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+            this.map.setMapTypeId('day_map');
+        } else if (!this.isNight) {
+            this.isNight = true;
+            this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
+            this.map.setMapTypeId('night_map');
+        }
     }
 }

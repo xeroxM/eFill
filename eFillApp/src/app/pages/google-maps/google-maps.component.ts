@@ -27,12 +27,20 @@ export class GoogleMapsComponent implements OnInit {
             zoom: 5.4,
             disableDefaultUI: true,
             clickableIcons: false,
-            mapTypeIds: 'day_map'
+            mapTypeIds: 'day_map, night_map'
         };
 
-        this.navigationService.map = new google.maps.Map(this.mapRef.nativeElement, options);
-        this.navigationService.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
-        this.navigationService.map.setMapTypeId('day_map');
+        const time = new Date().getHours();
+
+        if (time < 6 || time > 19) {
+            this.navigationService.map = new google.maps.Map(this.mapRef.nativeElement, options);
+            this.navigationService.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
+            this.navigationService.map.setMapTypeId('night_map');
+        } else if (time >= 6 || time <= 19) {
+            this.navigationService.map = new google.maps.Map(this.mapRef.nativeElement, options);
+            this.navigationService.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+            this.navigationService.map.setMapTypeId('day_map');
+        }
     }
 
     ngOnInit() {

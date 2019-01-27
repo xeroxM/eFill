@@ -5,6 +5,8 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 import {timer} from 'rxjs';
+import {MapStyleService} from './services/map-style/map-style.service';
+import {NavigationService} from './services/navigation/navigation.service';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +19,8 @@ export class AppComponent {
     constructor(
         private platform: Platform,
         private splashScreen: SplashScreen,
-        private statusBar: StatusBar
+        private statusBar: StatusBar,
+        public navigationService: NavigationService
     ) {
         this.initializeApp();
     }
@@ -26,6 +29,14 @@ export class AppComponent {
         this.platform.ready().then(() => {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
+
+           const time = new Date().getHours();
+
+            if (time < 6 || time > 19) {
+                this.navigationService.isNight = true;
+            } else if (time >= 6 || time <= 19) {
+                this.navigationService.isNight = false;
+            }
 
             timer(5000).subscribe(() => this.showSplash = false);
         });
