@@ -656,6 +656,39 @@ export class MapStyleService {
         ]
     );
 
+    public clusterStylesDay = [
+        {
+            textColor: '#eefff1',
+            url: 'assets/cluster/a1.png',
+            height: 51,
+            width: 51
+        },
+        {
+            textColor: '#fffff3',
+            url: 'assets/cluster/a2.png',
+            height: 53,
+            width: 53
+        },
+        {
+            textColor: '#ffe5cc',
+            url: 'assets/cluster/a3.png',
+            height: 66,
+            width: 66
+        },
+        {
+            textColor: '#6c6c6c',
+            url: 'assets/cluster/a4.png',
+            height: 78,
+            width: 78
+        },
+        {
+            textColor: '#6c6c6c',
+            url: 'assets/cluster/a5.png',
+            height: 78,
+            width: 78
+        },
+    ];
+
     public clusterStylesNight = [
         {
             textColor: '#393939',
@@ -688,38 +721,4 @@ export class MapStyleService {
             width: 78
         },
     ];
-
-    public clusterStylesDay = [
-        {
-            textColor: '#393939',
-            url: 'assets/cluster/a1.png',
-            height: 51,
-            width: 51
-        },
-        {
-            textColor: '#283040',
-            url: 'assets/cluster/a2.png',
-            height: 53,
-            width: 53
-        },
-        {
-            textColor: '#97c6ce',
-            url: 'assets/cluster/a3.png',
-            height: 66,
-            width: 66
-        },
-        {
-            textColor: '#8ec3b9',
-            url: 'assets/cluster/a4.png',
-            height: 78,
-            width: 78
-        },
-        {
-            textColor: '#8ec3b9',
-            url: 'assets/cluster/a5.png',
-            height: 78,
-            width: 78
-        },
-    ];
-
 }
