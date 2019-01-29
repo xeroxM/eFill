@@ -39,6 +39,7 @@ export class NavigationService {
     public directionsDisplay: any;
 
     public isNight: boolean;
+    public isNightToggle: boolean;
 
     public mcOptionsNight = {
         styles: this.mapStyleService.clusterStylesNight,

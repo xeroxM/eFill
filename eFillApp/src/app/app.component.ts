@@ -34,8 +34,10 @@ export class AppComponent {
 
             if (time < 6 || time > 19) {
                 this.navigationService.isNight = true;
+                this.navigationService.isNightToggle = true;
             } else if (time >= 6 || time <= 19) {
                 this.navigationService.isNight = false;
+                this.navigationService.isNightToggle = false;
             }
 
             timer(5000).subscribe(() => this.showSplash = false);
