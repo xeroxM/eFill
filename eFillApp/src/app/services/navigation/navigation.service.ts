@@ -40,8 +40,12 @@ export class NavigationService {
 
     public isNight: boolean;
 
-    public mcOptions = {
-        styles: this.mapStyleService.clusterStyles,
+    public mcOptionsNight = {
+        styles: this.mapStyleService.clusterStylesNight,
+    };
+
+    public mcOptionsDay = {
+        styles: this.mapStyleService.clusterStylesDay,
     };
 
     constructor(
@@ -97,7 +101,6 @@ export class NavigationService {
                     if (this.currentWindow != null) {
                         this.currentWindow.close();
                     }
-                    const peter = `this.getRouteToStation(this.stationInformation[${i}].lat, this.stationInformation[${i}].long)`;
                     const infowindow = new google.maps.InfoWindow({
                         content:
                             `<div>${this.stationInformation[i].operator}</div><br/>` +
@@ -110,7 +113,14 @@ export class NavigationService {
 
                 });
             }
-            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptions);
+
+            const time = new Date().getHours();
+
+            if (time < 6 || time > 19) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+            } else if (time >= 6 || time <= 19) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+            }
         });
     }
 
@@ -228,11 +238,10 @@ export class NavigationService {
     }
 
     public clearMarkers() {
-        for (let i = 0; i < this.markers.length; i++) {
-            console.log(this.markers[i]);
-            this.markers[i].setMap(null);
+        for (let i = 0; i < this.stationMarkers.length; i++) {
+            this.stationMarkers[i].setMap(null);
         }
-        this.markers = [];
+        this.stationMarkers = [];
     }
 
     public changeMapStyle() {
@@ -240,10 +249,16 @@ export class NavigationService {
             this.isNight = false;
             this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
             this.map.setMapTypeId('day_map');
+            this.markerCluster.clearMarkers();
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+
         } else if (!this.isNight) {
             this.isNight = true;
             this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
             this.map.setMapTypeId('night_map');
+            this.markerCluster.clearMarkers();
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+
         }
     }
 }
