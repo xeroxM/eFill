@@ -13,27 +13,29 @@ declare let google: any;
 
 export class NavigationService {
 
-    public geoLocLat: number;
-    public geoLocLong: number;
-
     public map: any;
 
     public markers: any;
     public geocoder: any;
     public GooglePlaces: any;
+
+    public GoogleAutocomplete: any;
+    public autocompleteItems: any;
     public autocompletePlaceSearch: any;
     public autocompleteStartPoint: any;
     public autocompleteEndPoint: any;
     public showItemsPlaceSearch = true;
     public showItemsStartPoint = true;
     public showItemsEndPoint = true;
-    public GoogleAutocomplete: any;
-    public autocompleteItems: any;
 
     public stationMarkers = [];
     public stationInformation = [];
     public currentWindow = null;
     public markerCluster: any;
+    public geoLocLat: number;
+    public geoLocLong: number;
+
+    public favorites = [];
 
     public directionsService: any;
     public directionsDisplay: any;
@@ -89,6 +91,10 @@ export class NavigationService {
         });
     }
 
+    public test() {
+        console.log('lol');
+    }
+
     public loadStationLocations() {
         this.importData.getCoordinates().subscribe(data => {
             this.stationInformation = data;
@@ -102,10 +108,53 @@ export class NavigationService {
                     if (this.currentWindow != null) {
                         this.currentWindow.close();
                     }
+
                     const infowindow = new google.maps.InfoWindow({
+                        maxWidth: 320,
+                        maxHeight: 320,
                         content:
                             `<div>${this.stationInformation[i].operator}</div><br/>` +
-                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>`
+                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>` +
+                            `<button clear id="isNotFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
+                            `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
+                            `<button id="isFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
+                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>`
+                    });
+
+                    google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+
+                        console.log(this.favorites, this.stationInformation[i], this.favorites.find(station => station === this.stationInformation[i]));
+
+                        const result = this.favorites.find(station => station === this.stationInformation[i]);
+
+                        if (this.favorites.length === 0) {
+                            document.getElementById('isFavorite').style.visibility = 'hidden';
+                        } else {
+                            if (result) {
+                                document.getElementById('isNotFavorite').style.visibility = 'hidden';
+                                document.getElementById('isFavorite').style.visibility = 'visible';
+                            } else {
+                                document.getElementById('isFavorite').style.visibility = 'hidden';
+                                document.getElementById('isNotFavorite').style.visibility = 'visible';
+                            }
+                        }
+
+                        document.getElementById('isNotFavorite').addEventListener('click', () => {
+                            this.favorites.push(this.stationInformation[i]);
+                            console.log(this.favorites);
+                            document.getElementById('isNotFavorite').style.visibility = 'hidden';
+                            document.getElementById('isFavorite').style.visibility = 'visible';
+                        });
+                        document.getElementById('isFavorite').addEventListener('click', () => {
+                            for (let j = 0; j < this.favorites.length; j++) {
+                                if (this.favorites[j] === this.stationInformation[i]) {
+                                    this.favorites.splice(j, 1);
+                                }
+                            }
+                            console.log(this.favorites);
+                            document.getElementById('isFavorite').style.visibility = 'hidden';
+                            document.getElementById('isNotFavorite').style.visibility = 'visible';
+                        });
                     });
 
                     infowindow.open(this.map, marker);

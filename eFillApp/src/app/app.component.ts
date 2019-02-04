@@ -20,7 +20,8 @@ export class AppComponent {
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
-        public navigationService: NavigationService
+        public navigationService: NavigationService,
+        public mapStyleService: MapStyleService
     ) {
         this.initializeApp();
     }
@@ -30,7 +31,7 @@ export class AppComponent {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
 
-           const time = new Date().getHours();
+            const time = new Date().getHours();
 
             if (time < 6 || time > 19) {
                 this.navigationService.isNight = true;
