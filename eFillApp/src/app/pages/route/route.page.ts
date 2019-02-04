@@ -18,6 +18,7 @@ export class RoutePage implements OnInit {
     ngOnInit() {
         this.routeForm = this.fb.group({
             start_point: ['', Validators.required],
+            way_point: ['', Validators.required],
             end_point: ['', Validators.required]
         });
     }

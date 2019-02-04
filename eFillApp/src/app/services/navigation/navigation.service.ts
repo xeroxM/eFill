@@ -23,9 +23,11 @@ export class NavigationService {
     public autocompleteItems: any;
     public autocompletePlaceSearch: any;
     public autocompleteStartPoint: any;
+    public autocompleteWayPoint: any;
     public autocompleteEndPoint: any;
     public showItemsPlaceSearch = true;
     public showItemsStartPoint = true;
+    public showItemsWayPoint = true;
     public showItemsEndPoint = true;
 
     public stationMarkers = [];
@@ -63,6 +65,7 @@ export class NavigationService {
         this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
         this.autocompletePlaceSearch = {input: ''};
         this.autocompleteStartPoint = {input: ''};
+        this.autocompleteWayPoint = {input: ''};
         this.autocompleteEndPoint = {input: ''};
         this.autocompleteItems = [];
         this.markers = [];

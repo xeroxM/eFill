@@ -17,6 +17,7 @@
         <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteStartPoint.input"
                    (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteStartPoint)"
                    (ionFocus)="this.navigationService.showItemsStartPoint = true;
+                               this.navigationService.showItemsWayPoint = false;
                                this.navigationService.showItemsEndPoint = false;
                                this.navigationService.showItemsPlaceSearch = false;
                                this.navigationService.autocompleteItems = [];"
@@ -44,11 +45,40 @@
         </ion-list>
     </ion-fab>
 
+
+    <ion-toolbar class="search">
+        <ion-icon slot="start" name="pin"></ion-icon>
+        <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteWayPoint.input"
+                   (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteWayPoint)"
+                   (ionFocus)="this.navigationService.showItemsStartPoint = false;
+                               this.navigationService.showItemsWayPoint = true;
+                               this.navigationService.showItemsEndPoint = false;
+                               this.navigationService.showItemsPlaceSearch = false;
+                               this.navigationService.autocompleteItems = [];"
+                   placeholder="Zwischenstopp" formControlName="way_point"></ion-input>
+        <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteWayPoint.input < 1">
+            <ion-button (click)="this.navigationService.autocompleteWayPoint.input = ''">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-fab>
+        <ion-list *ngIf="this.navigationService.showItemsWayPoint"
+                  [hidden]="this.navigationService.autocompleteWayPoint.input < 1" no-padding>
+            <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
+                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteWayPoint);">
+                {{ item.description }}
+            </ion-item>
+        </ion-list>
+    </ion-fab>
+
+
     <ion-toolbar class="search">
         <ion-icon slot="start" name="pin"></ion-icon>
         <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteEndPoint.input"
                    (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteEndPoint)"
                    (ionFocus)="this.navigationService.showItemsStartPoint = false;
+                               this.navigationService.showItemsWayPoint = false;
                                this.navigationService.showItemsEndPoint = true;
                                this.navigationService.showItemsPlaceSearch = false;
                                this.navigationService.autocompleteItems = [];"
