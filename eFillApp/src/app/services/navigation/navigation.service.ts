@@ -118,7 +118,7 @@ export class NavigationService {
                         content:
                             `<div>${this.stationInformation[i].operator}</div><br/>` +
                             `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>` +
-                            `<button clear id="isNotFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
+                            `<button id="isNotFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
                             `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
                             `<button id="isFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
                             `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>`

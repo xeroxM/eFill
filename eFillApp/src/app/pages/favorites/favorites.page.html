@@ -25,6 +25,11 @@
                     {{favorite['operator']}}
                 </ion-label>
                 <ion-buttons slot="end">
+                    <ion-button (click)="this.navigationService.getRouteToStation(favorite['lat'], favorite['long'])">
+                        <ion-icon name="navigate" color="primary"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+                <ion-buttons slot="end">
                     <ion-button (click)="removeFavorite(this.navigationService.favorites, i)">
                         <ion-icon name="trash" color="danger"></ion-icon>
                     </ion-button>
