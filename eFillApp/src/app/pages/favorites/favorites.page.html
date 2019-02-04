@@ -10,17 +10,21 @@
 </ion-header>
 
 <ion-content>
-    <ion-list>
+    <ion-list *ngIf="this.navigationService.favorites.length === 0">
         <ion-list-header>
             <ion-label>
-                Follow us on Twitter
+                No favorites have been added.
             </ion-label>
         </ion-list-header>
-        <ion-item>
-            <ion-label>
-                <ion-icon name="logo-ionic" slot="start"></ion-icon>
-                @ionicframework
-            </ion-label>
-        </ion-item>
     </ion-list>
+
+    <ng-container *ngFor="let favorite of this.navigationService.favorites; let i = index;">
+        <ion-list>
+            <ion-list-header>
+                <ion-label>
+                    {{favorite['operator']}}
+                </ion-label>
+            </ion-list-header>
+        </ion-list>
+    </ng-container>
 </ion-content>

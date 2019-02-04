@@ -123,8 +123,6 @@ export class NavigationService {
 
                     google.maps.event.addListenerOnce(infowindow, 'domready', () => {
 
-                        console.log(this.favorites, this.stationInformation[i], this.favorites.find(station => station === this.stationInformation[i]));
-
                         const result = this.favorites.find(station => station === this.stationInformation[i]);
 
                         if (this.favorites.length === 0) {

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {NavigationService} from '../../services/navigation/navigation.service';
 
 @Component({
     selector: 'app-contact',
@@ -6,4 +7,7 @@ import {Component} from '@angular/core';
     styleUrls: ['favorites.page.scss']
 })
 export class FavoritesPage {
+    constructor(public navigationService: NavigationService) {
+    }
+
 }
