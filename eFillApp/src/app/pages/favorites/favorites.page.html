@@ -11,20 +11,25 @@
 
 <ion-content>
     <ion-list *ngIf="this.navigationService.favorites.length === 0">
-        <ion-list-header>
+        <ion-item>
             <ion-label>
                 No favorites have been added.
             </ion-label>
-        </ion-list-header>
+        </ion-item>
     </ion-list>
 
     <ng-container *ngFor="let favorite of this.navigationService.favorites; let i = index;">
         <ion-list>
-            <ion-list-header>
+            <ion-item>
                 <ion-label>
                     {{favorite['operator']}}
                 </ion-label>
-            </ion-list-header>
+                <ion-buttons slot="end">
+                    <ion-button (click)="removeFavorite(this.navigationService.favorites, i)">
+                        <ion-icon name="trash" color="danger"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-item>
         </ion-list>
     </ng-container>
 </ion-content>

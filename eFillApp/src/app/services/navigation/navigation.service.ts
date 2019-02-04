@@ -139,7 +139,6 @@ export class NavigationService {
 
                         document.getElementById('isNotFavorite').addEventListener('click', () => {
                             this.favorites.push(this.stationInformation[i]);
-                            console.log(this.favorites);
                             document.getElementById('isNotFavorite').style.visibility = 'hidden';
                             document.getElementById('isFavorite').style.visibility = 'visible';
                         });
@@ -149,7 +148,6 @@ export class NavigationService {
                                     this.favorites.splice(j, 1);
                                 }
                             }
-                            console.log(this.favorites);
                             document.getElementById('isFavorite').style.visibility = 'hidden';
                             document.getElementById('isNotFavorite').style.visibility = 'visible';
                         });

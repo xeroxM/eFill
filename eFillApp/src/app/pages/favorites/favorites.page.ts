@@ -7,7 +7,12 @@ import {NavigationService} from '../../services/navigation/navigation.service';
     styleUrls: ['favorites.page.scss']
 })
 export class FavoritesPage {
+
     constructor(public navigationService: NavigationService) {
+    }
+
+    public removeFavorite(favorites, index) {
+        favorites.splice(index, 1);
     }
 
 }
