@@ -20,7 +20,7 @@
 
     <ng-container *ngFor="let favorite of this.navigationService.favorites; let i = index;">
         <ion-list>
-            <ion-item>
+            <ion-item (click)="this.navigationService.selectFavorite(favorite)" tappable>
                 <ion-label>
                     {{favorite['operator']}}
                 </ion-label>

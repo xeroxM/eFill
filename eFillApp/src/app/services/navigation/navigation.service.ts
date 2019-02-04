@@ -290,6 +290,12 @@ export class NavigationService {
         this.stationMarkers = [];
     }
 
+    public selectFavorite(favorite) {
+        this.map.setCenter(new google.maps.LatLng(favorite['lat'], favorite['long']));
+        this.map.setZoom(14);
+        this.navCtrl.navigateBack('/tabs/(map:map)');
+    }
+
     public changeMapStyle() {
         if (this.isNight) {
             this.isNight = false;
