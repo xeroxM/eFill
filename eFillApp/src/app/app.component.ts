@@ -7,6 +7,7 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {timer} from 'rxjs';
 import {MapStyleService} from './services/map-style/map-style.service';
 import {NavigationService} from './services/navigation/navigation.service';
+import {DataImportService} from './services/data-import/data-import.service';
 
 @Component({
     selector: 'app-root',
@@ -21,7 +22,7 @@ export class AppComponent {
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         public navigationService: NavigationService,
-        public mapStyleService: MapStyleService
+        public dataImport: DataImportService
     ) {
         this.initializeApp();
     }

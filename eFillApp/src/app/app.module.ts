@@ -9,6 +9,8 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
+import {FileTransfer} from '@ionic-native/file-transfer/ngx';
+import {File} from '@ionic-native/file/ngx';
 
 import {HttpClientModule} from '@angular/common/http';
 
@@ -20,7 +22,9 @@ import {HttpClientModule} from '@angular/common/http';
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        Geolocation
+        Geolocation,
+        FileTransfer,
+        File
     ],
     bootstrap: [AppComponent]
 })
