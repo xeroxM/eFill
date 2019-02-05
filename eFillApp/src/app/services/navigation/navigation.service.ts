@@ -4,6 +4,7 @@ import {DataImportService} from '../data-import/data-import.service';
 import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
+import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 
 declare let google: any;
 
@@ -30,6 +31,7 @@ export class NavigationService {
     public showItemsWayPoint = true;
     public showItemsEndPoint = true;
 
+    public stationMarkersSet = new Set();
     public stationMarkers = [];
     public stationInformation = [];
     public currentWindow = null;
@@ -47,10 +49,12 @@ export class NavigationService {
 
     public mcOptionsNight = {
         styles: this.mapStyleService.clusterStylesNight,
+        maxZoom: 17
     };
 
     public mcOptionsDay = {
         styles: this.mapStyleService.clusterStylesDay,
+        maxZoom: 17
     };
 
     constructor(
@@ -82,7 +86,7 @@ export class NavigationService {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-            this.map.setZoom(14);
+            this.map.setZoom(15);
         });
     }
 
@@ -94,18 +98,27 @@ export class NavigationService {
         });
     }
 
-    public test() {
-        console.log('lol');
-    }
-
     public loadStationLocations() {
         this.importData.getCoordinates().subscribe(data => {
             this.stationInformation = data;
+
+            const optionsSpidifier = {
+                keepSpiderfied: true,
+                legWeight: 0,
+                nudgeRadius: 1,
+                spiderfiedShadowColor: false
+            };
+
+            const markerSpiderfier = new OverlappingMarkerSpiderfier(this.map, optionsSpidifier);
+
             for (let i = 0; i < this.stationInformation.length; i++) {
                 const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
                 const marker = this.addMarker(location, this.map);
 
-                this.stationMarkers.push(marker);
+                this.stationMarkersSet.add(marker);
+                markerSpiderfier.addMarker(marker);
+
+                this.stationMarkers = Array.from(this.stationMarkersSet);
 
                 marker.addListener('click', () => {
                     if (this.currentWindow != null) {
@@ -141,6 +154,7 @@ export class NavigationService {
                         }
 
                         document.getElementById('isNotFavorite').addEventListener('click', () => {
+                            console.log(this.favorites);
                             this.favorites.push(this.stationInformation[i]);
                             document.getElementById('isNotFavorite').style.visibility = 'hidden';
                             document.getElementById('isFavorite').style.visibility = 'visible';
@@ -295,7 +309,7 @@ export class NavigationService {
 
     public selectFavorite(favorite) {
         this.map.setCenter(new google.maps.LatLng(favorite['lat'], favorite['long']));
-        this.map.setZoom(14);
+        this.map.setZoom(17);
         this.navCtrl.navigateBack('/tabs/(map:map)');
     }
 
