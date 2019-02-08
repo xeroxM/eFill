@@ -45,7 +45,7 @@
         </ion-list>
     </ion-fab>
 
-
+    <div *ngFor="let waypoint of this.navigationService.waypoints; let i = index;">
     <ion-toolbar class="search">
         <ion-icon slot="start" name="pin"></ion-icon>
         <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteWayPoint.input"
@@ -61,6 +61,11 @@
                 <ion-icon name="close"></ion-icon>
             </ion-button>
         </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="removeWaypoint(this.navigationService.waypoints, i)">
+                <ion-icon name="trash" color="danger"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
     <ion-fab>
         <ion-list *ngIf="this.navigationService.showItemsWayPoint"
@@ -71,7 +76,7 @@
             </ion-item>
         </ion-list>
     </ion-fab>
-
+    </div>
 
     <ion-toolbar class="search">
         <ion-icon slot="start" name="pin"></ion-icon>
@@ -100,9 +105,8 @@
     </ion-fab>
 
     <div class="wayptButton">
-        <ion-button
-                slot="start" size="small" shape="round" color="primary" fill="clear"
-                >
+        <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
+            (click)="addWaypoints()">
             <ion-icon slot="start" name="add-circle-outline"></ion-icon>
             Zwischenstopp
         </ion-button>

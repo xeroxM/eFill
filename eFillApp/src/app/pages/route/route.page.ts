@@ -15,6 +15,14 @@ export class RoutePage implements OnInit {
     constructor(public navigationService: NavigationService, public navCtrl: NavController, public fb: FormBuilder) {
     }
 
+    addWaypoints(){
+        this.navigationService.waypoints.push(1);
+    }
+
+    public removeWaypoint(waypoints, index) {
+        this.navigationService.waypoints.splice(index, 1);
+    }
+
     ngOnInit() {
         this.routeForm = this.fb.group({
             start_point: ['', Validators.required],

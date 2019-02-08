@@ -40,6 +40,7 @@ export class NavigationService {
     public geoLocLong: number;
 
     public favorites = [];
+    public waypoints = [];
 
     public directionsService: any;
     public directionsDisplay: any;
