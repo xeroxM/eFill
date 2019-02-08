@@ -8,7 +8,7 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-<ion-content [formGroup]="this.routeForm">
+<ion-content [formGroup]="this.navigationService.routeForm">
     <ion-toolbar class="search">
         <ion-icon [hidden]="this.navigationService.autocompleteStartPoint.input !== 'Mein Standort'" slot="start"
                   name="radio-button-on"></ion-icon>
@@ -44,38 +44,42 @@
             </ion-item>
         </ion-list>
     </ion-fab>
-
-    <div *ngFor="let waypoint of this.navigationService.waypoints; let i = index;">
-    <ion-toolbar class="search">
-        <ion-icon slot="start" name="pin"></ion-icon>
-        <ion-input type="text" [(ngModel)]="this.navigationService.autocompleteWayPoint.input"
-                   (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompleteWayPoint)"
-                   (ionFocus)="this.navigationService.showItemsStartPoint = false;
+    <div formArrayName="way_point">
+        <div *ngFor="let waypointInstance of this.navigationService.wayPointArray.controls; let i = index"
+             [formGroupName]="i">
+            <ion-toolbar class="search">
+                <ion-icon slot="start" name="more"></ion-icon>
+                <ion-input type="text" [(ngModel)]="waypointInstance['input']"
+                           (ionInput)="this.navigationService.updateSearchResults(waypointInstance)"
+                           (ionFocus)="this.navigationService.showItemsStartPoint = false;
                                this.navigationService.showItemsWayPoint = true;
                                this.navigationService.showItemsEndPoint = false;
                                this.navigationService.showItemsPlaceSearch = false;
-                               this.navigationService.autocompleteItems = [];"
-                   placeholder="Zwischenstopp" formControlName="way_point"></ion-input>
-        <ion-buttons slot="end" [hidden]="this.navigationService.autocompleteWayPoint.input < 1">
-            <ion-button (click)="this.navigationService.autocompleteWayPoint.input = ''">
-                <ion-icon name="close"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-        <ion-buttons slot="end">
-            <ion-button (click)="removeWaypoint(this.navigationService.waypoints, i)">
-                <ion-icon name="trash" color="danger"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
-    <ion-fab>
-        <ion-list *ngIf="this.navigationService.showItemsWayPoint"
-                  [hidden]="this.navigationService.autocompleteWayPoint.input < 1" no-padding>
-            <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
-                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteWayPoint);">
-                {{ item.description }}
-            </ion-item>
-        </ion-list>
-    </ion-fab>
+                               this.navigationService.autocompleteItems = [];
+                               saveWayPoint = waypointInstance;
+                               saveWayPointIndex = i;"
+                           placeholder="Zwischenstopp" formControlName="way_point_address"></ion-input>
+                <ion-buttons slot="end" [hidden]="waypointInstance['input'] < 1">
+                    <ion-button (click)="waypointInstance['input'].setValue('')">
+                        <ion-icon name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+                <ion-buttons slot="end">
+                    <ion-button (click)="this.navigationService.removeWaypoint(i)">
+                        <ion-icon name="trash" color="danger"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </div>
+        <ion-fab>
+            <ion-list *ngIf="this.navigationService.showItemsWayPoint === true"
+                      [hidden]="saveWayPoint['input'] < 1" no-padding>
+                <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
+                          (click)="this.navigationService.selectSearchResult(item, saveWayPoint); test(saveWayPoint)">
+                    {{ item.description }}
+                </ion-item>
+            </ion-list>
+        </ion-fab>
     </div>
 
     <ion-toolbar class="search">
@@ -106,7 +110,7 @@
 
     <div class="wayptButton">
         <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
-            (click)="addWaypoints()">
+                    (click)="this.navigationService.addWaypoints()">
             <ion-icon slot="start" name="add-circle-outline"></ion-icon>
             Zwischenstopp
         </ion-button>
@@ -114,7 +118,7 @@
 
     <div class="startButton" text-center>
         <ion-button
-                [disabled]="!this.routeForm.valid"
+                [disabled]="!this.navigationService.routeForm.valid"
                 slot="end" shape="round" color="primary" fill="outline"
                 (click)="this.navigationService.convertObj(this.navigationService.autocompleteStartPoint, this.navigationService.autocompleteEndPoint)">
             <ion-icon slot="start" name="navigate"></ion-icon>

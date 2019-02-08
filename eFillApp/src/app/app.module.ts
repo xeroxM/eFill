@@ -11,6 +11,7 @@ import {AppComponent} from './app.component';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 import {HttpClientModule} from '@angular/common/http';
+import {FormBuilder} from '@angular/forms';
 
 @NgModule({
     declarations: [AppComponent],
@@ -20,7 +21,8 @@ import {HttpClientModule} from '@angular/common/http';
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        Geolocation
+        Geolocation,
+        FormBuilder
     ],
     bootstrap: [AppComponent]
 })

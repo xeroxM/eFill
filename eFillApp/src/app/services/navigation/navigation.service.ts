@@ -5,6 +5,7 @@ import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 declare let google: any;
 
@@ -40,7 +41,6 @@ export class NavigationService {
     public geoLocLong: number;
 
     public favorites = [];
-    public waypoints = [];
 
     public directionsService: any;
     public directionsDisplay: any;
@@ -58,12 +58,18 @@ export class NavigationService {
         maxZoom: 17
     };
 
+    public routeForm: FormGroup;
+    public wayPointObject: Validators = {
+        way_point_address: ''
+    };
+
     constructor(
         public navCtrl: NavController,
         public geolocation: Geolocation,
         public zone: NgZone,
         public importData: DataImportService,
-        public mapStyleService: MapStyleService) {
+        public mapStyleService: MapStyleService,
+        public fb: FormBuilder) {
         this.geocoder = new google.maps.Geocoder;
         const elem = document.createElement('div');
         this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -80,6 +86,8 @@ export class NavigationService {
         window['getRouteToStation'] = (stationlat, stationlong) => {
             this.getRouteToStation(stationlat, stationlong);
         };
+
+        this.createRouteForm();
     }
 
     public getCurrentLocation() {
@@ -217,11 +225,14 @@ export class NavigationService {
                     this.map.setCenter(results[0].geometry.location);
                     this.map.setZoom(13);
                 }
+
                 this.zone.run(() => {
                     autocomplete.input = results[0].formatted_address;
                 });
             }
         });
+
+        console.log(this.routeForm);
     }
 
     public startNavigation(originlat, originlong, destinationlat, destinationlong) {
@@ -262,20 +273,45 @@ export class NavigationService {
         });
     }
 
+    public createRouteForm() {
+        this.routeForm = this.fb.group({
+            start_point: ['', Validators.required],
+            way_point: this.fb.array([]),
+            end_point: ['', Validators.required]
+        });
+    }
+
+    get wayPointArray() {
+        return this.routeForm.get('way_point') as FormArray;
+    }
+
+    public addWaypoints() {
+        const newInstance = this.fb.group({...this.wayPointObject});
+        this.wayPointArray.push(newInstance);
+    }
+
+    public removeWaypoint(index) {
+        this.wayPointArray.removeAt(index);
+    }
+
     public convertObj(origin, destination) {
         let originlat, originlong, destinationlat, destinationlong;
+
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
         });
+
         const originStr = JSON.stringify(origin);
         const originSub = originStr.substring(10);
         const originReg = originSub.search('\"');
         originlat = originSub.substring(0, originReg);
+
         const destinationStr = JSON.stringify(destination);
         const destinationSub = destinationStr.substring(10);
         const destinationReg = destinationSub.search('\"');
         destinationlat = destinationSub.substring(0, destinationReg);
+
         if (originlat === 'Mein Standort') {
             originlat = this.geoLocLat;
             originlong = this.geoLocLong;
