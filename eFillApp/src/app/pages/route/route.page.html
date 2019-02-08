@@ -120,7 +120,9 @@
         <ion-button
                 [disabled]="!this.navigationService.routeForm.valid"
                 slot="end" shape="round" color="primary" fill="outline"
-                (click)="this.navigationService.convertObj(this.navigationService.autocompleteStartPoint, this.navigationService.autocompleteEndPoint)">
+                (click)="this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
+                         this.navigationService.routeForm.value['end_point'],
+                         this.navigationService.routeForm.value['way_point'])">
             <ion-icon slot="start" name="navigate"></ion-icon>
             Starten
         </ion-button>

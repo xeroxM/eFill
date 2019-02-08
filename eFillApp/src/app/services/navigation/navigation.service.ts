@@ -235,8 +235,9 @@ export class NavigationService {
         console.log(this.routeForm);
     }
 
-    public startNavigation(originlat, originlong, destinationlat, destinationlong) {
+    public startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint) {
         let start, end;
+
         if (originlong === null) {
             start = originlat;
         } else {
@@ -247,9 +248,20 @@ export class NavigationService {
         } else {
             end = {lat: destinationlat, lng: destinationlong};
         }
+
+        const waypts = [];
+        for (let i = 0; i < waypoint.length; i++) {
+            waypts.push({
+                location: waypoint[i]['way_point_address'],
+                stopover: true
+            });
+        }
+
         const request = {
             origin: start,
             destination: end,
+            waypoints: waypts,
+            optimizeWaypoints: true,
             travelMode: google.maps.TravelMode['DRIVING']
         };
         this.directionsService.route(request, (res, status) => {
@@ -260,7 +272,6 @@ export class NavigationService {
             } else {
                 console.warn(status);
             }
-
         });
     }
 
@@ -269,7 +280,7 @@ export class NavigationService {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.startNavigation(this.geoLocLat, this.geoLocLong,
-                stationlat, stationlong);
+                stationlat, stationlong, []);
         });
     }
 
@@ -294,7 +305,7 @@ export class NavigationService {
         this.wayPointArray.removeAt(index);
     }
 
-    public convertObj(origin, destination) {
+    public convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
 
         this.geolocation.getCurrentPosition().then(pos => {
@@ -302,32 +313,20 @@ export class NavigationService {
             this.geoLocLong = pos.coords.longitude;
         });
 
-        const originStr = JSON.stringify(origin);
-        const originSub = originStr.substring(10);
-        const originReg = originSub.search('\"');
-        originlat = originSub.substring(0, originReg);
-
-        const destinationStr = JSON.stringify(destination);
-        const destinationSub = destinationStr.substring(10);
-        const destinationReg = destinationSub.search('\"');
-        destinationlat = destinationSub.substring(0, destinationReg);
+        originlat = origin;
+        destinationlat = destination;
 
         if (originlat === 'Mein Standort') {
             originlat = this.geoLocLat;
             originlong = this.geoLocLong;
             destinationlong = null;
-        } else if (destinationlat === 'Mein Standort') {
-            destinationlat = this.geoLocLat;
-            destinationlong = this.geoLocLong;
-            originlong = null;
         } else {
             originlong = null;
             destinationlong = null;
         }
-        console.log(originlat + ' ' + originlong + ' ' + destinationlat + ' ' + destinationlong);
-        this.navCtrl.navigateBack('/tabs/(map:map)');
-        this.startNavigation(originlat, originlong, destinationlat, destinationlong);
 
+        this.navCtrl.navigateBack('/tabs/(map:map)');
+        this.startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
     public addMarker(position, map) {
