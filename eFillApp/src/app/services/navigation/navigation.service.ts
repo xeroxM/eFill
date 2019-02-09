@@ -6,6 +6,7 @@ import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Platform} from '@ionic/angular';
 
 declare let google: any;
 
@@ -69,25 +70,29 @@ export class NavigationService {
         public zone: NgZone,
         public importData: DataImportService,
         public mapStyleService: MapStyleService,
-        public fb: FormBuilder) {
-        this.geocoder = new google.maps.Geocoder;
-        const elem = document.createElement('div');
-        this.GooglePlaces = new google.maps.places.PlacesService(elem);
-        this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-        this.autocompletePlaceSearch = {input: ''};
-        this.autocompleteStartPoint = {input: ''};
-        this.autocompleteWayPoint = {input: ''};
-        this.autocompleteEndPoint = {input: ''};
-        this.autocompleteItems = [];
-        this.markers = [];
-        this.directionsService = new google.maps.DirectionsService;
-        this.directionsDisplay = new google.maps.DirectionsRenderer;
+        public fb: FormBuilder,
+        private platform: Platform) {
 
-        window['getRouteToStation'] = (stationlat, stationlong) => {
-            this.getRouteToStation(stationlat, stationlong);
-        };
+        this.platform.ready().then(() => {
+            this.geocoder = new google.maps.Geocoder;
+            const elem = document.createElement('div');
+            this.GooglePlaces = new google.maps.places.PlacesService(elem);
+            this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+            this.autocompletePlaceSearch = {input: ''};
+            this.autocompleteStartPoint = {input: ''};
+            this.autocompleteWayPoint = {input: ''};
+            this.autocompleteEndPoint = {input: ''};
+            this.autocompleteItems = [];
+            this.markers = [];
+            this.directionsService = new google.maps.DirectionsService;
+            this.directionsDisplay = new google.maps.DirectionsRenderer;
 
-        this.createRouteForm();
+            window['getRouteToStation'] = (stationlat, stationlong) => {
+                this.getRouteToStation(stationlat, stationlong);
+            };
+
+            this.createRouteForm();
+        });
     }
 
     public getCurrentLocation() {

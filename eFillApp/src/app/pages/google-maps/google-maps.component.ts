@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
-import {DataImportService} from '../../services/data-import/data-import.service';
+import {Platform} from '@ionic/angular';
 
 declare let google: any;
 
@@ -16,7 +16,8 @@ export class GoogleMapsComponent implements OnInit {
 
     constructor(
         public mapStyleService: MapStyleService,
-        public navigationService: NavigationService) {
+        public navigationService: NavigationService,
+        private platform: Platform) {
     }
 
     public showMap() {
@@ -44,8 +45,10 @@ export class GoogleMapsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.showMap();
-        this.navigationService.loadStationLocations();
+        this.platform.ready().then(() => {
+            this.showMap();
+            this.navigationService.loadStationLocations();
+        });
     }
 
 }
