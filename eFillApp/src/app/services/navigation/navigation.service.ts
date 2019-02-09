@@ -96,11 +96,53 @@ export class NavigationService {
     }
 
     public getCurrentLocation() {
-        this.geolocation.getCurrentPosition().then(pos => {
+        const options = {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0
+        };
+
+        this.map.setZoom(15);
+
+        const innerCircle = {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillOpacity: 1.0,
+            fillColor: '#007bff',
+            strokeOpacity: 1.0,
+            strokeColor: 'white',
+            strokeWeight: 0.8,
+            scale: 5
+        };
+
+        const outerCircle = {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillOpacity: 0.1,
+            fillColor: '#007bff',
+            strokeOpacity: 1.0,
+            strokeColor: '#007bff',
+            strokeWeight: 0.1,
+            scale: 25
+        };
+
+        const markerInner = new google.maps.Marker({
+            map: this.map,
+            icon: innerCircle
+        });
+
+        const markerOuter = new google.maps.Marker({
+            map: this.map,
+            icon: outerCircle
+        });
+
+
+        this.geolocation.watchPosition(options).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-            this.map.setZoom(15);
+            const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
+            markerInner.setPosition(location);
+            markerOuter.setPosition(location);
+
         });
     }
 
@@ -127,7 +169,7 @@ export class NavigationService {
 
             for (let i = 0; i < this.stationInformation.length; i++) {
                 const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
-                const marker = this.addMarker(location, this.map);
+                const marker = this.addMarker(location, this.map, 'assets/icon/charging.png');
 
                 this.stationMarkersSet.add(marker);
                 markerSpiderfier.addMarker(marker);
@@ -334,10 +376,10 @@ export class NavigationService {
         this.startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
-    public addMarker(position, map) {
+    public addMarker(position, map, iconstyle) {
         return new google.maps.Marker({
             position, map,
-            icon: 'assets/icon/charging.png'
+            icon: iconstyle
         });
     }
 
