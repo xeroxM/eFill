@@ -1,42 +1,46 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Platform} from '@ionic/angular';
+import {SQLitePorter} from '@ionic-native/sqlite-porter/ngx';
+import {SQLite, SQLiteObject} from '@ionic-native/sqlite/ngx';
+import {BehaviorSubject} from 'rxjs';
+import {Storage} from '@ionic/storage';
+import 'rxjs/add/operator/map';
 
-import {FileTransfer} from '@ionic-native/file-transfer/ngx';
-import {File} from '@ionic-native/file/ngx';
-
-interface StationInformation {
-    long: number;
-    lat: number;
-    operator: string;
-    address: string;
-    place: string;
-}
-
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class DataImportService {
-
-    private url = 'assets/fake-data/loading_stations.json';
-
-    private urlNEW = 'https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/HandelundVertrieb/Ladesaeulen/Ladesaeulenkarte_Datenbankauszug19.xlsx';
-
-    constructor(private http: HttpClient, public file: File, public transfer: FileTransfer) {
+    database: SQLiteObject;
+    private databaseReady: BehaviorSubject<boolean>;
+    constructor(private http: HttpClient, private sqlitePorter: SQLitePorter, private storage: Storage, private sqlite: SQLite, private platform: Platform)
+    {
+        this.databaseReady = new BehaviorSubject(false);
+        this.platform.ready().then(() => {
+            this.sqlite.create({
+                name: 'eFillCreate.de',
+                location: 'default'
+            })
+                .then((db: SQLiteObject) => {
+                   this.database = db;
+                   this.storage.get('database_filled').then(val => {
+                       if (val) {
+                           this.databaseReady.next(true);
+                       } else {
+                           this.fillDatabase();
+                       }
+                   });
+                });
+        });
     }
 
-    public downloadAndSavePicture() {
-        this.http.get(this.urlNEW, {responseType: 'blob'})
-            .subscribe((imageBlob: Blob) => {
-                // imageBlob is the binary data of the the image
-                // From here you can manipulate it and store it where you want
-                // For example, to store it in your app dir
-                // The replace true is optional but is just in case you want to overwrite it
-                return this.file.writeFile(this.file.dataDirectory, 'my_downloaded_image', imageBlob, {replace: true});
+    fillDatabase() {
+        this.http.get('assets/data/eFillDB.sql')
+            .map(res => res.text())
+            .subscribe(sql => {
+                this.sqlitePorter.importSqlToDb(this.database, sql)
+                    .then(data => {
+                        this.databaseReady.next(true);
+                        this.storage.set('database_filled', true);
+                    });
             });
-    }
-
-    getCoordinates(): Observable<StationInformation[]> {
-        return this.http.get<StationInformation[]>(this.url);
     }
 }

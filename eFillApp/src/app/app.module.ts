@@ -9,22 +9,29 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {Geolocation} from '@ionic-native/geolocation/ngx';
-import {FileTransfer} from '@ionic-native/file-transfer/ngx';
 import {File} from '@ionic-native/file/ngx';
 
+import {IonicStorageModule} from '@ionic/storage';
+
 import {HttpClientModule} from '@angular/common/http';
+import {DataImportService} from './services/data-import/data-import.service';
+import {HttpModule} from '@angular/http';
+import {SQLitePorter} from '@ionic-native/sqlite-porter/ngx';
+import {SQLite} from '@ionic-native/sqlite/ngx';
 
 @NgModule({
     declarations: [AppComponent],
     entryComponents: [],
-    imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+    imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, HttpClientModule, HttpModule],
     providers: [
         StatusBar,
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         Geolocation,
-        FileTransfer,
-        File
+        DataImportService,
+        File,
+        SQLitePorter,
+        SQLite
     ],
     bootstrap: [AppComponent]
 })
