@@ -307,12 +307,17 @@ export class NavigationService {
             destination: end,
             waypoints: waypts,
             optimizeWaypoints: true,
-            travelMode: google.maps.TravelMode['DRIVING']
+            travelMode: google.maps.TravelMode['DRIVING'],
+            /*drivingOptions: {
+                departureTime: new Date(Date.now() + N),  // for the time N milliseconds from now.
+                trafficModel: 'optimistic'
+            }*/
         };
         this.directionsService.route(request, (res, status) => {
 
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
+                this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
             } else {
                 console.warn(status);
@@ -372,6 +377,15 @@ export class NavigationService {
 
         this.navCtrl.navigateBack('/tabs/(map:map)');
         this.startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint);
+    }
+
+    public getDirections() {
+        if ((document.getElementById('directionsPanel').style.display) === 'none') {
+            document.getElementById('directionsPanel').style.display = 'block';
+        }
+        else {
+            document.getElementById('directionsPanel').style.display = 'none';
+        }
     }
 
     public addMarker(position, map, iconstyle) {
