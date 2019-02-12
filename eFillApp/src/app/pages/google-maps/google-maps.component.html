@@ -9,8 +9,8 @@
             <ion-icon name="md-locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-fab>
-        <ion-list class="place-list" *ngIf="this.navigationService.showItemsPlaceSearch"
+    <ion-fab class="place-list">
+        <ion-list *ngIf="this.navigationService.showItemsPlaceSearch"
                   [hidden]="this.navigationService.autocompletePlaceSearch.input < 1" no-padding>
             <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                       (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompletePlaceSearch)">
