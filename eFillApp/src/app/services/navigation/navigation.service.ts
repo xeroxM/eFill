@@ -102,8 +102,6 @@ export class NavigationService {
             maximumAge: 0
         };
 
-        this.map.setZoom(15);
-
         const innerCircle = {
             path: google.maps.SymbolPath.CIRCLE,
             fillOpacity: 1.0,
@@ -134,6 +132,7 @@ export class NavigationService {
             icon: outerCircle
         });
 
+        this.map.setZoom(15);
 
         this.geolocation.watchPosition(options).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
@@ -142,7 +141,6 @@ export class NavigationService {
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             markerInner.setPosition(location);
             markerOuter.setPosition(location);
-
         });
     }
 

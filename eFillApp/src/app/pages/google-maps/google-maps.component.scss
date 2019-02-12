@@ -4,6 +4,12 @@
 
 ion-list {
   width: 100%;
-  position: absolute;
   z-index: 1;
+}
+
+ion-fab {
+  width: 100%;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 90px;
 }

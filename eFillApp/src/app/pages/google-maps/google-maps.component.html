@@ -1,15 +1,18 @@
 <ion-content scroll="false">
     <ion-fab vertical="bottom" horizontal="end">
         <ion-fab-button (click)="this.navigationService.getCurrentLocation()" color="light" mini>
-                <ion-icon name="md-locate"></ion-icon>
+            <ion-icon name="md-locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-list *ngIf="this.navigationService.showItemsPlaceSearch" [hidden]="this.navigationService.autocompletePlaceSearch.input < 1" no-padding>
-        <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
-                  (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompletePlaceSearch)">
-            {{ item.description }}
-        </ion-item>
-    </ion-list>
+    <ion-fab>
+        <ion-list *ngIf="this.navigationService.showItemsPlaceSearch"
+                  [hidden]="this.navigationService.autocompletePlaceSearch.input < 1" no-padding>
+            <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
+                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompletePlaceSearch)">
+                {{ item.description }}
+            </ion-item>
+        </ion-list>
+    </ion-fab>
     <div #map id="map">
     </div>
 </ion-content>
