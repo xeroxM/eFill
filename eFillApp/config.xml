@@ -97,4 +97,5 @@
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="1.1.0" />
     <plugin name="cordova-sqlite-storage" spec="3.0.0" />
     <plugin name="cordova-plugin-advanced-http" spec="2.0.4" />
+    <engine name="android" spec="~7.1.4" />
 </widget>

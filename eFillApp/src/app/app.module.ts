@@ -18,6 +18,7 @@ import {DataImportService} from './services/data-import/data-import.service';
 import {HttpModule} from '@angular/http';
 import {SQLitePorter} from '@ionic-native/sqlite-porter/ngx';
 import {SQLite} from '@ionic-native/sqlite/ngx';
+import 'rxjs/add/operator/map';
 
 @NgModule({
     declarations: [AppComponent],
@@ -31,6 +32,7 @@ import {SQLite} from '@ionic-native/sqlite/ngx';
         DataImportService,
         File,
         SQLitePorter,
+        Map,
         SQLite
     ],
     bootstrap: [AppComponent]

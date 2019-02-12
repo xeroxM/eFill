@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8007ff5-117f-4b8d-a60a-4e396db436fb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/eFill_App.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/eFill_App.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eFillApp/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eFillApp/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eFillApp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eFillApp/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/src/app/app.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eFillApp/src/app/services/data-import/data-import.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/src/app/services/data-import/data-import.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eFillApp/src/assets/data/efillDB.sql" beforeDir="false" afterPath="$PROJECT_DIR$/eFillApp/src/assets/data/efillDB.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/eFillApp/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -37,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/eFillApp/src/app/services/data-import/data-import.service.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="469">
-              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+            <state relative-caret-position="493">
+              <caret line="56" column="15" lean-forward="true" selection-start-line="56" selection-start-column="15" selection-end-line="56" selection-end-column="15" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -49,8 +52,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/eFillApp/src/app/app.module.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+            <state relative-caret-position="578">
+              <caret line="35" column="14" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -59,7 +65,7 @@
         <entry file="file://$PROJECT_DIR$/eFillApp/src/assets/data/efillDB.sql">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="9" column="253" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="253" />
+              <caret line="9" column="26" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -93,6 +99,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -154,7 +161,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -191,18 +197,19 @@
       <option name="presentableId" value="Default" />
       <updated>1549970541026</updated>
       <workItem from="1549970546897" duration="4366000" />
-      <workItem from="1549976093017" duration="1028000" />
+      <workItem from="1549976093017" duration="3883000" />
+      <workItem from="1549982043029" duration="4430000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5394000" />
+    <option name="totallyTimeSpent" value="12679000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25302014" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25637585" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="DB Browser" order="2" />
       <window_info id="Project Explorer" order="3" />
@@ -234,24 +241,34 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/eFillApp/src/app/database.service.ts" />
-    <entry file="file://$PROJECT_DIR$/eFillApp/src/app/app.module.ts">
+    <entry file="file://$PROJECT_DIR$/eFillApp/node_modules/@ionic-native/sqlite/ngx/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+        <state relative-caret-position="85">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/eFillApp/src/assets/data/efillDB.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="9" column="253" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="253" />
+          <caret line="9" column="26" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/eFillApp/src/app/app.module.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="35" column="14" selection-start-line="35" selection-start-column="14" selection-end-line="35" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/eFillApp/src/app/services/data-import/data-import.service.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+        <state relative-caret-position="493">
+          <caret line="56" column="15" lean-forward="true" selection-start-line="56" selection-start-column="15" selection-end-line="56" selection-end-column="15" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
