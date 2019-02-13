@@ -1,12 +1,3 @@
---
--- File generated with SQLiteStudio v3.2.1 on Di Feb 12 15:41:38 2019
---
--- Text encoding used: UTF-8
---
-PRAGMA foreign_keys = off;
-BEGIN TRANSACTION;
-
--- Table: ladestationen
 CREATE TABLE ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4");
 INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4") VALUES ('Volkswagen Sachsen GmbH; Die Gläserne Manufaktur', 'Lennéstraße 1', '01069 Dresden', '13,75423', '51,04365', '01.10.2016', '100', 'Schnellladeeinrichtung', '2', 'DC Kupplung Combo, DC CHAdeMO', '50', 'AC Kupplung Typ 2', '43', '', '', '', '');
 INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4") VALUES ('Volkswagen Sachsen GmbH; Die Gläserne Manufaktur', 'Lennéstraße 1', '01069 Dresden', '13,75427', '51,04368', '01.10.2016', '100', 'Schnellladeeinrichtung', '2', 'DC Kupplung Combo, DC CHAdeMO', '50', 'AC Kupplung Typ 2', '43', '', '', '', '');
@@ -6964,6 +6955,3 @@ INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, 
 INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4") VALUES ('Thüringer Energie AG', 'Gedeplatz', '99976 Lengenfeld unterm Stein', '10,21947', '51,21411', '25.10.2017', '30', 'Normalladeeinrichtung', '2', 'AC Steckdose Typ 2', '22', 'AC Steckdose Typ 2', '22', '', '', '', '');
 INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4") VALUES ('Thüringer Energie AG', 'Karlstraße 26', '99988 Heyerode', '10,313755', '51,164651', '25.10.2017', '30', 'Normalladeeinrichtung', '2', 'AC Steckdose Typ 2', '22', 'AC Steckdose Typ 2', '22', '', '', '', '');
 INSERT INTO ladestationen (Betreiber, Adresse, "Postleitzahl Ort", Längengrad, Breitengrad, Inbetriebnamedatum, Anschlussleistung, "Art der Ladestation", "Anzahl der Ladepunkte", "Steckertyp 1", "kW 1", "Steckertyp 2", "kW 2", "Steckertyp 3", "kW 3", "Steckertyp 4", "kW 4") VALUES ('Thüringer Energie AG', 'Mühlhäuser Str. 18', '99991 Großengottern', '10,55497', '51,15086', '08.11.2017', '86', 'Schnellladeeinrichtung', '2', 'DC Kupplung Combo, DC CHAdeMO', '50', 'AC Kupplung Typ 2', '43', '', '', '', '');
-
-COMMIT TRANSACTION;
-PRAGMA foreign_keys = on;

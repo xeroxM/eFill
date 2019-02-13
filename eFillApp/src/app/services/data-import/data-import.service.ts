@@ -29,12 +29,15 @@ export class DataImportService {
         this.databaseReady = new BehaviorSubject(false);
         this.platform.ready().then(() => {
             this.sqlite.create({
-                name: 'eFillCreate.de',
+                name: 'eFill.db',
                 location: 'default'
             })
-                .then((db: SQLiteObject) => {
+                .then(async (db: SQLiteObject) => {
                     this.database = db;
-                    this.storage.get('database_filled').then(val => {
+                    await this.database.executeSql('DROP TABLE IF EXISTS ladestationen').then(() => {}).catch(() => {});
+                    this.storage.set('database_filled', await this.checkTableExists('ladestationen'));
+                    console.log('Cleared table');
+                    this.storage.get('database_filled').then(async val => {
                         if (val) {
                             this.databaseReady.next(true);
                         } else {
@@ -45,19 +48,48 @@ export class DataImportService {
         });
     }
 
-   public fillDatabase(): Observable<StationInformation[]> {
-        this.http.get<StationInformation[]>('assets/data/eFillDB.sql').pipe(map((res: any) => res.data))
-            .subscribe(sql => {
-                this.sqlitePorter.importSqlToDb(this.database, sql)
-                    .then(data => {
+   public async fillDatabase() {
+        await this.http.get('assets/data/efillDB.sql', {responseType: 'text' as 'text'}).subscribe(sql => {
+                const time = Date.now();
+                console.log('Starting DB import');
+                this.sqlitePorter.importSqlToDb(this.database._objectInstance, sql)
+                    .then(async () => {
                         this.databaseReady.next(true);
                         this.storage.set('database_filled', true);
-                        console.log(sql);
-                    });
+                        console.log(`Importing DB took ${Date.now() - time} milliseconds`);
+                        console.log(await this.getAllDBEntries());
+                    }).catch(e => console.error(e));
             });
     }
     getCoordinates(): Observable<StationInformation[]> {
         return this.http.get<StationInformation[]>(this.url);
+    }
+
+    public async checkTableExists(tablename) {
+      let res = {
+        rows: {
+          length: 0,
+          item: (i) => {}
+        }
+      };
+      await this.database.executeSql(`SELECT name FROM sqlite_master WHERE type='table' AND name='${tablename}';`)
+                    .then(e => res = e)
+                    .catch(e => res = e);
+      return (res.rows.length > 0) ? true : false;
+    }
+
+    public async getAllDBEntries() {
+      const temp = [];
+      await this.database.executeSql('SELECT * FROM ladestationen').then(data => {
+        for (let i = 0; i < data.rows.length; i++) {
+          temp.push(data.rows.item(i));
+        }
+      }).catch(data => {
+        for (let i = 0; i < data.rows.length; i++) {
+          temp.push(data.rows.item(i));
+        }
+      });
+      return temp;
     }
 
 }
