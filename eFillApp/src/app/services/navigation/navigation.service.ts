@@ -45,6 +45,8 @@ export class NavigationService {
 
     public directionsService: any;
     public directionsDisplay: any;
+    public routeObjects = [];
+    public routeActive = false;
 
     public isNight: boolean;
     public isNightToggle: boolean;
@@ -313,12 +315,35 @@ export class NavigationService {
                 trafficModel: 'optimistic'
             }*/
         };
-        this.directionsService.route(request, (res, status) => {
 
+        this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
                 this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
+                console.log(request);
+                for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
+                    const routeObject = {};
+                    routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
+                    routeObject['startLng'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lng']();
+                    routeObject['endLat'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lat']();
+                    routeObject['endLng'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lng']();
+                    routeObject['duration'] = {
+                        text: res['routes'][0]['legs'][0]['steps'][i]['duration']['text'],
+                        value: res['routes'][0]['legs'][0]['steps'][i]['duration']['value']
+                    };
+                    routeObject['distance'] = {
+                        text: res['routes'][0]['legs'][0]['steps'][i]['distance']['text'],
+                        value: res['routes'][0]['legs'][0]['steps'][i]['distance']['value']
+                    };
+                    routeObject['maneuver'] = res['routes'][0]['legs'][0]['steps'][i]['maneuver'];
+                    routeObject['instructions'] = res['routes'][0]['legs'][0]['steps'][i]['instructions'];
+
+                    this.routeObjects.push(routeObject);
+                }
+                console.log(this.routeObjects);
+                console.log(res);
+                this.routeActive = true;
             } else {
                 console.warn(status);
             }
@@ -382,8 +407,7 @@ export class NavigationService {
     public getDirections() {
         if ((document.getElementById('directionsPanel').style.display) === 'none') {
             document.getElementById('directionsPanel').style.display = 'block';
-        }
-        else {
+        } else {
             document.getElementById('directionsPanel').style.display = 'none';
         }
     }

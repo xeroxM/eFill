@@ -1,10 +1,56 @@
 <ion-content>
-    <ion-fab>
+    <ion-toolbar *ngIf="this.navigationService.routeActive">
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'turn-right'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_right.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'turn-left'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_left.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'straight'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/straight.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'merge'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_merge.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'roundabout-right'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/roundabout-right.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'roundabout-left'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/roundabout-left.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'ramp-right'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/ramp-right.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'ramp-left'">
+            <img slot="start" class="route-icons" width="30px" src="assets/icon/ramp-left.png">
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive">
+            <div slot="start" class="info"
+                 [innerHTML]="this.navigationService.routeObjects[9]['instructions']"></div>
+        </ng-container>
+        <ng-container
+                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive">
+            <div slot="start" class="distance">
+                {{this.navigationService.routeObjects[9]['distance']['text']}}
+            </div>
+        </ng-container>
+    </ion-toolbar>
+    <ion-fab *ngIf="!this.navigationService.routeActive">
         <ion-toolbar>
             <ion-buttons slot="start">
                 <ion-menu-button></ion-menu-button>
             </ion-buttons>
-            <ion-input type="text" [(ngModel)]="this.navigationService.autocompletePlaceSearch.input"
+            <ion-input type="text"
+                       [(ngModel)]="this.navigationService.autocompletePlaceSearch.input"
                        (ionInput)="this.navigationService.updateSearchResults(this.navigationService.autocompletePlaceSearch)"
                        (ionFocus)="this.navigationService.showItemsStartPoint = false;
                                this.navigationService.showItemsWayPoint = false;
