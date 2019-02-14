@@ -1,49 +1,51 @@
-<ion-content>
+<ion-header>
     <ion-toolbar *ngIf="this.navigationService.routeActive">
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'turn-right'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'turn-right'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_right.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'turn-left'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'turn-left'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_left.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'straight'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'straight'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/straight.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'merge'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'merge'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_merge.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'roundabout-right'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'roundabout-right'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/roundabout-right.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'roundabout-left'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'roundabout-left'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/roundabout-left.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'ramp-right'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'ramp-right'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/ramp-right.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive && this.navigationService.routeObjects[9]['maneuver'] === 'ramp-left'">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'ramp-left'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/ramp-left.png">
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive">
             <div slot="start" class="info"
-                 [innerHTML]="this.navigationService.routeObjects[9]['instructions']"></div>
+                 [innerHTML]="this.navigationService.routeObjects[this.navigationService.routeStepIndex]['instructions']"></div>
         </ng-container>
         <ng-container
-                *ngIf="this.navigationService.routeObjects[9] && this.navigationService.routeActive">
+                *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive">
             <div slot="start" class="distance">
-                {{this.navigationService.routeObjects[9]['distance']['text']}}
+                {{this.navigationService.routeObjects[this.navigationService.routeStepIndex]['distance']['text']}}
             </div>
         </ng-container>
     </ion-toolbar>
+</ion-header>
+<ion-content>
     <ion-fab *ngIf="!this.navigationService.routeActive">
         <ion-toolbar>
             <ion-buttons slot="start">

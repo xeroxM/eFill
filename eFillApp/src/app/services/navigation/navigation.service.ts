@@ -7,6 +7,7 @@ import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Platform} from '@ionic/angular';
+import {Observable} from 'rxjs';
 
 declare let google: any;
 
@@ -23,45 +24,74 @@ export class NavigationService {
     public GooglePlaces: any;
 
     public GoogleAutocomplete: any;
-    public autocompleteItems: any;
+
+    // array which contains the items for autocompletion list
+    public autocompleteItems = [];
+
+    // ngModel variables to determin what user typed into input field
     public autocompletePlaceSearch: any;
     public autocompleteStartPoint: any;
-    public autocompleteWayPoint: any;
     public autocompleteEndPoint: any;
+
+    // determines which autocomplete-list is shown
     public showItemsPlaceSearch = true;
     public showItemsStartPoint = true;
     public showItemsWayPoint = true;
     public showItemsEndPoint = true;
 
+    // arrays for markers of e-Charging-Stations
     public stationMarkersSet = new Set();
     public stationMarkers = [];
+
+    // array for station information from server
     public stationInformation = [];
     public currentWindow = null;
-    public markerCluster: any;
-    public geoLocLat: number;
-    public geoLocLong: number;
 
+    // determines markerClusterer
+    public markerCluster: any;
+
+    // Observable to .subscribe or .unsubscribe for geolocation
+    public watchID: Observable<any>;
+
+    // array for favorites
     public favorites = [];
 
     public directionsService: any;
     public directionsDisplay: any;
+
+    // array for all steps of route calculated
     public routeObjects = [];
     public routeActive = false;
+    public routeStepIndex = 0;
 
+    // markers for geolocation
+    public markerInner: any;
+    public markerOuter: any;
+    
+    // lat and long for geolocation
+    public geoLocLat: number;
+    public geoLocLong: number;
+
+    // checks if its day or night
     public isNight: boolean;
     public isNightToggle: boolean;
 
+    // options for nightMap Clusters
     public mcOptionsNight = {
         styles: this.mapStyleService.clusterStylesNight,
         maxZoom: 17
     };
 
+    // options for dayMap Clusters
     public mcOptionsDay = {
         styles: this.mapStyleService.clusterStylesDay,
         maxZoom: 17
     };
 
+    // form Group for route calculation
     public routeForm: FormGroup;
+
+    // object for added waypoint
     public wayPointObject: Validators = {
         way_point_address: ''
     };
@@ -82,7 +112,6 @@ export class NavigationService {
             this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
             this.autocompletePlaceSearch = {input: ''};
             this.autocompleteStartPoint = {input: ''};
-            this.autocompleteWayPoint = {input: ''};
             this.autocompleteEndPoint = {input: ''};
             this.autocompleteItems = [];
             this.markers = [];
@@ -104,45 +133,25 @@ export class NavigationService {
             maximumAge: 0
         };
 
-        const innerCircle = {
-            path: google.maps.SymbolPath.CIRCLE,
-            fillOpacity: 1.0,
-            fillColor: '#007bff',
-            strokeOpacity: 1.0,
-            strokeColor: 'white',
-            strokeWeight: 0.8,
-            scale: 5
-        };
-
-        const outerCircle = {
-            path: google.maps.SymbolPath.CIRCLE,
-            fillOpacity: 0.1,
-            fillColor: '#007bff',
-            strokeOpacity: 1.0,
-            strokeColor: '#007bff',
-            strokeWeight: 0.1,
-            scale: 25
-        };
-
-        const markerInner = new google.maps.Marker({
+        this.markerInner = new google.maps.Marker({
             map: this.map,
-            icon: innerCircle
+            icon: this.mapStyleService.innerCircle
         });
 
-        const markerOuter = new google.maps.Marker({
+        this.markerOuter = new google.maps.Marker({
             map: this.map,
-            icon: outerCircle
+            icon: this.mapStyleService.outerCircle
         });
 
         this.map.setZoom(15);
 
-        this.geolocation.watchPosition(options).subscribe(pos => {
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
-            markerInner.setPosition(location);
-            markerOuter.setPosition(location);
+            this.markerInner.setPosition(location);
+            this.markerOuter.setPosition(location);
         });
     }
 
@@ -282,7 +291,7 @@ export class NavigationService {
         console.log(this.routeForm);
     }
 
-    public startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint) {
+    public calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint) {
         let start, end;
 
         if (originlong === null) {
@@ -308,7 +317,7 @@ export class NavigationService {
             origin: start,
             destination: end,
             waypoints: waypts,
-            optimizeWaypoints: true,
+            optimizeWaypoints: false,
             travelMode: google.maps.TravelMode['DRIVING'],
             /*drivingOptions: {
                 departureTime: new Date(Date.now() + N),  // for the time N milliseconds from now.
@@ -341,11 +350,63 @@ export class NavigationService {
 
                     this.routeObjects.push(routeObject);
                 }
-                console.log(this.routeObjects);
-                console.log(res);
                 this.routeActive = true;
+                console.log(this.routeObjects);
             } else {
                 console.warn(status);
+            }
+        });
+    }
+
+    public cancelRoute() {
+        const location = new google.maps.LatLng(51.133481, 10.018343);
+        this.directionsDisplay.setMap(null);
+        this.map.setCenter(location);
+        this.map.setZoom(5.4);
+        this.routeActive = false;
+        this.routeForm.get('start_point').setValue('');
+        this.autocompleteStartPoint.input = '';
+        this.routeForm.get('end_point').setValue('');
+        this.autocompleteEndPoint.input = '';
+        while (this.wayPointArray.length !== 0) {
+            this.wayPointArray.removeAt(0);
+        }
+        this.markerInner.setMap(null);
+        this.markerOuter.setMap(null);
+        this.watchID.unsubscribe();
+    }
+
+    public startNavigation() {
+        this.routeStepIndex = 0;
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0
+        };
+
+        this.markerInner = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.innerCircle
+        });
+
+        this.markerOuter = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.outerCircle
+        });
+        this.map.setZoom(15);
+
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+            this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+            const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
+            this.markerInner.setPosition(location);
+            this.markerOuter.setPosition(location);
+
+            if (this.geoLocLat === this.routeObjects[this.routeStepIndex]['endLat']
+                && this.geoLocLong === this.routeObjects[this.routeStepIndex]['endLng']) {
+                this.routeStepIndex = this.routeStepIndex + 1;
             }
         });
     }
@@ -354,7 +415,7 @@ export class NavigationService {
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
-            this.startNavigation(this.geoLocLat, this.geoLocLong,
+            this.calculateRoute(this.geoLocLat, this.geoLocLong,
                 stationlat, stationlong, []);
         });
     }
@@ -401,7 +462,7 @@ export class NavigationService {
         }
 
         this.navCtrl.navigateBack('/tabs/(map:map)');
-        this.startNavigation(originlat, originlong, destinationlat, destinationlong, waypoint);
+        this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
     public getDirections() {

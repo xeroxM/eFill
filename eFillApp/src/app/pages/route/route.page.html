@@ -30,7 +30,7 @@
         </ion-buttons>
         <ion-buttons slot="end">
             <ion-button (click)="this.navigationService.getInput(this.navigationService.autocompleteStartPoint); this.navigationService.autocompleteStartPoint.input = 'Mein Standort';
-                                 this.navigationService.autocompleteItems = []" class="locationButton">
+                                 this.navigationService.autocompleteItems = []" class="location-button">
                 <ion-icon name="md-locate"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -59,14 +59,9 @@
                                saveWayPoint = waypointInstance;
                                saveWayPointIndex = i;"
                            placeholder="Zwischenstopp" formControlName="way_point_address"></ion-input>
-                <ion-buttons slot="end" [hidden]="waypointInstance['input'] < 1">
-                    <ion-button (click)="waypointInstance['input'].setValue('')">
-                        <ion-icon name="close"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
                 <ion-buttons slot="end">
                     <ion-button (click)="this.navigationService.removeWaypoint(i)">
-                        <ion-icon name="trash" color="danger"></ion-icon>
+                        <ion-icon name="close"></ion-icon>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
@@ -108,7 +103,7 @@
         </ion-list>
     </ion-fab>
 
-    <div class="wayptButton">
+    <div class="waypt-button">
         <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
                     (click)="this.navigationService.addWaypoints()">
             <ion-icon slot="start" name="add-circle-outline"></ion-icon>
@@ -116,15 +111,15 @@
         </ion-button>
     </div>
 
-    <div class="startButton" text-center>
+    <div class="start-button" text-center>
         <ion-button
                 [disabled]="!this.navigationService.routeForm.valid"
                 slot="end" shape="round" color="primary" fill="outline"
                 (click)="this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
                          this.navigationService.routeForm.value['end_point'],
                          this.navigationService.routeForm.value['way_point'])">
-            <ion-icon slot="start" name="navigate"></ion-icon>
-            Starten
+            <ion-icon slot="start" name="car"></ion-icon>
+            Route berechnen
         </ion-button>
     </div>
 </ion-content>

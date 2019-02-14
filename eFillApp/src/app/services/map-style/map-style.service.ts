@@ -721,4 +721,25 @@ export class MapStyleService {
             width: 78
         },
     ];
+
+    public innerCircle = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillOpacity: 1.0,
+        fillColor: '#007bff',
+        strokeOpacity: 1.0,
+        strokeColor: 'white',
+        strokeWeight: 0.8,
+        scale: 5
+    };
+
+    public outerCircle = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillOpacity: 0.1,
+        fillColor: '#007bff',
+        strokeOpacity: 1.0,
+        strokeColor: '#007bff',
+        strokeWeight: 0.1,
+        scale: 25
+    };
+
 }
