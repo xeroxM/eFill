@@ -51,7 +51,7 @@ export class NavigationService {
     public markerCluster: any;
 
     // Observable to .subscribe or .unsubscribe for geolocation
-    public watchID: Observable<any>;
+    public watchID: any;
 
     // array for favorites
     public favorites = [];
@@ -67,7 +67,7 @@ export class NavigationService {
     // markers for geolocation
     public markerInner: any;
     public markerOuter: any;
-    
+
     // lat and long for geolocation
     public geoLocLat: number;
     public geoLocLong: number;
