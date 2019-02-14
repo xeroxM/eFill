@@ -4,7 +4,7 @@
             <ion-icon name="list"></ion-icon>
         </ion-fab-button>
     </ion-fab-->
-    <ion-fab class="navigation-fab" *ngIf="this.navigationService.routeActive" vertical="bottom" horizontal="center">
+    <ion-fab class="navigation-fab" *ngIf="this.navigationService.routeActive && !this.navigationService.navigationActive" vertical="bottom" horizontal="center">
         <ion-fab-button (click)="this.navigationService.startNavigation()" color="light">
             <ion-icon name="navigate"></ion-icon>
         </ion-fab-button>

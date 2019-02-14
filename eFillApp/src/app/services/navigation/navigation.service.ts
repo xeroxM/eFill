@@ -60,9 +60,11 @@ export class NavigationService {
     public directionsDisplay: any;
 
     // array for all steps of route calculated
+    public routeOverview = {};
     public routeObjects = [];
     public routeActive = false;
     public routeStepIndex = 0;
+    public navigationActive = false;
 
     // markers for geolocation
     public markerInner: any;
@@ -145,10 +147,16 @@ export class NavigationService {
 
         this.map.setZoom(15);
 
-        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+
+        this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+        });
+
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             this.markerInner.setPosition(location);
             this.markerOuter.setPosition(location);
@@ -331,6 +339,14 @@ export class NavigationService {
                 this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
                 console.log(request);
+
+                this.routeOverview = {
+                    duration: res['routes'][0]['legs'][0]['duration'],
+                    distance: res['routes'][0]['legs'][0]['distance'],
+                    start_address: res['routes'][0]['legs'][0]['start_address'],
+                    end_address: res['routes'][0]['legs'][0]['end_address']
+                };
+
                 for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
                     const routeObject = {};
                     routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
@@ -351,7 +367,7 @@ export class NavigationService {
                     this.routeObjects.push(routeObject);
                 }
                 this.routeActive = true;
-                console.log(this.routeObjects);
+                console.log(this.routeOverview);
             } else {
                 console.warn(status);
             }
@@ -364,6 +380,7 @@ export class NavigationService {
         this.map.setCenter(location);
         this.map.setZoom(5.4);
         this.routeActive = false;
+        this.navigationActive = false;
         this.routeForm.get('start_point').setValue('');
         this.autocompleteStartPoint.input = '';
         this.routeForm.get('end_point').setValue('');
@@ -377,6 +394,7 @@ export class NavigationService {
     }
 
     public startNavigation() {
+        this.navigationActive = true;
         this.routeStepIndex = 0;
 
         const options = {
@@ -394,6 +412,7 @@ export class NavigationService {
             map: this.map,
             icon: this.mapStyleService.outerCircle
         });
+
         this.map.setZoom(15);
 
         this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {

@@ -1,5 +1,19 @@
 <ion-header>
-    <ion-toolbar *ngIf="this.navigationService.routeActive">
+    <ion-toolbar *ngIf="this.navigationService.routeActive && !this.navigationService.navigationActive">
+        <ion-row><b>{{this.navigationService.routeOverview['start_address']}}
+            <ion-row>
+                <ion-icon style="margin-top: 3px; margin-bottom: 3px" name="arrow-down"></ion-icon>
+            </ion-row>
+        </b></ion-row>
+        <ion-row><b>{{this.navigationService.routeOverview['end_address']}}</b></ion-row>
+        <ion-row style="padding-top: 3px">
+            <span style="color: #0F9D58; padding-right: 5px">{{'Distanz: ' + this.navigationService.routeOverview['distance']['text']}}</span>
+        </ion-row>
+        <ion-row style="padding-top: 3px">
+            <span style="color: #4285F4;;">{{'Dauer: ' + this.navigationService.routeOverview['duration']['text']}}</span>
+        </ion-row>
+    </ion-toolbar>
+    <ion-toolbar *ngIf="this.navigationService.navigationActive">
         <ng-container
                 *ngIf="this.navigationService.routeObjects[this.navigationService.routeStepIndex] && this.navigationService.routeActive && this.navigationService.routeObjects[this.navigationService.routeStepIndex]['maneuver'] === 'turn-right'">
             <img slot="start" class="route-icons" width="30px" src="assets/icon/turn_right.png">
