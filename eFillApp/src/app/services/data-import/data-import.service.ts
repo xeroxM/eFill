@@ -5,7 +5,7 @@ import {SQLitePorter} from '@ionic-native/sqlite-porter/ngx';
 import {SQLite, SQLiteObject} from '@ionic-native/sqlite/ngx';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Storage} from '@ionic/storage';
-import {map} from 'rxjs/operators';
+// import {map} from 'rxjs/operators';
 
 interface StationInformation {
     long: number;
@@ -17,7 +17,7 @@ interface StationInformation {
 
 @Injectable()
 export class DataImportService {
-    private url = 'assets/fake-data/loading_stations.json';
+   // private url = 'assets/fake-data/loading_stations.json';
     database: SQLiteObject;
     private databaseReady: BehaviorSubject<boolean>;
 
@@ -34,8 +34,8 @@ export class DataImportService {
             })
                 .then(async (db: SQLiteObject) => {
                     this.database = db;
-                    await this.database.executeSql('DROP TABLE IF EXISTS ladestationen').then(() => {}).catch(() => {});
-                    this.storage.set('database_filled', await this.checkTableExists('ladestationen'));
+                    await this.database.executeSql('DROP TABLE IF EXISTS loadingstations').then(() => {}).catch(() => {});
+                    this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
                     console.log('Cleared table');
                     this.storage.get('database_filled').then(async val => {
                         if (val) {
@@ -61,9 +61,9 @@ export class DataImportService {
                     }).catch(e => console.error(e));
             });
     }
-    getCoordinates(): Observable<StationInformation[]> {
+    /*getCoordinates(): Observable<StationInformation[]> {
         return this.http.get<StationInformation[]>(this.url);
-    }
+    }*/
 
     public async checkTableExists(tablename) {
       let res = {
@@ -80,7 +80,7 @@ export class DataImportService {
 
     public async getAllDBEntries() {
       const temp = [];
-      await this.database.executeSql('SELECT * FROM ladestationen').then(data => {
+      await this.database.executeSql('SELECT * FROM loadingstations').then(data => {
         for (let i = 0; i < data.rows.length; i++) {
           temp.push(data.rows.item(i));
         }
@@ -91,5 +91,4 @@ export class DataImportService {
       });
       return temp;
     }
-
 }

@@ -6,6 +6,7 @@ import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 
+
 declare let google: any;
 
 @Injectable({
@@ -98,9 +99,9 @@ export class NavigationService {
         });
     }
 
-    public loadStationLocations() {
-        this.importData.getCoordinates().subscribe(data => {
-            this.stationInformation = data;
+    public async loadStationLocations() {
+        this.stationInformation = await this.importData.getAllDBEntries();
+        console.log('Hello', this.stationInformation[0], 'World');
 
             const optionsSpidifier = {
                 keepSpiderfied: true,
@@ -184,7 +185,6 @@ export class NavigationService {
             } else if (time >= 6 || time <= 19) {
                 this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
             }
-        });
     }
 
     public updateSearchResults(autocomplete) {

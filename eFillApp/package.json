@@ -48,6 +48,7 @@
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "3.0.0",
     "core-js": "^2.6.1",
+    "gradle": "^1.0.9",
     "ionic": "^4.6.0",
     "overlapping-marker-spiderfier": "^1.1.4",
     "rxjs": "^6.3.3",
