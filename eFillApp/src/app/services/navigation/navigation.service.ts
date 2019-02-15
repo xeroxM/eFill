@@ -49,6 +49,8 @@ export class NavigationService {
 
     // determines markerClusterer
     public markerCluster: any;
+    public markerClusterSave: any;
+    public markersShown = true;
 
     // Observable to .subscribe or .unsubscribe for geolocation
     public watchID: any;
@@ -65,6 +67,7 @@ export class NavigationService {
     public routeActive = false;
     public routeStepIndex = 0;
     public navigationActive = false;
+    public volumeOn = true;
 
     // markers for geolocation
     public markerInner: any;
@@ -335,9 +338,10 @@ export class NavigationService {
         this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
-                this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+                this.markersShown = false;
+                this.markerCluster.clearMarkers();
+                // this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
-                console.log(request);
 
                 this.routeOverview = {
                     duration: res['routes'][0]['legs'][0]['duration'],
@@ -526,21 +530,43 @@ export class NavigationService {
         this.navCtrl.navigateBack('/tabs/(map:map)');
     }
 
+    public showAndHideMarkers() {
+        if (this.markersShown) {
+            this.markersShown = false;
+            this.markerCluster.clearMarkers();
+        } else {
+            this.markersShown = true;
+            if (!this.isNight) {
+                this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+                this.map.setMapTypeId('day_map');
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+
+            } else if (this.isNight) {
+                this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
+                this.map.setMapTypeId('night_map');
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+            }
+        }
+    }
+
     public changeMapStyle() {
         if (this.isNight) {
             this.isNight = false;
             this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
             this.map.setMapTypeId('day_map');
             this.markerCluster.clearMarkers();
-            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+            if (this.markersShown) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+            }
 
         } else if (!this.isNight) {
             this.isNight = true;
             this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
             this.map.setMapTypeId('night_map');
             this.markerCluster.clearMarkers();
-            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
-
+            if (this.markersShown) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+            }
         }
     }
 }

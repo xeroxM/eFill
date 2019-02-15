@@ -14,13 +14,24 @@
                 </ion-toolbar>
             </ion-header>
             <ion-content>
-                <ion-list>
+                <!--ion-list>
                     <ion-item>
                         <ion-label>Nightmode</ion-label>
                         <ion-toggle *ngIf="!this.navigationService.isNightToggle" checked="false"
                                     (ionChange)="this.navigationService.changeMapStyle()"></ion-toggle>
                         <ion-toggle *ngIf="this.navigationService.isNightToggle" checked="true"
                                     (ionChange)="this.navigationService.changeMapStyle()"></ion-toggle>
+                    </ion-item>
+                </ion-list-->
+                <ion-list>
+                    <ion-item>
+                        Item 1
+                    </ion-item>
+                    <ion-item>
+                        Item 2
+                    </ion-item>
+                    <ion-item>
+                        Item 3
                     </ion-item>
                 </ion-list>
             </ion-content>

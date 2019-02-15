@@ -11,6 +11,25 @@
             <ion-icon name="navigate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
+    <ion-fab vertical="bottom" horizontal="start" slot="fixed"> <!-- *ngIf="this.navigationService.routeActive" -->
+        <ion-fab-button color="light" mini>
+            <ion-icon name="settings"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="this.navigationService.showAndHideMarkers();" color="light" mini>
+                <ion-icon name="logo-ionic"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="this.navigationService.changeMapStyle();" color="light" mini>
+                <ion-icon *ngIf="this.navigationService.isNight" name="sunny"></ion-icon>
+                <ion-icon *ngIf="!this.navigationService.isNight" name="moon"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
+                            color="light" mini>
+                <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
+                <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
     <ion-fab class="navigation-fab" *ngIf="this.navigationService.routeActive" vertical="top" horizontal="end">
         <ion-fab-button (click)="this.navigationService.cancelRoute()" color="light" mini>
             <ion-icon name="close"></ion-icon>
