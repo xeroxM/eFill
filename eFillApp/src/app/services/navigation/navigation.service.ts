@@ -147,12 +147,11 @@ export class NavigationService {
 
         this.map.setZoom(15);
 
-
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-        });
+        }).catch(e => console.error(e));
 
         this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
@@ -423,10 +422,25 @@ export class NavigationService {
             this.markerInner.setPosition(location);
             this.markerOuter.setPosition(location);
 
-            if (this.geoLocLat === this.routeObjects[this.routeStepIndex]['endLat']
-                && this.geoLocLong === this.routeObjects[this.routeStepIndex]['endLng']) {
+            // Haversine formula to calculate distance between geolocation and next route point
+            const rad = (x) => {
+                return x * Math.PI / 180;
+            };
+
+            const earthRadius = 6378137;
+            const distanceLat = rad(this.routeObjects[this.routeStepIndex]['endLat'] - this.geoLocLat);
+            const distanceLong = rad(this.routeObjects[this.routeStepIndex]['endLng'] - this.geoLocLong);
+            const a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
+                Math.cos(rad(this.geoLocLat)) * Math.cos(rad(this.routeObjects[this.routeStepIndex]['endLat'])) *
+                Math.sin(distanceLong / 2) * Math.sin(distanceLong / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = earthRadius * c;
+            console.log(distance);
+
+            if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
             }
+
         });
     }
 
