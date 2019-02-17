@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationService} from '../../services/navigation/navigation.service';
-import {NavController} from '@ionic/angular';
-import {FormBuilder, ReactiveFormsModule, FormGroup, Validators, FormArray} from '@angular/forms';
 
 @Component({
     selector: 'app-route',

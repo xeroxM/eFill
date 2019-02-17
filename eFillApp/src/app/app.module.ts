@@ -13,6 +13,8 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
 import {HttpClientModule} from '@angular/common/http';
 import {FormBuilder} from '@angular/forms';
 
+import {TextToSpeech} from '@ionic-native/text-to-speech/ngx';
+
 @NgModule({
     declarations: [AppComponent],
     entryComponents: [],
@@ -22,7 +24,8 @@ import {FormBuilder} from '@angular/forms';
         SplashScreen,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         Geolocation,
-        FormBuilder
+        FormBuilder,
+        TextToSpeech
     ],
     bootstrap: [AppComponent]
 })

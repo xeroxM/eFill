@@ -7,7 +7,7 @@ import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Platform} from '@ionic/angular';
-import {Observable} from 'rxjs';
+import {TextToSpeechService} from '../text-to-speech/text-to-speech.service';
 
 declare let google: any;
 
@@ -108,7 +108,8 @@ export class NavigationService {
         public importData: DataImportService,
         public mapStyleService: MapStyleService,
         public fb: FormBuilder,
-        private platform: Platform) {
+        private platform: Platform,
+        public tts: TextToSpeechService) {
 
         this.platform.ready().then(() => {
             this.geocoder = new google.maps.Geocoder;
@@ -350,6 +351,10 @@ export class NavigationService {
                     end_address: res['routes'][0]['legs'][0]['end_address']
                 };
 
+                const htmlToPlaintext = (text) => {
+                    return text ? String(text).replace(/(<([^>]+)>)/ig, '') : '';
+                };
+
                 for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
                     const routeObject = {};
                     routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
@@ -366,11 +371,12 @@ export class NavigationService {
                     };
                     routeObject['maneuver'] = res['routes'][0]['legs'][0]['steps'][i]['maneuver'];
                     routeObject['instructions'] = res['routes'][0]['legs'][0]['steps'][i]['instructions'];
+                    routeObject['speech'] = htmlToPlaintext(res['routes'][0]['legs'][0]['steps'][i]['instructions']);
 
                     this.routeObjects.push(routeObject);
                 }
                 this.routeActive = true;
-                console.log(this.routeOverview);
+                console.log(this.routeObjects);
             } else {
                 console.warn(status);
             }
@@ -418,6 +424,10 @@ export class NavigationService {
 
         this.map.setZoom(15);
 
+        if (this.routeStepIndex === 0) {
+            this.tts.directionsTextToSpeech(this.routeObjects[0]['speech']);
+        }
+
         this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
@@ -443,6 +453,7 @@ export class NavigationService {
 
             if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
+                this.tts.directionsTextToSpeech(this.routeObjects[this.routeStepIndex]['speech']);
             }
 
         });
