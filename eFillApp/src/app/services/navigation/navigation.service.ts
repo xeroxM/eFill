@@ -420,13 +420,19 @@ export class NavigationService {
             icon: this.mapStyleService.outerCircle
         });
 
-        this.map.setZoom(15);
-
         if (this.routeStepIndex === 0) {
             this.tts.directionsTextToSpeech(this.routeObjects[0]['speech']);
         }
 
+        let isZoomed = false;
+
         this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+
+            if (!isZoomed) {
+                this.map.setZoom(15);
+                isZoomed = true;
+            }
+
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
