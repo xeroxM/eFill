@@ -155,12 +155,12 @@ export class NavigationService {
 
             if (!isZoomed) {
                 this.map.setZoom(15);
+                this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
                 isZoomed = true;
             }
 
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
-            this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             this.markerInner.setPosition(location);
             this.markerOuter.setPosition(location);
@@ -204,14 +204,15 @@ export class NavigationService {
 
                     const infowindow = new google.maps.InfoWindow({
                         maxWidth: 320,
-                        maxHeight: 320,
                         content:
-                            `<div>${this.stationInformation[i].operator}</div><br/>` +
-                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>` +
-                            `<button id="isNotFavorite" style="background: none; position: absolute; top: 27px">` +
+                            `<div style="margin-left: 15px"><button id="isNotFavorite"` +
+                            `style="background: none; position: absolute; top: 10px; left: 0">` +
                             `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
-                            `<button id="isFavorite" style="background: none; position: absolute; top: 27px">` +
-                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>`
+                            `<button id="isFavorite" style="background: none; position: absolute; top: 10px; left: 0">` +
+                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>` +
+                            `${this.stationInformation[i].operator}</div><br/>` +
+                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},` +
+                            `${this.stationInformation[i].long});">Route berechnen</a>`
                     });
 
                     google.maps.event.addListenerOnce(infowindow, 'domready', () => {
