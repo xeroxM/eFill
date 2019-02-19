@@ -264,7 +264,7 @@ export class NavigationService {
     }
 
     public updateSearchResults(autocomplete) {
-        if (autocomplete.input === null) {
+        if (autocomplete.input === null || autocomplete.input.length === 0) {
             this.autocompleteItems = [];
             return;
         }
