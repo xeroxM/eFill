@@ -397,9 +397,7 @@ export class NavigationService {
         while (this.wayPointArray.length !== 0) {
             this.wayPointArray.removeAt(0);
         }
-        this.markerInner.setMap(null);
-        this.markerOuter.setMap(null);
-        this.watchID.unsubscribe();
+        this.showAndHideMarkers();
     }
 
     public startNavigation() {
@@ -457,6 +455,13 @@ export class NavigationService {
             }
 
         });
+    }
+
+    public cancelNavigation() {
+        this.cancelRoute();
+        this.markerInner.setMap(null);
+        this.markerOuter.setMap(null);
+        this.watchID.unsubscribe();
     }
 
     public getRouteToStation(stationlat, stationlong) {
