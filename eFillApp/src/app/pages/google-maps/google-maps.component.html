@@ -28,7 +28,8 @@
                 <ion-icon name="logo-ionic"></ion-icon>
             </ion-fab-button>
             <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
-                            color="light" mini>
+                            color="light" (click)="this.navigationService.volumeOn = !this.navigationService.volumeOn"
+                            mini>
                 <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
                 <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
             </ion-fab-button>

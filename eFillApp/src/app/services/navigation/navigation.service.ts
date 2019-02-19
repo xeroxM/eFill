@@ -430,7 +430,7 @@ export class NavigationService {
             icon: this.mapStyleService.outerCircle
         });
 
-        if (this.routeStepIndex === 0) {
+        if (this.routeStepIndex === 0 && this.volumeOn) {
             this.tts.directionsTextToSpeech(this.routeObjects[0]['speech']);
         }
 
@@ -467,7 +467,9 @@ export class NavigationService {
 
             if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
-                this.tts.directionsTextToSpeech(this.routeObjects[this.routeStepIndex]['speech']);
+                if (this.volumeOn) {
+                    this.tts.directionsTextToSpeech(this.routeObjects[this.routeStepIndex]['speech']);
+                }
             }
 
         });
