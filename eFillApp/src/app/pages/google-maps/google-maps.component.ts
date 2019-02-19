@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
-import {Platform} from '@ionic/angular';
+import {NavController, Platform} from '@ionic/angular';
 
 declare let google: any;
 
@@ -17,7 +17,12 @@ export class GoogleMapsComponent implements OnInit {
     constructor(
         public mapStyleService: MapStyleService,
         public navigationService: NavigationService,
-        private platform: Platform) {
+        private platform: Platform,
+        public navCtrl: NavController) {
+    }
+
+    public moveToFavorites() {
+        this.navCtrl.navigateForward('/tabs/(map:favorites)');
     }
 
     public showMap() {

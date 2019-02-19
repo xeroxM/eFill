@@ -23,7 +23,7 @@ const routes: Routes = [
             },
             {
                 path: 'favorites',
-                outlet: 'favorites',
+                outlet: 'map',
                 component: FavoritesPage
             }
         ]

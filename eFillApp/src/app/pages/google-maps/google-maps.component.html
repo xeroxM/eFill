@@ -23,6 +23,9 @@
                 <ion-icon *ngIf="this.navigationService.isNight" name="sunny"></ion-icon>
                 <ion-icon *ngIf="!this.navigationService.isNight" name="moon"></ion-icon>
             </ion-fab-button>
+            <ion-fab-button (click)="moveToFavorites()" color="light" mini>
+                <ion-icon name="star"></ion-icon>
+            </ion-fab-button>
             <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
                             color="light" mini>
                 <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
