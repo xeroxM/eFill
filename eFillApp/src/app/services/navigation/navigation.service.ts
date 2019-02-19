@@ -149,17 +149,18 @@ export class NavigationService {
             icon: this.mapStyleService.outerCircle
         });
 
-        this.map.setZoom(15);
+        let isZoomed = false;
 
-        this.geolocation.getCurrentPosition().then(pos => {
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+
+            if (!isZoomed) {
+                this.map.setZoom(15);
+                isZoomed = true;
+            }
+
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-        }).catch(e => console.error(e));
-
-        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
-            this.geoLocLat = pos.coords.latitude;
-            this.geoLocLong = pos.coords.longitude;
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             this.markerInner.setPosition(location);
             this.markerOuter.setPosition(location);
