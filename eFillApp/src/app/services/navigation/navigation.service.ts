@@ -153,14 +153,15 @@ export class NavigationService {
 
         this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
 
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+
             if (!isZoomed) {
                 this.map.setZoom(15);
                 this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
                 isZoomed = true;
             }
 
-            this.geoLocLat = pos.coords.latitude;
-            this.geoLocLong = pos.coords.longitude;
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             this.markerInner.setPosition(location);
             this.markerOuter.setPosition(location);
@@ -338,6 +339,12 @@ export class NavigationService {
             }*/
         };
 
+        if (this.markerInner && this.markerInner['visible'] === true) {
+            this.markerInner.setMap(null);
+            this.markerOuter.setMap(null);
+            this.watchID.unsubscribe();
+        }
+
         this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
@@ -379,6 +386,7 @@ export class NavigationService {
                 }
                 this.routeActive = true;
                 console.log(this.routeObjects);
+
             } else {
                 console.warn(status);
             }
