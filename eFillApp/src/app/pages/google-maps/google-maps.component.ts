@@ -16,7 +16,8 @@ export class GoogleMapsComponent implements OnInit {
 
     constructor(
         public mapStyleService: MapStyleService,
-        public navigationService: NavigationService) {
+        public navigationService: NavigationService,
+        public dataImport: DataImportService) {
     }
 
     public showMap() {
@@ -45,7 +46,11 @@ export class GoogleMapsComponent implements OnInit {
 
     ngOnInit() {
         this.showMap();
-        this.navigationService.loadStationLocations();
+        this.dataImport.databaseReady.subscribe((data) => {
+            console.log(data);
+            if (data === true) {
+                this.navigationService.loadStationLocations();
+            }
+        });
     }
-
 }

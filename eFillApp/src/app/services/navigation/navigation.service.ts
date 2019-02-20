@@ -100,8 +100,9 @@ export class NavigationService {
     }
 
     public async loadStationLocations() {
-        this.stationInformation = await this.importData.getAllDBEntries();
-        console.log('Hello', this.stationInformation[0], 'World');
+            this.stationInformation = await this.importData.getAllDBEntries();
+            console.log('Hello', this.stationInformation[0], 'World');
+
 
             const optionsSpidifier = {
                 keepSpiderfied: true,

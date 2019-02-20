@@ -15,11 +15,13 @@ interface StationInformation {
     place: string;
 }
 
+
 @Injectable()
 export class DataImportService {
    // private url = 'assets/fake-data/loading_stations.json';
     database: SQLiteObject;
-    private databaseReady: BehaviorSubject<boolean>;
+    public databaseReady: BehaviorSubject<boolean>;
+    public stationInformation = [];
 
     constructor(private http: HttpClient,
                 private sqlitePorter: SQLitePorter,
@@ -58,6 +60,8 @@ export class DataImportService {
                         this.storage.set('database_filled', true);
                         console.log(`Importing DB took ${Date.now() - time} milliseconds`);
                         console.log(await this.getAllDBEntries());
+                       // this.stationInformation = await this.getAllDBEntries();
+                        console.log(this.stationInformation);
                     }).catch(e => console.error(e));
             });
     }
@@ -90,5 +94,6 @@ export class DataImportService {
         }
       });
       return temp;
+      // console.log(temp, 'Hello');
     }
 }
