@@ -1,15 +1,65 @@
 <ion-content scroll="false">
-    <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="this.navigationService.getCurrentLocation()" color="light" mini>
-                <ion-icon name="md-locate"></ion-icon>
+    <!--ion-fab vertical="bottom" horizontal="start" [hidden]="this.navigationService.autocompleteEndPoint.input < 1">
+        <ion-fab-button (click)="this.navigationService.getDirections()" color="light" mini>
+            <ion-icon name="list"></ion-icon>
+        </ion-fab-button>
+    </ion-fab-->
+    <ion-fab class="navigation-fab"
+             *ngIf="this.navigationService.routeActive && !this.navigationService.navigationActive" vertical="bottom"
+             horizontal="center">
+        <ion-fab-button (click)="this.navigationService.startNavigation()" color="light">
+            <ion-icon name="navigate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-list *ngIf="this.navigationService.showItemsPlaceSearch" [hidden]="this.navigationService.autocompletePlaceSearch.input < 1" no-padding>
-        <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
-                  (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompletePlaceSearch)">
-            {{ item.description }}
-        </ion-item>
-    </ion-list>
+    <ion-fab vertical="bottom" horizontal="start" slot="fixed"> <!-- *ngIf="this.navigationService.routeActive" -->
+        <ion-fab-button color="light" mini>
+            <ion-icon name="settings"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button [hidden]="this.navigationService.routeActive" (click)="moveToFavorites()" color="light"
+                            mini>
+                <ion-icon name="star"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="this.navigationService.changeMapStyle();" color="light" mini>
+                <ion-icon *ngIf="this.navigationService.isNight" name="sunny"></ion-icon>
+                <ion-icon *ngIf="!this.navigationService.isNight" name="moon"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="this.navigationService.showAndHideMarkers();" color="light" mini>
+                <ion-icon name="logo-ionic"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
+                            color="light" (click)="this.navigationService.volumeOn = !this.navigationService.volumeOn"
+                            mini>
+                <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
+                <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+    <ion-fab class="navigation-fab" *ngIf="this.navigationService.routeActive" vertical="top" horizontal="end">
+        <ion-fab-button *ngIf="this.navigationService.routeActive && !this.navigationService.navigationActive"
+                        (click)="this.navigationService.cancelRoute()" color="light" mini>
+            <ion-icon name="close"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
+                        (click)="this.navigationService.cancelNavigation()" color="light" mini>
+            <ion-icon name="close"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab *ngIf="!this.navigationService.routeActive" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="this.navigationService.getCurrentLocation()" color="light" mini>
+            <ion-icon name="md-locate"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab class="place-list">
+        <ion-list *ngIf="this.navigationService.showItemsPlaceSearch"
+                  [hidden]="this.navigationService.autocompletePlaceSearch.input < 1" no-padding>
+            <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
+                      (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompletePlaceSearch)">
+                {{ item.description }}
+            </ion-item>
+        </ion-list>
+    </ion-fab>
     <div #map id="map">
     </div>
+    <div id="directionsPanel" display="none"></div>
 </ion-content>

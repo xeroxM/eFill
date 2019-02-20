@@ -1,7 +1,9 @@
 <div *ngIf="showSplash" class="splash">
     <div class="spinner">
-        <div class="double-bounce1"></div>
-        <div class="double-bounce2"></div>
+        <div *ngIf="!this.navigationService.isNight" class="double-bounce1Day"></div>
+        <div *ngIf="!this.navigationService.isNight" class="double-bounce2Day"></div>
+        <div *ngIf="this.navigationService.isNight" class="double-bounce1Night"></div>
+        <div *ngIf="this.navigationService.isNight" class="double-bounce2Night"></div>
     </div>
 </div>
 
@@ -14,13 +16,24 @@
                 </ion-toolbar>
             </ion-header>
             <ion-content>
-                <ion-list>
+                <!--ion-list>
                     <ion-item>
                         <ion-label>Nightmode</ion-label>
                         <ion-toggle *ngIf="!this.navigationService.isNightToggle" checked="false"
                                     (ionChange)="this.navigationService.changeMapStyle()"></ion-toggle>
                         <ion-toggle *ngIf="this.navigationService.isNightToggle" checked="true"
                                     (ionChange)="this.navigationService.changeMapStyle()"></ion-toggle>
+                    </ion-item>
+                </ion-list-->
+                <ion-list>
+                    <ion-item>
+                        Item 1
+                    </ion-item>
+                    <ion-item>
+                        Item 2
+                    </ion-item>
+                    <ion-item>
+                        Item 3
                     </ion-item>
                 </ion-list>
             </ion-content>

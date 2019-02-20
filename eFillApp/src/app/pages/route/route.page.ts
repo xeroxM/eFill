@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationService} from '../../services/navigation/navigation.service';
-import {NavController} from '@ionic/angular';
-import {FormBuilder, ReactiveFormsModule, FormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'app-route',
@@ -10,17 +8,17 @@ import {FormBuilder, ReactiveFormsModule, FormGroup, Validators} from '@angular/
 })
 export class RoutePage implements OnInit {
 
-    public routeForm: FormGroup;
+    public saveWayPoint = {};
+    public saveWayPointIndex = 0;
 
-    constructor(public navigationService: NavigationService, public navCtrl: NavController, public fb: FormBuilder) {
+    constructor(public navigationService: NavigationService) {
+    }
+
+    test(test) {
+        console.log(test);
     }
 
     ngOnInit() {
-        this.routeForm = this.fb.group({
-            start_point: ['', Validators.required],
-            way_point: [''],
-            end_point: ['', Validators.required]
-        });
     }
 
 }

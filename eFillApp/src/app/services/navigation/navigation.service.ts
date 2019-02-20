@@ -5,6 +5,9 @@ import * as MarkerClusterer from '@google/markerclustererplus';
 import {MapStyleService} from '../map-style/map-style.service';
 import {NavController} from '@ionic/angular';
 import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Platform} from '@ionic/angular';
+import {TextToSpeechService} from '../text-to-speech/text-to-speech.service';
 
 
 declare let google: any;
@@ -22,40 +25,81 @@ export class NavigationService {
     public GooglePlaces: any;
 
     public GoogleAutocomplete: any;
-    public autocompleteItems: any;
+
+    // array which contains the items for autocompletion list
+    public autocompleteItems = [];
+
+    // ngModel variables to determin what user typed into input field
     public autocompletePlaceSearch: any;
     public autocompleteStartPoint: any;
-    public autocompleteWayPoint: any;
     public autocompleteEndPoint: any;
+
+    // determines which autocomplete-list is shown
     public showItemsPlaceSearch = true;
     public showItemsStartPoint = true;
     public showItemsWayPoint = true;
     public showItemsEndPoint = true;
 
+    // arrays for markers of e-Charging-Stations
     public stationMarkersSet = new Set();
     public stationMarkers = [];
+
+    // array for station information from server
     public stationInformation = [];
     public currentWindow = null;
-    public markerCluster: any;
-    public geoLocLat: number;
-    public geoLocLong: number;
 
+    // determines markerClusterer
+    public markerCluster: any;
+    public markerClusterSave: any;
+    public markersShown = true;
+
+    // Observable to .subscribe or .unsubscribe for geolocation
+    public watchID: any;
+
+    // array for favorites
     public favorites = [];
 
     public directionsService: any;
     public directionsDisplay: any;
 
+    // array for all steps of route calculated
+    public routeOverview = {};
+    public routeObjects = [];
+    public routeActive = false;
+    public routeStepIndex = 0;
+    public navigationActive = false;
+    public volumeOn = true;
+
+    // markers for geolocation
+    public markerInner: any;
+    public markerOuter: any;
+
+    // lat and long for geolocation
+    public geoLocLat: number;
+    public geoLocLong: number;
+
+    // checks if its day or night
     public isNight: boolean;
     public isNightToggle: boolean;
 
+    // options for nightMap Clusters
     public mcOptionsNight = {
         styles: this.mapStyleService.clusterStylesNight,
         maxZoom: 17
     };
 
+    // options for dayMap Clusters
     public mcOptionsDay = {
         styles: this.mapStyleService.clusterStylesDay,
         maxZoom: 17
+    };
+
+    // form Group for route calculation
+    public routeForm: FormGroup;
+
+    // object for added waypoint
+    public wayPointObject: Validators = {
+        way_point_address: ''
     };
 
     constructor(
@@ -63,31 +107,65 @@ export class NavigationService {
         public geolocation: Geolocation,
         public zone: NgZone,
         public importData: DataImportService,
-        public mapStyleService: MapStyleService) {
-        this.geocoder = new google.maps.Geocoder;
-        const elem = document.createElement('div');
-        this.GooglePlaces = new google.maps.places.PlacesService(elem);
-        this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-        this.autocompletePlaceSearch = {input: ''};
-        this.autocompleteStartPoint = {input: ''};
-        this.autocompleteWayPoint = {input: ''};
-        this.autocompleteEndPoint = {input: ''};
-        this.autocompleteItems = [];
-        this.markers = [];
-        this.directionsService = new google.maps.DirectionsService;
-        this.directionsDisplay = new google.maps.DirectionsRenderer;
+        public mapStyleService: MapStyleService,
+        public fb: FormBuilder,
+        private platform: Platform,
+        public tts: TextToSpeechService) {
 
-        window['getRouteToStation'] = (stationlat, stationlong) => {
-            this.getRouteToStation(stationlat, stationlong);
-        };
+        this.platform.ready().then(() => {
+            this.geocoder = new google.maps.Geocoder;
+            const elem = document.createElement('div');
+            this.GooglePlaces = new google.maps.places.PlacesService(elem);
+            this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+            this.autocompletePlaceSearch = {input: ''};
+            this.autocompleteStartPoint = {input: ''};
+            this.autocompleteEndPoint = {input: ''};
+            this.autocompleteItems = [];
+            this.markers = [];
+            this.directionsService = new google.maps.DirectionsService;
+            this.directionsDisplay = new google.maps.DirectionsRenderer;
+
+            window['getRouteToStation'] = (stationlat, stationlong) => {
+                this.getRouteToStation(stationlat, stationlong);
+            };
+
+            this.createRouteForm();
+        });
     }
 
     public getCurrentLocation() {
-        this.geolocation.getCurrentPosition().then(pos => {
+        const options = {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0
+        };
+
+        this.markerInner = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.innerCircle
+        });
+
+        this.markerOuter = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.outerCircle
+        });
+
+        let isZoomed = false;
+
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
-            this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-            this.map.setZoom(15);
+
+            if (!isZoomed) {
+                this.map.setZoom(15);
+                this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+                isZoomed = true;
+            }
+
+            const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
+            this.markerInner.setPosition(location);
+            this.markerOuter.setPosition(location);
         });
     }
 
@@ -115,7 +193,7 @@ export class NavigationService {
 
             for (let i = 0; i < this.stationInformation.length; i++) {
                 const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
-                const marker = this.addMarker(location, this.map);
+                const marker = this.addMarker(location, this.map, 'assets/icon/charging.png');
 
                 this.stationMarkersSet.add(marker);
                 markerSpiderfier.addMarker(marker);
@@ -129,14 +207,15 @@ export class NavigationService {
 
                     const infowindow = new google.maps.InfoWindow({
                         maxWidth: 320,
-                        maxHeight: 320,
                         content:
-                            `<div>${this.stationInformation[i].operator}</div><br/>` +
-                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat}, ${this.stationInformation[i].long});">Route berechnen</a>` +
-                            `<button id="isNotFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
+                            `<div style="margin-left: 15px"><button id="isNotFavorite"` +
+                            `style="background: none; position: absolute; top: 10px; left: 0">` +
                             `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
-                            `<button id="isFavorite" style="background: none; position: absolute; right: 11px; bottom: 0">` +
-                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>`
+                            `<button id="isFavorite" style="background: none; position: absolute; top: 10px; left: 0">` +
+                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>` +
+                            `${this.stationInformation[i].operator}</div><br/>` +
+                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},` +
+                            `${this.stationInformation[i].long});">Route berechnen</a>`
                     });
 
                     google.maps.event.addListenerOnce(infowindow, 'domready', () => {
@@ -189,7 +268,7 @@ export class NavigationService {
     }
 
     public updateSearchResults(autocomplete) {
-        if (autocomplete.input === null) {
+        if (autocomplete.input === null || autocomplete.input.length === 0) {
             this.autocompleteItems = [];
             return;
         }
@@ -217,15 +296,19 @@ export class NavigationService {
                     this.map.setCenter(results[0].geometry.location);
                     this.map.setZoom(13);
                 }
+
                 this.zone.run(() => {
                     autocomplete.input = results[0].formatted_address;
                 });
             }
         });
+
+        console.log(this.routeForm);
     }
 
-    public startNavigation(originlat, originlong, destinationlat, destinationlong) {
+    public calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint) {
         let start, end;
+
         if (originlong === null) {
             start = originlat;
         } else {
@@ -236,68 +319,236 @@ export class NavigationService {
         } else {
             end = {lat: destinationlat, lng: destinationlong};
         }
+
+        const waypts = [];
+        for (let i = 0; i < waypoint.length; i++) {
+            waypts.push({
+                location: waypoint[i]['way_point_address'],
+                stopover: true
+            });
+        }
+
         const request = {
             origin: start,
             destination: end,
-            travelMode: google.maps.TravelMode['DRIVING']
+            waypoints: waypts,
+            optimizeWaypoints: false,
+            travelMode: google.maps.TravelMode['DRIVING'],
+            /*drivingOptions: {
+                departureTime: new Date(Date.now() + N),  // for the time N milliseconds from now.
+                trafficModel: 'optimistic'
+            }*/
         };
-        this.directionsService.route(request, (res, status) => {
 
+        if (this.markerInner && this.markerInner['visible'] === true) {
+            this.markerInner.setMap(null);
+            this.markerOuter.setMap(null);
+            this.watchID.unsubscribe();
+        }
+
+        this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
+                this.markersShown = false;
+                this.markerCluster.clearMarkers();
+                // this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
+
+                this.routeOverview = {
+                    duration: res['routes'][0]['legs'][0]['duration'],
+                    distance: res['routes'][0]['legs'][0]['distance'],
+                    start_address: res['routes'][0]['legs'][0]['start_address'],
+                    end_address: res['routes'][0]['legs'][0]['end_address']
+                };
+
+                const htmlToPlaintext = (text) => {
+                    return text ? String(text).replace(/(<([^>]+)>)/ig, '') : '';
+                };
+
+                for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
+                    const routeObject = {};
+                    routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
+                    routeObject['startLng'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lng']();
+                    routeObject['endLat'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lat']();
+                    routeObject['endLng'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lng']();
+                    routeObject['duration'] = {
+                        text: res['routes'][0]['legs'][0]['steps'][i]['duration']['text'],
+                        value: res['routes'][0]['legs'][0]['steps'][i]['duration']['value']
+                    };
+                    routeObject['distance'] = {
+                        text: res['routes'][0]['legs'][0]['steps'][i]['distance']['text'],
+                        value: res['routes'][0]['legs'][0]['steps'][i]['distance']['value']
+                    };
+                    routeObject['maneuver'] = res['routes'][0]['legs'][0]['steps'][i]['maneuver'];
+                    routeObject['instructions'] = res['routes'][0]['legs'][0]['steps'][i]['instructions'];
+                    routeObject['speech'] = htmlToPlaintext(res['routes'][0]['legs'][0]['steps'][i]['instructions']);
+
+                    this.routeObjects.push(routeObject);
+                }
+                this.routeActive = true;
+                console.log(this.routeObjects);
+
             } else {
                 console.warn(status);
             }
+        });
+    }
+
+    public cancelRoute() {
+        const location = new google.maps.LatLng(51.133481, 10.018343);
+        this.directionsDisplay.setMap(null);
+        this.map.setCenter(location);
+        this.map.setZoom(5.4);
+        this.routeActive = false;
+        this.navigationActive = false;
+        this.routeForm.get('start_point').setValue('');
+        this.autocompleteStartPoint.input = '';
+        this.routeForm.get('end_point').setValue('');
+        this.autocompleteEndPoint.input = '';
+        while (this.wayPointArray.length !== 0) {
+            this.wayPointArray.removeAt(0);
+        }
+        this.showAndHideMarkers();
+    }
+
+    public startNavigation() {
+        this.navigationActive = true;
+        this.routeStepIndex = 0;
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0
+        };
+
+        this.markerInner = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.innerCircle
+        });
+
+        this.markerOuter = new google.maps.Marker({
+            map: this.map,
+            icon: this.mapStyleService.outerCircle
+        });
+
+        if (this.routeStepIndex === 0 && this.volumeOn) {
+            this.tts.directionsTextToSpeech(this.routeObjects[0]['speech']);
+        }
+
+        let isZoomed = false;
+
+        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+
+            if (!isZoomed) {
+                this.map.setZoom(15);
+                isZoomed = true;
+            }
+
+            this.geoLocLat = pos.coords.latitude;
+            this.geoLocLong = pos.coords.longitude;
+            this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+            const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
+            this.markerInner.setPosition(location);
+            this.markerOuter.setPosition(location);
+
+            // Haversine formula to calculate distance between geolocation and next route point
+            const rad = (x) => {
+                return x * Math.PI / 180;
+            };
+
+            const earthRadius = 6378137;
+            const distanceLat = rad(this.routeObjects[this.routeStepIndex]['endLat'] - this.geoLocLat);
+            const distanceLong = rad(this.routeObjects[this.routeStepIndex]['endLng'] - this.geoLocLong);
+            const a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
+                Math.cos(rad(this.geoLocLat)) * Math.cos(rad(this.routeObjects[this.routeStepIndex]['endLat'])) *
+                Math.sin(distanceLong / 2) * Math.sin(distanceLong / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = earthRadius * c;
+            console.log(distance);
+
+            if (distance < 50) {
+                this.routeStepIndex = this.routeStepIndex + 1;
+                if (this.volumeOn) {
+                    this.tts.directionsTextToSpeech(this.routeObjects[this.routeStepIndex]['speech']);
+                }
+            }
 
         });
+    }
+
+    public cancelNavigation() {
+        this.cancelRoute();
+        this.markerInner.setMap(null);
+        this.markerOuter.setMap(null);
+        this.watchID.unsubscribe();
     }
 
     public getRouteToStation(stationlat, stationlong) {
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
-            this.startNavigation(this.geoLocLat, this.geoLocLong,
-                stationlat, stationlong);
+            this.calculateRoute(this.geoLocLat, this.geoLocLong,
+                stationlat, stationlong, []);
         });
     }
 
-    public convertObj(origin, destination) {
+    public createRouteForm() {
+        this.routeForm = this.fb.group({
+            start_point: ['', Validators.required],
+            way_point: this.fb.array([]),
+            end_point: ['', Validators.required]
+        });
+    }
+
+    get wayPointArray() {
+        return this.routeForm.get('way_point') as FormArray;
+    }
+
+    public addWaypoints() {
+        const newInstance = this.fb.group({...this.wayPointObject});
+        this.wayPointArray.push(newInstance);
+    }
+
+    public removeWaypoint(index) {
+        this.wayPointArray.removeAt(index);
+    }
+
+    public convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
+
         this.geolocation.getCurrentPosition().then(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
         });
-        const originStr = JSON.stringify(origin);
-        const originSub = originStr.substring(10);
-        const originReg = originSub.search('\"');
-        originlat = originSub.substring(0, originReg);
-        const destinationStr = JSON.stringify(destination);
-        const destinationSub = destinationStr.substring(10);
-        const destinationReg = destinationSub.search('\"');
-        destinationlat = destinationSub.substring(0, destinationReg);
+
+        originlat = origin;
+        destinationlat = destination;
+
         if (originlat === 'Mein Standort') {
             originlat = this.geoLocLat;
             originlong = this.geoLocLong;
             destinationlong = null;
-        } else if (destinationlat === 'Mein Standort') {
-            destinationlat = this.geoLocLat;
-            destinationlong = this.geoLocLong;
-            originlong = null;
         } else {
             originlong = null;
             destinationlong = null;
         }
-        console.log(originlat + ' ' + originlong + ' ' + destinationlat + ' ' + destinationlong);
-        this.navCtrl.navigateBack('/tabs/(map:map)');
-        this.startNavigation(originlat, originlong, destinationlat, destinationlong);
 
+        this.navCtrl.navigateBack('/tabs/(map:map)');
+        this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
-    public addMarker(position, map) {
+    public getDirections() {
+        if ((document.getElementById('directionsPanel').style.display) === 'none') {
+            document.getElementById('directionsPanel').style.display = 'block';
+        } else {
+            document.getElementById('directionsPanel').style.display = 'none';
+        }
+    }
+
+    public addMarker(position, map, iconstyle) {
         return new google.maps.Marker({
             position, map,
-            icon: 'assets/icon/charging.png'
+            icon: iconstyle
         });
     }
 
@@ -314,21 +565,43 @@ export class NavigationService {
         this.navCtrl.navigateBack('/tabs/(map:map)');
     }
 
+    public showAndHideMarkers() {
+        if (this.markersShown) {
+            this.markersShown = false;
+            this.markerCluster.clearMarkers();
+        } else {
+            this.markersShown = true;
+            if (!this.isNight) {
+                this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
+                this.map.setMapTypeId('day_map');
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+
+            } else if (this.isNight) {
+                this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
+                this.map.setMapTypeId('night_map');
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+            }
+        }
+    }
+
     public changeMapStyle() {
         if (this.isNight) {
             this.isNight = false;
             this.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
             this.map.setMapTypeId('day_map');
             this.markerCluster.clearMarkers();
-            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+            if (this.markersShown) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+            }
 
         } else if (!this.isNight) {
             this.isNight = true;
             this.map.mapTypes.set('night_map', this.mapStyleService.mapStyleNight);
             this.map.setMapTypeId('night_map');
             this.markerCluster.clearMarkers();
-            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
-
+            if (this.markersShown) {
+                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+            }
         }
     }
 }

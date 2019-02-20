@@ -4,6 +4,26 @@
 
 ion-list {
   width: 100%;
+  z-index: 1;
+}
+
+#directionsPanel {
+  display: none;
+  z-index: 1;
   position: absolute;
+  height: 50%;
+  width: 80%;
+  top: 40%;
+  left: 10%;
+  padding: 1%;
+  overflow: scroll;
+  background-color: white;
+}
+
+.place-list {
+  width: 100%;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 90px;
   z-index: 1;
 }
