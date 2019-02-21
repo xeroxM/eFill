@@ -658,31 +658,31 @@ export class MapStyleService {
 
     public clusterStylesDay = [
         {
-            textColor: '#eefff1',
+            textColor: '#ffffff',
             url: 'assets/cluster/a1.png',
             height: 51,
             width: 51
         },
         {
-            textColor: '#fffff3',
+            textColor: '#ffffff',
             url: 'assets/cluster/a2.png',
             height: 53,
             width: 53
         },
         {
-            textColor: '#ffe5cc',
+            textColor: '#ffffff',
             url: 'assets/cluster/a3.png',
             height: 66,
             width: 66
         },
         {
-            textColor: '#6c6c6c',
+            textColor: '#ffffff',
             url: 'assets/cluster/a4.png',
             height: 78,
             width: 78
         },
         {
-            textColor: '#6c6c6c',
+            textColor: '#ffffff',
             url: 'assets/cluster/a5.png',
             height: 78,
             width: 78
@@ -703,19 +703,19 @@ export class MapStyleService {
             width: 53
         },
         {
-            textColor: '#97c6ce',
+            textColor: '#dcecef',
             url: 'assets/cluster/b3.png',
             height: 66,
             width: 66
         },
         {
-            textColor: '#8ec3b9',
+            textColor: '#dcecef',
             url: 'assets/cluster/b4.png',
             height: 78,
             width: 78
         },
         {
-            textColor: '#8ec3b9',
+            textColor: '#dcecef',
             url: 'assets/cluster/b5.png',
             height: 78,
             width: 78
