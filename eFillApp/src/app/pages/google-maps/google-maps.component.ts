@@ -58,8 +58,8 @@ export class GoogleMapsComponent implements OnInit {
                 console.log(data);
                 if (data === true) {
                     this.navigationService.loadStationLocations();
+                    this.mapStyleService.showSplash = false;
                 }
-                this.mapStyleService.showSplash = false;
             });
         });
     }

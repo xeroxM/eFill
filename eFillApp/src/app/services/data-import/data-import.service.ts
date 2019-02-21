@@ -35,11 +35,7 @@ export class DataImportService {
             })
                 .then(async (db: SQLiteObject) => {
                     this.database = db;
-                    await this.database.executeSql('DROP TABLE IF EXISTS loadingstations').then(() => {
-                    }).catch(() => {
-                    });
                     this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
-                    console.log('Cleared table');
                     this.storage.get('database_filled').then(async val => {
                         if (val) {
                             this.databaseReady.next(true);
