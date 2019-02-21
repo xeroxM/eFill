@@ -1,4 +1,4 @@
-<div *ngIf="showSplash" class="splash">
+<div *ngIf="this.mapStyleService.showSplash" class="splash">
     <div class="spinner">
         <div *ngIf="!this.navigationService.isNight" class="double-bounce1Day"></div>
         <div *ngIf="!this.navigationService.isNight" class="double-bounce2Day"></div>

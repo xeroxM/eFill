@@ -4,10 +4,8 @@ import {Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 
-import {timer} from 'rxjs';
 import {MapStyleService} from './services/map-style/map-style.service';
 import {NavigationService} from './services/navigation/navigation.service';
-import {DataImportService} from './services/data-import/data-import.service';
 
 @Component({
     selector: 'app-root',
@@ -15,14 +13,12 @@ import {DataImportService} from './services/data-import/data-import.service';
 })
 export class AppComponent {
 
-    showSplash = true;
-
     constructor(
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         public navigationService: NavigationService,
-        public dataImport: DataImportService
+        public mapStyleService: MapStyleService
     ) {
         this.initializeApp();
     }
@@ -41,8 +37,6 @@ export class AppComponent {
                 this.navigationService.isNight = false;
                 this.navigationService.isNightToggle = false;
             }
-
-            timer(5000).subscribe(() => this.showSplash = false);
         });
     }
 }

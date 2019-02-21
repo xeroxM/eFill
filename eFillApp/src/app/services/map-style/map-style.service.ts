@@ -7,6 +7,8 @@ declare let google: any;
 })
 export class MapStyleService {
 
+    public showSplash = true;
+
     constructor() {
     }
 

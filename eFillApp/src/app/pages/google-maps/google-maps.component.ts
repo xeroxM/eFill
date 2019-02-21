@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
 import {DataImportService} from '../../services/data-import/data-import.service';
+import {NavController, Platform} from '@ionic/angular';
 
 declare let google: any;
 
@@ -17,7 +18,13 @@ export class GoogleMapsComponent implements OnInit {
     constructor(
         public mapStyleService: MapStyleService,
         public navigationService: NavigationService,
-        public dataImport: DataImportService) {
+        public dataImport: DataImportService,
+        private navCtrl: NavController,
+        private platform: Platform) {
+    }
+
+    public moveToFavorites() {
+        this.navCtrl.navigateForward('/tabs/(map:favorites)');
     }
 
     public showMap() {
@@ -45,12 +52,15 @@ export class GoogleMapsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.showMap();
-        this.dataImport.databaseReady.subscribe((data) => {
-            console.log(data);
-            if (data === true) {
-                this.navigationService.loadStationLocations();
-            }
+        this.platform.ready().then(() => {
+            this.showMap();
+            this.dataImport.databaseReady.subscribe((data) => {
+                console.log(data);
+                if (data === true) {
+                    this.navigationService.loadStationLocations();
+                }
+                this.mapStyleService.showSplash = false;
+            });
         });
     }
 }
