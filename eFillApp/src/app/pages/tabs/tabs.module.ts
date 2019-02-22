@@ -10,6 +10,7 @@ import {TabsPage} from './tabs.page';
 import {FavoritesPageModule} from '../favorites/favorites.module';
 import {MapPageModule} from '../map/map.module';
 import {RoutePageModule} from '../route/route.module';
+import {CarprofilePageModule} from '../carprofile/carprofile.module';
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import {RoutePageModule} from '../route/route.module';
         TabsPageRoutingModule,
         MapPageModule,
         FavoritesPageModule,
-        RoutePageModule
+        RoutePageModule,
+        CarprofilePageModule
     ],
     declarations: [TabsPage]
 })
