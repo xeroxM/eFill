@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [formGroup]="this.connectorForm">
   <ion-item>
     <ion-label>Marke</ion-label>
     <ion-select [(ngModel)]="marke" interface="action-sheet">
@@ -212,40 +212,38 @@
     <ion-label>Reichweite</ion-label>
     <ion-input></ion-input>
   </ion-item>
-  <ion-item>
-    <ion-label>Steckertyp 1</ion-label>
-    <ion-select interface="action-sheet">
-      <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
-      <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
-      <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
-      <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
-      <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
-      <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
-      <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Steckertyp 2</ion-label>
-    <ion-select interface="action-sheet">
-      <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
-      <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
-      <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
-      <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
-      <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
-      <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
-      <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>Steckertyp 3</ion-label>
-    <ion-select interface="action-sheet">
-      <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
-      <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
-      <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
-      <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
-      <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
-      <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
-      <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
-    </ion-select>
-  </ion-item>
+  <div formArrayName="connector_type">
+    <div *ngFor="let connectorTypeInstance of connectorTypeArray.controls; let i = index"
+         [formGroupName]="i">
+          <ion-item>
+            <ion-label>Steckertyp</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="connectorTypeInstance['select']">
+              <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
+              <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
+              <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
+              <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
+              <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
+              <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
+              <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
+            </ion-select>
+            <ion-buttons slot="end">
+              <ion-button (click)="removeConnectorType(i)">
+                <ion-icon name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+    </div>
+  </div>
+
+  <div class="connectorType">
+    <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
+                (click)="addConnectorType()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Steckertyp
+    </ion-button>
+  </div>
+  <ion-button slot="end" shape="round" color="primary" fill="outline">
+    <ion-icon slot="start" name="save"></ion-icon>
+    Speichern
+  </ion-button>
 </ion-content>
