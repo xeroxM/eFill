@@ -1,0 +1,249 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/(map:map)"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Autoprofil anlegen</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [formGroup]="this.connectorForm">
+  <ion-item>
+    <ion-label>Marke</ion-label>
+    <ion-select [(ngModel)]="marke" interface="action-sheet">
+      <ion-select-option value="audi">Audi</ion-select-option>
+      <ion-select-option value="bmw">BMW</ion-select-option>
+      <ion-select-option value="byd">BYD</ion-select-option>
+      <ion-select-option value="chevrolet">Chevrolet</ion-select-option>
+      <ion-select-option value="citroen">Citroën</ion-select-option>
+      <ion-select-option value="ego">e.Go</ion-select-option>
+      <ion-select-option value="fisker">Fisker</ion-select-option>
+      <ion-select-option value="ford">Ford</ion-select-option>
+      <ion-select-option value="gerEcars">German E-Cars</ion-select-option>
+      <ion-select-option value="jaguar">Jaguar</ion-select-option>
+      <ion-select-option value="kia">Kia</ion-select-option>
+      <ion-select-option value="landRover">Land Rover</ion-select-option>
+      <ion-select-option value="mercedes">Mercedes-Benz</ion-select-option>
+      <ion-select-option value="mini">MINI</ion-select-option>
+      <ion-select-option value="mitsubishi">Mitsubishi</ion-select-option>
+      <ion-select-option value="nissan">Nissan</ion-select-option>
+      <ion-select-option value="opel">Opel</ion-select-option>
+      <ion-select-option value="peugeot">Peugeot</ion-select-option>
+      <ion-select-option value="porsche">Porsche</ion-select-option>
+      <ion-select-option value="renault">Renault</ion-select-option>
+      <ion-select-option value="smart">smart</ion-select-option>
+      <ion-select-option value="streetScooter">Street Scooter</ion-select-option>
+      <ion-select-option value="tazzari">Tazzari</ion-select-option>
+      <ion-select-option value="tesla">Tesla</ion-select-option>
+      <ion-select-option value="toyota">Toyota</ion-select-option>
+      <ion-select-option value="vw">Volkswagen</ion-select-option>
+      <ion-select-option value="volvo">Volvo</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Modell</ion-label>
+    <ion-select *ngIf="marke === 'audi'" interface="action-sheet">
+      <ion-select-option value="a3Sportback">A3 Sportback e-tron</ion-select-option>
+      <ion-select-option value="etron55">e-tron 55</ion-select-option>
+      <ion-select-option value="q7etron">Q7 e-tron quattro</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'bmw'" interface="action-sheet">
+      <ion-select-option value="225xe">225xe Active Tourer</ion-select-option>
+      <ion-select-option value="330e">330e Limousine</ion-select-option>
+      <ion-select-option value="530e">530e iPerformance</ion-select-option>
+      <ion-select-option value="740e">740e</ion-select-option>
+      <ion-select-option value="740eLe">740eLe xDrive</ion-select-option>
+      <ion-select-option value="i360">i3 (60 Ah)</ion-select-option>
+      <ion-select-option value="i394">i3 (94 Ah)</ion-select-option>
+      <ion-select-option value="i3s94">i3s (94 Ah)</ion-select-option>
+      <ion-select-option value="i8C">i8 Coupé</ion-select-option>
+      <ion-select-option value="i8R">i8 Roadster</ion-select-option>
+      <ion-select-option value="X5">X5 xDrive40e iPerformance</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'byd'" interface="action-sheet">
+      <ion-select-option value="e6">E6</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'chevrolet'" interface="action-sheet">
+      <ion-select-option value="volt">Volt</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'citroen'" interface="action-sheet">
+      <ion-select-option value="berlingo">Berlingo Electric</ion-select-option>
+      <ion-select-option value="cZero">C-Zero</ion-select-option>
+      <ion-select-option value="eMehari">E-Mehari Cabrio</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'ego'" interface="action-sheet">
+      <ion-select-option value="life20">Life20</ion-select-option>
+      <ion-select-option value="life40">Life40</ion-select-option>
+      <ion-select-option value="life60">Life60</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'fisker'" interface="action-sheet">
+      <ion-select-option value="karma">Karma</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'ford'" interface="action-sheet">
+      <ion-select-option value="cMax">C-Max Energi</ion-select-option>
+      <ion-select-option value="focusEAlt">Focus Electric (bis 2017)</ion-select-option>
+      <ion-select-option value="focusENeu">Focus Electric (ab 2017)</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'gerEcars'" interface="action-sheet">
+      <ion-select-option value="stromos">Stromos</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'hyundai'" interface="action-sheet">
+      <ion-select-option value="ioniqE">IONIQ Elektro</ion-select-option>
+      <ion-select-option value="ioniqH">IONIQ Plug-In Hybrid</ion-select-option>
+      <ion-select-option value="kona100">Kona Elektro 100 kW</ion-select-option>
+      <ion-select-option value="kona150">Kona Elektro 150 kW</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'jaguar'" interface="action-sheet">
+      <ion-select-option value="iPace">I-Pace</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'kia'" interface="action-sheet">
+      <ion-select-option value="niroH">Niro Plug-In Hybrid</ion-select-option>
+      <ion-select-option value="optima">Optima 2.0 GDI</ion-select-option>
+      <ion-select-option value="soulAlt">Soul EV (bis 2017)</ion-select-option>
+      <ion-select-option value="soulNeu">Soul EV (ab 2017)</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'landRover'" interface="action-sheet">
+      <ion-select-option value="rangeRover">Range Rover P400e</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'mercedes'" interface="action-sheet">
+      <ion-select-option value="bKlasse">B-Klasse Sports Tourer B250e</ion-select-option>
+      <ion-select-option value="cKlasse">C-Klasse C350e</ion-select-option>
+      <ion-select-option value="eKlasse">E-Klasse E350e</ion-select-option>
+      <ion-select-option value="eVito">eVito</ion-select-option>
+      <ion-select-option value="eqc">EQC</ion-select-option>
+      <ion-select-option value="glc">GLC 350e 4Matic</ion-select-option>
+      <ion-select-option value="gle">GLC 500e 4Matic</ion-select-option>
+      <ion-select-option value="s500e">S500e</ion-select-option>
+      <ion-select-option value="sls">SLS AMG Coupé Electric Drive</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'mini'" interface="action-sheet">
+      <ion-select-option value="cooper">Cooper S E Countryman All4</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'mitsubishi'" interface="action-sheet">
+      <ion-select-option value="iMiEV">i-MiEV</ion-select-option>
+      <ion-select-option value="outlander">Outlander Plug-In Hybrid</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'nissan'" interface="action-sheet">
+      <ion-select-option value="eNV200">e-NV200 EVALIA</ion-select-option>
+      <ion-select-option value="leaf24">Leaf (24 kWh)</ion-select-option>
+      <ion-select-option value="leaf30">Leaf (30 kWh)</ion-select-option>
+      <ion-select-option value="leaf40">Leaf (40 kWh)</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'opel'" interface="action-sheet">
+      <ion-select-option value="ampera">Ampera</ion-select-option>
+      <ion-select-option value="amperaE">Ampera-e</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'peugeot'" interface="action-sheet">
+      <ion-select-option value="iOn">iOn</ion-select-option>
+      <ion-select-option value="partnerE">Partner Electric</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'porsche'" interface="action-sheet">
+      <ion-select-option value="918">918 Spyder</ion-select-option>
+      <ion-select-option value="cayenne">Cayenne S E-Hybrid</ion-select-option>
+      <ion-select-option value="panameraT">Panamera Turbo S E-Hybrid</ion-select-option>
+      <ion-select-option value="panameraTEx">Panamera Turbo S E-Hybrid Executive</ion-select-option>
+      <ion-select-option value="panameraTSp">Panamera Turbo S E-Hybrid Sport Turismo</ion-select-option>
+      <ion-select-option value="panamera4e">Panamera 4 E-Hybrid</ion-select-option>
+      <ion-select-option value="panamera4eEx">Panamera 4 E-Hybrid Executive</ion-select-option>
+      <ion-select-option value="panamera4eSp">Panamera 4 E-Hybrid Sport Turismo</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'renault'" interface="action-sheet">
+      <ion-select-option value="fluence">Fluence Z.E.</ion-select-option>
+      <ion-select-option value="kangooAlt">Kangoo Z.E. (bis 2017)</ion-select-option>
+      <ion-select-option value="kangoo33">Kangoo Z.E. 33</ion-select-option>
+      <ion-select-option value="twizy45">Twizy 45</ion-select-option>
+      <ion-select-option value="twizy80">Twizy 80</ion-select-option>
+      <ion-select-option value="zoeR240">Zoe R240</ion-select-option>
+      <ion-select-option value="zoeR90">Zoe R90 (Z.E. 40)</ion-select-option>
+      <ion-select-option value="zoeQ90">Zoe Q90 (Z.E. 40)</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'smart'" interface="action-sheet">
+      <ion-select-option value="cabrio">cabrio electric drive</ion-select-option>
+      <ion-select-option value="forfour">forfour electric drive</ion-select-option>
+      <ion-select-option value="fortwoAlt">fortwo electric drive (bis 2016)</ion-select-option>
+      <ion-select-option value="fortwoNeu">fortwo electric drive</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'streetScooter'" interface="action-sheet">
+      <ion-select-option value="work">Work</ion-select-option>
+      <ion-select-option value="workL">Work L</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'tazzari'" interface="action-sheet">
+      <ion-select-option value="zeroEM1">Zero EM1</ion-select-option>
+      <ion-select-option value="zeroEM2">Zero EM2 Space</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'tesla'" interface="action-sheet">
+      <ion-select-option value="modelSP100">Model S P100D</ion-select-option>
+      <ion-select-option value="modelS70">Model S 70D</ion-select-option>
+      <ion-select-option value="modelS75">Model S 75D</ion-select-option>
+      <ion-select-option value="modelS90">Model S 90D</ion-select-option>
+      <ion-select-option value="modelS100">Model S 100D</ion-select-option>
+      <ion-select-option value="modelXP90">Model X P90D</ion-select-option>
+      <ion-select-option value="modelXP100">Model X P100D</ion-select-option>
+      <ion-select-option value="modelX75">Model X 75D</ion-select-option>
+      <ion-select-option value="modelX90">Model X 90D</ion-select-option>
+      <ion-select-option value="modelX100">Model X 100D</ion-select-option>
+      <ion-select-option value="model3">Model 3</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'toyota'" interface="action-sheet">
+      <ion-select-option value="priusAlt">Prius Plug-In Hybrid (bis 2016)</ion-select-option>
+      <ion-select-option value="priusNeu">Prius Plug-In Hybrid (ab 2016)</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'vw'" interface="action-sheet">
+      <ion-select-option value="eCrafter">e-Crafter</ion-select-option>
+      <ion-select-option value="eGolfAlt">e-Golf (bis 2016)</ion-select-option>
+      <ion-select-option value="eGolfNeu">e-Golf (ab 2016)</ion-select-option>
+      <ion-select-option value="eUp">e-up!</ion-select-option>
+      <ion-select-option value="golfGTE">Golf GTE</ion-select-option>
+      <ion-select-option value="passatLimousine">Passat Limousine GTE</ion-select-option>
+      <ion-select-option value="passatVariant">Passat Variant GTE</ion-select-option>
+      <ion-select-option value="xl1">XL1</ion-select-option>
+    </ion-select>
+    <ion-select *ngIf="marke === 'volvo'" interface="action-sheet">
+      <ion-select-option value="c30">C30 Electric</ion-select-option>
+      <ion-select-option value="s90">S90 T8 Twin Engine</ion-select-option>
+      <ion-select-option value="v60">V60 Plug-In Hybrid</ion-select-option>
+      <ion-select-option value="v90">V90 T8 Twin Engine AWD</ion-select-option>
+      <ion-select-option value="xc60">XC60 T8 Twin Engine</ion-select-option>
+      <ion-select-option value="xc90">XC90 Plug-In Hybrid</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Reichweite</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+  <div formArrayName="connector_type">
+    <div *ngFor="let connectorTypeInstance of connectorTypeArray.controls; let i = index"
+         [formGroupName]="i">
+          <ion-item>
+            <ion-label>Steckertyp</ion-label>
+            <ion-select interface="action-sheet" [(ngModel)]="connectorTypeInstance['select']">
+              <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
+              <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
+              <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
+              <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
+              <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
+              <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
+              <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
+            </ion-select>
+            <ion-buttons slot="end">
+              <ion-button (click)="removeConnectorType(i)">
+                <ion-icon name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+    </div>
+  </div>
+
+  <div class="connectorType">
+    <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
+                (click)="addConnectorType()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Steckertyp
+    </ion-button>
+  </div>
+  <ion-button slot="end" shape="round" color="primary" fill="outline">
+    <ion-icon slot="start" name="save"></ion-icon>
+    Speichern
+  </ion-button>
+</ion-content>
