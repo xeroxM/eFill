@@ -59,6 +59,8 @@ export class GoogleMapsComponent implements OnInit {
                 if (data === true) {
                     this.navigationService.loadStationLocations();
                     this.mapStyleService.showSplash = false;
+                    console.log(this.dataImport.getAllDBEntries());
+                    console.log(this.dataImport.getAllFavEntries());
                 }
             });
         });

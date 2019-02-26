@@ -179,7 +179,8 @@ export class NavigationService {
 
     public async loadStationLocations() {
             this.stationInformation = await this.importData.getAllDBEntries();
-            console.log('Hello', this.stationInformation[0], 'World');
+            this.favorites = await this.importData.getAllFavEntries();
+            // console.log('Hello', this.stationInformation[0], 'World');
 
 
             const optionsSpidifier = {
@@ -236,7 +237,10 @@ export class NavigationService {
 
                         document.getElementById('isNotFavorite').addEventListener('click', () => {
                             console.log(this.favorites);
-                            this.favorites.push(this.stationInformation[i]);
+                           // this.favorites.push(this.stationInformation[i]);
+                            this.importData.database.executeSql(this.importData.addFav, this.stationInformation[i]);
+
+
                             document.getElementById('isNotFavorite').style.visibility = 'hidden';
                             document.getElementById('isFavorite').style.visibility = 'visible';
                         });

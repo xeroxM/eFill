@@ -93,6 +93,8 @@
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
     <plugin name="cordova-plugin-tts" spec="0.2.3" />
+    <plugin name="cordova-sqlite-storage" spec="~3.0.0" />
+    <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="~1.1.0" />
     <engine name="android" spec="7.1.4" />
     <engine name="browser" spec="5.0.4" />
 </widget>
