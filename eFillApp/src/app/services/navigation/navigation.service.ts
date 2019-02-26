@@ -106,7 +106,7 @@ export class NavigationService {
         public navCtrl: NavController,
         public geolocation: Geolocation,
         public zone: NgZone,
-        public importData: DataImportService,
+        public dataImport: DataImportService,
         public mapStyleService: MapStyleService,
         public fb: FormBuilder,
         private platform: Platform,
@@ -178,97 +178,116 @@ export class NavigationService {
     }
 
     public async loadStationLocations() {
-            this.stationInformation = await this.importData.getAllDBEntries();
-            this.favorites = await this.importData.getAllFavEntries();
-            // console.log('Hello', this.stationInformation[0], 'World');
+        this.favorites = await this.dataImport.getAllFavEntries();
+        this.stationInformation = await this.dataImport.getAllDBEntries();
 
+        const optionsSpidifier = {
+            keepSpiderfied: true,
+            legWeight: 0,
+            nudgeRadius: 1,
+            spiderfiedShadowColor: false
+        };
 
-            const optionsSpidifier = {
-                keepSpiderfied: true,
-                legWeight: 0,
-                nudgeRadius: 1,
-                spiderfiedShadowColor: false
-            };
+        const markerSpiderfier = new OverlappingMarkerSpiderfier(this.map, optionsSpidifier);
 
-            const markerSpiderfier = new OverlappingMarkerSpiderfier(this.map, optionsSpidifier);
+        for (let i = 0; i < this.stationInformation.length; i++) {
+            const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
+            const marker = this.addMarker(location, this.map, 'assets/icon/charging.png');
 
-            for (let i = 0; i < this.stationInformation.length; i++) {
-                const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
-                const marker = this.addMarker(location, this.map, 'assets/icon/charging.png');
+            this.stationMarkersSet.add(marker);
+            markerSpiderfier.addMarker(marker);
 
-                this.stationMarkersSet.add(marker);
-                markerSpiderfier.addMarker(marker);
+            this.stationMarkers = Array.from(this.stationMarkersSet);
 
-                this.stationMarkers = Array.from(this.stationMarkersSet);
+            marker.addListener('click', () => {
+                if (this.currentWindow != null) {
+                    this.currentWindow.close();
+                }
 
-                marker.addListener('click', () => {
-                    if (this.currentWindow != null) {
-                        this.currentWindow.close();
-                    }
+                const infowindow = new google.maps.InfoWindow({
+                    maxWidth: 320,
+                    content:
+                        `<div style="margin-left: 15px"><button id="isNotFavorite"` +
+                        `style="background: none; position: absolute; top: 10px; left: 0">` +
+                        `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
+                        `<button id="isFavorite" style="background: none; position: absolute; top: 10px; left: 0">` +
+                        `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>` +
+                        `${this.stationInformation[i].operator}</div><br/>` +
+                        `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},` +
+                        `${this.stationInformation[i].long});">Route berechnen</a>`
+                });
 
-                    const infowindow = new google.maps.InfoWindow({
-                        maxWidth: 320,
-                        content:
-                            `<div style="margin-left: 15px"><button id="isNotFavorite"` +
-                            `style="background: none; position: absolute; top: 10px; left: 0">` +
-                            `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
-                            `<button id="isFavorite" style="background: none; position: absolute; top: 10px; left: 0">` +
-                            `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>` +
-                            `${this.stationInformation[i].operator}</div><br/>` +
-                            `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},` +
-                            `${this.stationInformation[i].long});">Route berechnen</a>`
-                    });
+                google.maps.event.addListenerOnce(infowindow, 'domready', () => {
 
-                    google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+                    const result = this.favorites.find(station => station === this.stationInformation[i]);
 
-                        const result = this.favorites.find(station => station === this.stationInformation[i]);
-
-                        if (this.favorites.length === 0) {
-                            document.getElementById('isFavorite').style.visibility = 'hidden';
-                        } else {
-                            if (result) {
-                                document.getElementById('isNotFavorite').style.visibility = 'hidden';
-                                document.getElementById('isFavorite').style.visibility = 'visible';
-                            } else {
-                                document.getElementById('isFavorite').style.visibility = 'hidden';
-                                document.getElementById('isNotFavorite').style.visibility = 'visible';
-                            }
-                        }
-
-                        document.getElementById('isNotFavorite').addEventListener('click', () => {
-                            console.log(this.favorites);
-                           // this.favorites.push(this.stationInformation[i]);
-                            this.importData.database.executeSql(this.importData.addFav, this.stationInformation[i]);
-
-
+                    if (this.favorites.length === 0) {
+                        document.getElementById('isFavorite').style.visibility = 'hidden';
+                    } else {
+                        if (result) {
                             document.getElementById('isNotFavorite').style.visibility = 'hidden';
                             document.getElementById('isFavorite').style.visibility = 'visible';
-                        });
-                        document.getElementById('isFavorite').addEventListener('click', () => {
-                            for (let j = 0; j < this.favorites.length; j++) {
-                                if (this.favorites[j] === this.stationInformation[i]) {
-                                    this.favorites.splice(j, 1);
-                                }
-                            }
+                        } else {
                             document.getElementById('isFavorite').style.visibility = 'hidden';
                             document.getElementById('isNotFavorite').style.visibility = 'visible';
-                        });
+                        }
+                    }
+
+                    document.getElementById('isNotFavorite').addEventListener('click', () => {
+                        this.favorites.push(this.stationInformation[i]);
+                        this.dataImport.database.executeSql(this.dataImport.addFav,
+                            [this.stationInformation[i]['operator'],
+                                this.stationInformation[i]['adress'],
+                                this.stationInformation[i]['place'],
+                                this.stationInformation[i]['long'],
+                                this.stationInformation[i]['lat'],
+                                this.stationInformation[i]['commissioning_date'],
+                                this.stationInformation[i]['power_consumption'],
+                                this.stationInformation[i]['station_type'],
+                                this.stationInformation[i]['number_of_charging_points'],
+                                this.stationInformation[i]['plug_type_1'],
+                                this.stationInformation[i]['kW_1'],
+                                this.stationInformation[i]['public_key_1'],
+                                this.stationInformation[i]['plug_type_2'],
+                                this.stationInformation[i]['kW_2'],
+                                this.stationInformation[i]['public_key_2'],
+                                this.stationInformation[i]['plug_type_3'],
+                                this.stationInformation[i]['kW_3'],
+                                this.stationInformation[i]['public_key_3'],
+                                this.stationInformation[i]['plug_type_4'],
+                                this.stationInformation[i]['kW_4'],
+                                this.stationInformation[i]['public_key_4'],
+                                this.stationInformation[i]['station_type']]);
+
+                        document.getElementById('isNotFavorite').style.visibility = 'hidden';
+                        document.getElementById('isFavorite').style.visibility = 'visible';
                     });
-
-                    infowindow.open(this.map, marker);
-                    this.currentWindow = infowindow;
-                    // this.getRouteToStation(this.stationInformation[i].lat, this.stationInformation[i].long);
-
+                    document.getElementById('isFavorite').addEventListener('click', () => {
+                        for (let j = 0; j < this.favorites.length; j++) {
+                            if (this.favorites[j] === this.stationInformation[i]) {
+                                this.favorites.splice(j, 1);
+                                const rowid = j + 1;
+                                this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid);
+                                this.dataImport.database.executeSql(`VACUUM`);
+                            }
+                        }
+                        document.getElementById('isFavorite').style.visibility = 'hidden';
+                        document.getElementById('isNotFavorite').style.visibility = 'visible';
+                    });
                 });
-            }
 
-            const time = new Date().getHours();
+                infowindow.open(this.map, marker);
+                this.currentWindow = infowindow;
+            });
+        }
 
-            if (time < 6 || time > 19) {
-                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
-            } else if (time >= 6 || time <= 19) {
-                this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
-            }
+        const time = new Date().getHours();
+
+        if (time < 6 || time > 19) {
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+        } else if (time >= 6 || time <= 19) {
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+        }
     }
 
     public updateSearchResults(autocomplete) {

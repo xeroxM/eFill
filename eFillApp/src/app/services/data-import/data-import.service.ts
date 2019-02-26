@@ -7,14 +7,15 @@ import {BehaviorSubject} from 'rxjs';
 import {Storage} from '@ionic/storage';
 
 
-
-
 @Injectable()
 export class DataImportService {
     database: SQLiteObject;
     public databaseReady: BehaviorSubject<boolean>;
 
-    public addFav = 'INSERT INTO Favorites VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+    public addFav = 'INSERT INTO favorites (operator, adress, place, long, lat, commissioning_date, ' +
+        'power_consumption, station_type, number_of_charging_points, plug_type_1, kW_1, public_key_1, ' +
+        'plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4, station_type) ' +
+        'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
     constructor(private http: HttpClient,
                 private sqlitePorter: SQLitePorter,
@@ -31,7 +32,6 @@ export class DataImportService {
                     this.database = db;
                     this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
                     this.storage.set('database_filled', await this.checkTableExists('favorites'));
-                    // this.storage.set('database_filled', false);
                     this.storage.get('database_filled').then(async val => {
                         if (val) {
                             this.databaseReady.next(true);
@@ -52,8 +52,6 @@ export class DataImportService {
                     this.databaseReady.next(true);
                     this.storage.set('database_filled', true);
                     console.log(`Importing DB took ${Date.now() - time} milliseconds`);
-                   // console.log(await this.getAllDBEntries());
-                    /*console.log(await this.getAllFavEntries());*/
                 }).catch(e => console.error(e));
         });
     }
@@ -85,6 +83,7 @@ export class DataImportService {
         });
         return temp;
     }
+
     public async getAllFavEntries() {
         const temp2 = [];
         await this.database.executeSql('SELECT * FROM favorites').then(data => {
@@ -98,10 +97,4 @@ export class DataImportService {
         });
         return temp2;
     }
-    /*public addFavorite(operator, adress, place, long, lat, commissioning_date, power_consumption, station_type, number_of_charging_points, plug_type_1, kW_1, public_key_1, plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4) {
-        const data = [operator, adress, place, long, lat, commissioning_date, power_consumption, station_type, number_of_charging_points, plug_type_1, kW_1, public_key_1, plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4];
-        return this.database.executeSql('INSERT INTO Favorites (operator, adress, place, long, lat, commissioning_date, power_consumption, station_type, number_of_charging_points, plug_type_1, kW_1, public_key_1, plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', data).then(res => {
-            return res;
-        });
-    }*/
 }
