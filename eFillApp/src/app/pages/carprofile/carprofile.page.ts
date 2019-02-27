@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
-  selector: 'app-carprofile',
-  templateUrl: './carprofile.page.html',
-  styleUrls: ['./carprofile.page.scss'],
+    selector: 'app-carprofile',
+    templateUrl: './carprofile.page.html',
+    styleUrls: ['./carprofile.page.scss'],
 })
 export class CarprofilePage {
+
+    public carBrand;
     public connectorForm: FormGroup;
 
     public connectorTypeObject: Validators = {
         connector_type_object: ''
     };
-  constructor(public fb: FormBuilder) { this.createConnectorType(); }
+
+    constructor(public fb: FormBuilder) {
+        this.createConnectorType();
+    }
 
     public createConnectorType() {
         this.connectorForm = this.fb.group({
@@ -30,7 +35,7 @@ export class CarprofilePage {
         this.connectorTypeArray.push(newInstance);
     }
 
-    public removeConnectorType (index) {
+    public removeConnectorType(index) {
         this.connectorTypeArray.removeAt(index);
     }
 
