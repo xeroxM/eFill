@@ -15,7 +15,11 @@ export class FavoritesPage {
     public removeFavorite(favorites, index) {
         favorites.splice(index, 1);
         const rowid = index + 1;
-        this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid);
-        this.dataImport.database.executeSql(`VACUUM`);
+        this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid).catch((data) => {
+            console.log(data);
+        });
+        this.dataImport.database.executeSql(`VACUUM`).catch((data) => {
+            console.log(data);
+        });
     }
 }

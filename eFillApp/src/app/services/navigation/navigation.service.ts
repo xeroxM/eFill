@@ -219,7 +219,7 @@ export class NavigationService {
 
                 google.maps.event.addListenerOnce(infowindow, 'domready', () => {
 
-                    const result = this.favorites.find(station => station === this.stationInformation[i]);
+                    const result = this.favorites.find(station => JSON.stringify(station) === JSON.stringify(this.stationInformation[i]));
 
                     if (this.favorites.length === 0) {
                         document.getElementById('isFavorite').style.visibility = 'hidden';
@@ -264,11 +264,15 @@ export class NavigationService {
                     });
                     document.getElementById('isFavorite').addEventListener('click', () => {
                         for (let j = 0; j < this.favorites.length; j++) {
-                            if (this.favorites[j] === this.stationInformation[i]) {
+                            if (JSON.stringify(this.favorites[j]) === JSON.stringify(this.stationInformation[i])) {
                                 this.favorites.splice(j, 1);
                                 const rowid = j + 1;
-                                this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid);
-                                this.dataImport.database.executeSql(`VACUUM`);
+                                this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid).catch((data) => {
+                                    console.log(data);
+                                });
+                                this.dataImport.database.executeSql(`VACUUM`).catch((data) => {
+                                    console.log(data);
+                                });
                             }
                         }
                         document.getElementById('isFavorite').style.visibility = 'hidden';
