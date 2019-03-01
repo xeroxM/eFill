@@ -181,7 +181,7 @@ export class NavigationService {
         this.favorites = await this.dataImport.getAllFavEntries();
         this.stationInformation = await this.dataImport.getAllDBEntries();
 
-        await this.dataImport.getAllFavEntries().then(() => {
+        await this.dataImport.getAllDBEntries().then(() => {
                 this.mapStyleService.showSplash = false;
             }
         );
@@ -213,14 +213,43 @@ export class NavigationService {
                 const infowindow = new google.maps.InfoWindow({
                     maxWidth: 320,
                     content:
-                        `<div style="margin-left: 15px"><button id="isNotFavorite"` +
-                        `style="background: none; position: absolute; top: 10px; left: 0">` +
-                        `<ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>` +
-                        `<button id="isFavorite" style="background: none; position: absolute; top: 10px; left: 0">` +
-                        `<ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>` +
-                        `${this.stationInformation[i].operator}</div><br/>` +
-                        `<a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},` +
-                        `${this.stationInformation[i].long});">Route berechnen</a>`
+                        `<ion-row style="margin-bottom: 7px">
+                            <ion-col size="auto">
+                                <button id="isNotFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
+                                <ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>
+                                <button id="isFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
+                                <ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>
+                            </ion-col>
+                            <ion-col size="auto" style="margin-left: 7px">
+                                ${this.stationInformation[i].operator}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row style="margin-bottom: 7px">
+                            <ion-col style="border-right: 1px solid #989aa2; padding-right: 10px" size="auto">
+                                ${this.stationInformation[i]['adress']}<br/>
+                                ${this.stationInformation[i]['place']}
+                            </ion-col>
+                            <ion-col size="auto" style="padding-left: 10px">
+                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_1'].length > 0}">
+                                    plug_type_1
+                                </ion-row>
+                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_2'].length > 0}">
+                                    plug_type_2
+                                </ion-row>
+                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_3'].length > 0}">
+                                    plug_type_3
+                                </ion-row>
+                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_4'].length > 0}">
+                                    plug_type_4
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="auto">
+                                <a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},
+                                ${this.stationInformation[i].long});">Route berechnen</a>
+                            </ion-col>
+                        </ion-row>`
                 });
 
                 google.maps.event.addListenerOnce(infowindow, 'domready', () => {
