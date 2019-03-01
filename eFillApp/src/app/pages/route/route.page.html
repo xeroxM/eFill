@@ -9,7 +9,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content [formGroup]="this.navigationService.routeForm">
-    <ion-list>
+    <ion-list style="height: 100%">
         <ion-toolbar class="search">
             <ion-icon [hidden]="this.navigationService.autocompleteStartPoint.input !== 'Mein Standort'" slot="start"
                       name="radio-button-on"></ion-icon>
@@ -37,7 +37,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-fab>
-            <ion-list *ngIf="this.navigationService.showItemsStartPoint"
+            <ion-list class="place-list" *ngIf="this.navigationService.showItemsStartPoint"
                       [hidden]="this.navigationService.autocompleteStartPoint.input < 1" no-padding>
                 <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                           (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteStartPoint)">
@@ -68,7 +68,7 @@
                 </ion-toolbar>
             </div>
             <ion-fab>
-                <ion-list *ngIf="this.navigationService.showItemsWayPoint === true"
+                <ion-list class="place-list" *ngIf="this.navigationService.showItemsWayPoint === true"
                           [hidden]="saveWayPoint['input'] < 1" no-padding>
                     <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                               (click)="this.navigationService.selectSearchResult(item, saveWayPoint); test(saveWayPoint)">
@@ -95,7 +95,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-fab>
-            <ion-list *ngIf="this.navigationService.showItemsEndPoint"
+            <ion-list class="place-list" *ngIf="this.navigationService.showItemsEndPoint"
                       [hidden]="this.navigationService.autocompleteEndPoint.input < 1" no-padding>
                 <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
                           (click)="this.navigationService.selectSearchResult(item, this.navigationService.autocompleteEndPoint);">

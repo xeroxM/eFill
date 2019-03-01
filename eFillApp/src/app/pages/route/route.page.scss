@@ -15,14 +15,14 @@
   padding-right: 5px;
 }
 
-ion-input {
-  margin-left: 5px;
-}
-
-ion-list {
+.place-list {
   width: 100%;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+ion-input {
+  margin-left: 5px;
 }
 
 ion-fab {
