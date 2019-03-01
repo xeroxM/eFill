@@ -9,6 +9,7 @@ import {Storage} from '@ionic/storage';
 
 @Injectable()
 export class DataImportService {
+
     database: SQLiteObject;
     public databaseReady: BehaviorSubject<boolean>;
 
@@ -24,23 +25,27 @@ export class DataImportService {
                 private platform: Platform) {
         this.databaseReady = new BehaviorSubject(false);
         this.platform.ready().then(() => {
-            this.sqlite.create({
-                name: 'eFill.db',
-                location: 'default'
-            })
-                .then(async (db: SQLiteObject) => {
-                    this.database = db;
-                    this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
-                    this.storage.set('database_filled', await this.checkTableExists('favorites'));
-                    this.storage.get('database_filled').then(async val => {
-                        if (val) {
-                            this.databaseReady.next(true);
-                        } else {
-                            this.fillDatabase();
-                        }
-                    });
-                });
+            this.createSQLDB();
         });
+    }
+
+    public createSQLDB() {
+        this.sqlite.create({
+            name: 'eFill.db',
+            location: 'default'
+        })
+            .then(async (db: SQLiteObject) => {
+                this.database = db;
+                this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
+                this.storage.set('database_filled', await this.checkTableExists('favorites'));
+                this.storage.get('database_filled').then(async val => {
+                    if (val) {
+                        this.databaseReady.next(true);
+                    } else {
+                        this.fillDatabase();
+                    }
+                });
+            });
     }
 
     public async fillDatabase() {
