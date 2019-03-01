@@ -181,6 +181,12 @@ export class NavigationService {
         this.favorites = await this.dataImport.getAllFavEntries();
         this.stationInformation = await this.dataImport.getAllDBEntries();
 
+        await this.dataImport.getAllFavEntries().then(() => {
+                this.mapStyleService.showSplash = false;
+            }
+        );
+
+
         const optionsSpidifier = {
             keepSpiderfied: true,
             legWeight: 0,
