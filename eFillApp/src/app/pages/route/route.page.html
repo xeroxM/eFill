@@ -111,6 +111,54 @@
                 Zwischenstopp
             </ion-button>
         </div>
+        <div class="info-button"
+             [hidden]="this.navigationService.showInfoButton != false">
+            <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
+                        (click)="this.navigationService.showInfoButton = true;">
+                <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+                Informationen hinzufügen
+            </ion-button>
+        </div>
+
+        <ion-list class="car-information"
+                  *ngIf="this.navigationService.showInfoButton"
+                  [hidden]="this.navigationService.showInfoButton != true">
+            <ion-item>
+                <ion-label>Informationen hinzufügen</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-input type="text" placeholder="aktuelle Reichweite in km"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Steckertypen</ion-label>
+                <ion-select interface="alert" multiple="true">
+                    <ion-select-option value="acCEE3">AC CEE 3 polig</ion-select-option>
+                    <ion-select-option value="acCEE5">AC CEE 5 polig</ion-select-option>
+                    <ion-select-option value="acTyp2">AC Steckdose Typ 2</ion-select-option>
+                    <ion-select-option value="ccs">CCS/ Combo 2</ion-select-option>
+                    <ion-select-option value="dcCHAdeMO">DC CHAdeMO</ion-select-option>
+                    <ion-select-option value="dcKupplung">DC Kupplung Combo</ion-select-option>
+                    <ion-select-option value="Typ1">Steckdose Typ 1</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Fahrstil</ion-label>
+                <ion-select interface="alert">
+                    <ion-select-option value="slow">Langsam</ion-select-option>
+                    <ion-select-option value="normal">Normal</ion-select-option>
+                    <ion-select-option value="fast">Schnell</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Wetter</ion-label>
+                <ion-select interface="alert">
+                    <ion-select-option value="cold">Kalt</ion-select-option>
+                    <ion-select-option value="normal">Normal</ion-select-option>
+                    <ion-select-option value="heat">Heiß</ion-select-option>
+                </ion-select>
+            </ion-item>
+        </ion-list>
+
 
         <div class="start-button" text-center>
             <ion-button
@@ -118,7 +166,8 @@
                     slot="end" shape="round" color="primary" fill="outline"
                     (click)="this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
                          this.navigationService.routeForm.value['end_point'],
-                         this.navigationService.routeForm.value['way_point'])">
+                         this.navigationService.routeForm.value['way_point']);
+                         this.navigationService.showInfoButton = false;">
                 <ion-icon slot="start" name="car"></ion-icon>
                 Route berechnen
             </ion-button>

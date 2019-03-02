@@ -70,6 +70,8 @@ export class NavigationService {
     public navigationActive = false;
     public volumeOn = true;
 
+    public showInfoButton = false;
+
     // markers for geolocation
     public markerInner: any;
     public markerOuter: any;
