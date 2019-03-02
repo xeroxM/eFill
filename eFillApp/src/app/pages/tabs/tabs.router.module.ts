@@ -5,7 +5,6 @@ import {TabsPage} from './tabs.page';
 import {MapPage} from '../map/map.page';
 import {FavoritesPage} from '../favorites/favorites.page';
 import {RoutePage} from '../route/route.page';
-import {CarprofilePage} from '../carprofile/carprofile.page';
 
 
 const routes: Routes = [
@@ -27,11 +26,6 @@ const routes: Routes = [
                 path: 'favorites',
                 outlet: 'map',
                 component: FavoritesPage
-            },
-            {
-                path: 'carprofile',
-                outlet: 'map',
-                component: CarprofilePage
             }
         ]
     },
