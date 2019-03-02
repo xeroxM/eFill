@@ -77,6 +77,11 @@ export class NavigationService {
     // lat and long for geolocation
     public geoLocLat: number;
     public geoLocLong: number;
+    public locationOptions = {
+        enableHighAccuracy: true,
+        timeout: Infinity,
+        maximumAge: 0
+    };
 
     // checks if its day or night
     public isNight: boolean;
@@ -134,12 +139,6 @@ export class NavigationService {
     }
 
     public getCurrentLocation() {
-        const options = {
-            enableHighAccuracy: true,
-            timeout: Infinity,
-            maximumAge: 0
-        };
-
         this.markerInner = new google.maps.Marker({
             map: this.map,
             icon: this.mapStyleService.innerCircle
@@ -152,7 +151,7 @@ export class NavigationService {
 
         let isZoomed = false;
 
-        this.watchID = this.geolocation.watchPosition(options).subscribe(pos => {
+        this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
 
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
@@ -171,9 +170,10 @@ export class NavigationService {
 
     public getInput(autocomplete) {
         autocomplete.input = 'Mein Standort';
-        this.geolocation.getCurrentPosition().then(pos => {
+        this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
+            this.watchID.unsubscribe();
         });
     }
 
@@ -185,8 +185,7 @@ export class NavigationService {
                 this.mapStyleService.showSplash = false;
             }
         );
-
-
+        
         const optionsSpidifier = {
             keepSpiderfied: true,
             legWeight: 0,
@@ -546,11 +545,12 @@ export class NavigationService {
     }
 
     public getRouteToStation(stationlat, stationlong) {
-        this.geolocation.getCurrentPosition().then(pos => {
+        this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
             this.calculateRoute(this.geoLocLat, this.geoLocLong,
                 stationlat, stationlong, []);
+            this.watchID.unsubscribe();
         });
     }
 
@@ -578,9 +578,10 @@ export class NavigationService {
     public convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
 
-        this.geolocation.getCurrentPosition().then(pos => {
+        this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
+            this.watchID.unsubscribe();
         });
 
         originlat = origin;
