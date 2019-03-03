@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {MapPage} from './map.page';
 import {GoogleMapsComponent} from '../google-maps/google-maps.component';
 import {RoutePageModule} from '../route/route.module';
+import {NearbyLoadingStationsPageModule} from '../nearby-loading-stations/nearby-loading-stations.module';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import {RoutePageModule} from '../route/route.module';
         CommonModule,
         FormsModule,
         RoutePageModule,
+        NearbyLoadingStationsPageModule,
         RouterModule.forChild([{path: '', component: MapPage}]),
     ]
 })

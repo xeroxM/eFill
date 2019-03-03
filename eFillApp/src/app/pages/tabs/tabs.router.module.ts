@@ -5,6 +5,7 @@ import {TabsPage} from './tabs.page';
 import {MapPage} from '../map/map.page';
 import {FavoritesPage} from '../favorites/favorites.page';
 import {RoutePage} from '../route/route.page';
+import {NearbyLoadingStationsPage} from '../nearby-loading-stations/nearby-loading-stations.page';
 
 
 const routes: Routes = [
@@ -26,6 +27,11 @@ const routes: Routes = [
                 path: 'favorites',
                 outlet: 'map',
                 component: FavoritesPage
+            },
+            {
+                path: 'nearby-stations',
+                outlet: 'map',
+                component: NearbyLoadingStationsPage
             }
         ]
     },

@@ -44,6 +44,8 @@ export class NavigationService {
     public stationMarkersSet = new Set();
     public stationMarkers = [];
 
+    public stationDistance = [];
+
     // array for station information from server
     public stationInformation = [];
     public currentWindow = null;
@@ -187,7 +189,7 @@ export class NavigationService {
                 this.mapStyleService.showSplash = false;
             }
         );
-        
+
         const optionsSpidifier = {
             keepSpiderfied: true,
             legWeight: 0,
@@ -537,6 +539,58 @@ export class NavigationService {
             }
 
         });
+    }
+
+    public addLoadingStationToRoute() {
+
+        for (let i = 0; this.stationInformation.length > i; i++) {
+            const rad = (x) => {
+                return x * Math.PI / 180;
+            };
+
+            const earthRadius = 6378137;
+            const distanceLat = rad(this.stationInformation[i]['lat'] - this.geoLocLat);
+            const distanceLong = rad(this.stationInformation[i]['long'] - this.geoLocLong);
+            const a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
+                Math.cos(rad(this.geoLocLat)) * Math.cos(rad(this.stationInformation[i]['lat'])) *
+                Math.sin(distanceLong / 2) * Math.sin(distanceLong / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = earthRadius * c;
+
+            this.stationDistance.push(this.stationInformation[i]);
+            this.stationDistance[i].distance = distance;
+        }
+
+        this.stationDistance.sort((a, b) => (a.distance > b.distance) ? 1 : ((b.distance > a.distance) ? -1 : 0));
+        this.stationDistance = this.stationDistance.slice(0, 20);
+
+        const test = [];
+
+        for (let i = 0; this.stationDistance.length > i; i++) {
+            const request = {
+                origin: {lat: this.geoLocLat, lng: this.geoLocLong},
+                destination: new google.maps.LatLng(this.stationDistance[i]['lat'], this.stationDistance[i]['long']),
+                travelMode: google.maps.TravelMode['DRIVING'],
+            };
+
+            this.directionsService.route(request, (res, status) => {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    this.directionsDisplay.setDirections(res);
+
+                    this.stationDistance[i]['distance_text'] = res['routes'][0]['legs'][0]['distance']['text'];
+                    this.stationDistance[i]['distance_value'] = Number(res['routes'][0]['legs'][0]['distance']['value']);
+                    this.stationDistance[i]['duration_text'] = res['routes'][0]['legs'][0]['duration']['text'];
+                    this.stationDistance[i]['duration_value'] = Number(res['routes'][0]['legs'][0]['duration']['text']);
+                }
+            });
+        }
+
+        this.stationDistance.sort((a, b) => parseFloat(a['duration_value']) - parseFloat(b['duration_value']));
+        // this.stationDistance.sort((a, b) => (a['duration_value'] > b['duration_value']) ? 1 :
+        // ((b['duration_value'] > a['duration_value']) ? -1 : 0));
+        this.stationDistance = this.stationDistance.slice(0, 10);
+        console.log(this.stationDistance);
+        this.navCtrl.navigateForward('/tabs/(map:nearby-stations)');
     }
 
     public cancelNavigation() {

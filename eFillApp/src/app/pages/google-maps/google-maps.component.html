@@ -11,6 +11,13 @@
             <ion-icon name="navigate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
+    <ion-fab class="navigation-fab"
+             *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive" vertical="bottom"
+             horizontal="center">
+        <ion-fab-button color="light" (click)="this.navigationService.addLoadingStationToRoute()">
+            <ion-icon name="battery-charging"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
     <ion-fab vertical="bottom" horizontal="start" slot="fixed"> <!-- *ngIf="this.navigationService.routeActive" -->
         <ion-fab-button color="light" mini>
             <ion-icon name="settings"></ion-icon>

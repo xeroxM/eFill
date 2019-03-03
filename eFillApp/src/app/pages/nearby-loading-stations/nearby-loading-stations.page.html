@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="tabs/(map:map)"></ion-back-button>
+        </ion-buttons>
+        <ion-title>
+            Ladestationen in der Nähe
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ng-container *ngFor="let station of this.navigationService.stationDistance">
+        <ion-list>
+            <ion-item tappable>
+                <ion-label text-wrap>
+                    <ion-row>
+                        <ion-col size="10">
+                            <ion-text color="primary">
+                                <h3>{{station['operator']}}</h3>
+                            </ion-text>
+                            <ion-text color="balanced">
+                                <p>{{station['adress']}}</p>
+                                <p>{{station['place']}}</p>
+                            </ion-text>
+                        </ion-col>
+                        <ion-col size="2">
+                            <ion-text style="color: #0F9D58">
+                                <p>{{station['distance_text']}}</p>
+                            </ion-text>
+                            <ion-text style="color: #F4B400">
+                                <p>{{station['duration_text']}}</p>
+                            </ion-text>
+                        </ion-col>
+                    </ion-row>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </ng-container>
+</ion-content>

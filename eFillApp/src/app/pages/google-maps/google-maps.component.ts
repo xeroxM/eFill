@@ -27,7 +27,7 @@ export class GoogleMapsComponent implements OnInit {
         this.navCtrl.navigateForward('/tabs/(map:favorites)');
     }
 
-    public moveToCarprofile(){
+    public moveToCarprofile() {
         this.navCtrl.navigateForward('/tabs/(map:carprofile)');
     }
 
