@@ -202,8 +202,16 @@ export class NavigationService {
         const markerSpiderfier = new OverlappingMarkerSpiderfier(this.map, optionsSpidifier);
 
         for (let i = 0; i < this.stationInformation.length; i++) {
+            let marker;
             const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
-            const marker = this.addMarker(location, this.map, 'assets/icon/charging.png');
+
+            if (this.stationInformation[i]['station_type'] === 'Schnellladeeinrichtung') {
+                marker = this.addMarker(location, this.map,
+                    {url: 'assets/icon/charging_fast.png', scaledSize: new google.maps.Size(30, 30)});
+            } else {
+                marker = this.addMarker(location, this.map,
+                    {url: 'assets/icon/charging.png', scaledSize: new google.maps.Size(30, 30)});
+            }
 
             this.stationMarkersSet.add(marker);
             markerSpiderfier.addMarker(marker);
