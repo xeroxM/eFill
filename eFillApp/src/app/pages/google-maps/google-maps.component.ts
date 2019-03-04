@@ -27,10 +27,6 @@ export class GoogleMapsComponent implements OnInit {
         this.navCtrl.navigateForward('/tabs/(map:favorites)');
     }
 
-    public moveToCarprofile() {
-        this.navCtrl.navigateForward('/tabs/(map:carprofile)');
-    }
-
     public showMap() {
         const location = new google.maps.LatLng(51.133481, 10.018343);
 

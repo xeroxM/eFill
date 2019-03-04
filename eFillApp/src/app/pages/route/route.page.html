@@ -71,7 +71,7 @@
                 <ion-list class="place-list" *ngIf="this.navigationService.showItemsWayPoint === true"
                           [hidden]="saveWayPoint['input'] < 1" no-padding>
                     <ion-item *ngFor="let item of this.navigationService.autocompleteItems" tappable
-                              (click)="this.navigationService.selectSearchResult(item, saveWayPoint); test(saveWayPoint)">
+                              (click)="this.navigationService.selectSearchResult(item, saveWayPoint)">
                         {{ item.description }}
                     </ion-item>
                 </ion-list>
