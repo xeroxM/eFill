@@ -63,6 +63,7 @@ export class NavigationService {
 
     public directionsService: any;
     public directionsDisplay: any;
+    public currentDirections: any;
 
     // array for all steps of route calculated
     public routeOverview = {};
@@ -108,7 +109,7 @@ export class NavigationService {
 
     // object for added waypoint
     public wayPointObject: Validators = {
-        way_point_address: ''
+        way_point_address: ['', Validators.required]
     };
 
     constructor(
@@ -397,13 +398,15 @@ export class NavigationService {
             origin: start,
             destination: end,
             waypoints: waypts,
-            optimizeWaypoints: false,
+            optimizeWaypoints: true,
             travelMode: google.maps.TravelMode['DRIVING'],
             /*drivingOptions: {
                 departureTime: new Date(Date.now() + N),  // for the time N milliseconds from now.
                 trafficModel: 'optimistic'
             }*/
         };
+
+        this.currentDirections = request;
 
         if (this.markerInner && this.markerInner['visible'] === true) {
             this.markerInner.setMap(null);
@@ -419,37 +422,110 @@ export class NavigationService {
                 // this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
 
-                this.routeOverview = {
-                    duration: res['routes'][0]['legs'][0]['duration'],
-                    distance: res['routes'][0]['legs'][0]['distance'],
-                    start_address: res['routes'][0]['legs'][0]['start_address'],
-                    end_address: res['routes'][0]['legs'][0]['end_address']
-                };
-
                 const htmlToPlaintext = (text) => {
                     return text ? String(text).replace(/(<([^>]+)>)/ig, '') : '';
                 };
 
-                for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
-                    const routeObject = {};
-                    routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
-                    routeObject['startLng'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lng']();
-                    routeObject['endLat'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lat']();
-                    routeObject['endLng'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lng']();
-                    routeObject['duration'] = {
-                        text: res['routes'][0]['legs'][0]['steps'][i]['duration']['text'],
-                        value: res['routes'][0]['legs'][0]['steps'][i]['duration']['value']
-                    };
-                    routeObject['distance'] = {
-                        text: res['routes'][0]['legs'][0]['steps'][i]['distance']['text'],
-                        value: res['routes'][0]['legs'][0]['steps'][i]['distance']['value']
-                    };
-                    routeObject['maneuver'] = res['routes'][0]['legs'][0]['steps'][i]['maneuver'];
-                    routeObject['instructions'] = res['routes'][0]['legs'][0]['steps'][i]['instructions'];
-                    routeObject['speech'] = htmlToPlaintext(res['routes'][0]['legs'][0]['steps'][i]['instructions']);
+                console.log(res);
 
-                    this.routeObjects.push(routeObject);
+                if (res['routes'][0]['legs'].length === 1) {
+                    this.routeOverview = {
+                        duration: res['routes'][0]['legs'][0]['duration'],
+                        distance: res['routes'][0]['legs'][0]['distance'],
+                        start_address: res['routes'][0]['legs'][0]['start_address'],
+                        end_address: res['routes'][0]['legs'][0]['end_address']
+                    };
+
+                    for (let i = 0; i < res['routes'][0]['legs'][0]['steps'].length; i++) {
+                        const routeObject = {};
+                        routeObject['startLat'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lat']();
+                        routeObject['startLng'] = res['routes'][0]['legs'][0]['steps'][i]['start_point']['lng']();
+                        routeObject['endLat'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lat']();
+                        routeObject['endLng'] = res['routes'][0]['legs'][0]['steps'][i]['end_point']['lng']();
+                        routeObject['duration'] = {
+                            text: res['routes'][0]['legs'][0]['steps'][i]['duration']['text'],
+                            value: res['routes'][0]['legs'][0]['steps'][i]['duration']['value']
+                        };
+                        routeObject['distance'] = {
+                            text: res['routes'][0]['legs'][0]['steps'][i]['distance']['text'],
+                            value: res['routes'][0]['legs'][0]['steps'][i]['distance']['value']
+                        };
+                        routeObject['maneuver'] = res['routes'][0]['legs'][0]['steps'][i]['maneuver'];
+                        routeObject['instructions'] = res['routes'][0]['legs'][0]['steps'][i]['instructions'];
+                        routeObject['speech'] = htmlToPlaintext(res['routes'][0]['legs'][0]['steps'][i]['instructions']);
+
+                        this.routeObjects.push(routeObject);
+                    }
+                } else {
+
+                    this.routeOverview = {
+                        duration: {},
+                        distance: {},
+                        start_address: res['routes'][0]['legs'][0]['start_address'],
+                        end_address: res['routes'][0]['legs'][res['routes'][0]['legs'].length - 1]['end_address']
+                    };
+
+                    let distance = 0;
+                    let duration = 0;
+
+                    for (let i = 0; i < res['routes'][0]['legs'].length; i++) {
+                        distance = distance + res['routes'][0]['legs'][i]['distance']['value'];
+                        duration = duration + res['routes'][0]['legs'][i]['duration']['value'];
+                    }
+
+                    this.routeOverview['distance']['value'] = distance;
+                    this.routeOverview['duration']['value'] = duration;
+                    this.routeOverview['distance']['text'] = (Math.round((distance / 1000) * 10) / 10).toString() + ' km';
+
+                    const transformDuration = () => {
+                        let durationText;
+                        let remainder;
+
+                        if ((duration / 60) > 59) {
+                            if (((duration / 60) / 60) < 2) {
+                                remainder = (duration / 60) % 60;
+                                durationText = (((duration / 60) / 60).toString()).substring(0, ((duration / 60) / 60)
+                                        .toString().indexOf('.')) + ' hour ' +
+                                    (remainder.toString()).substring(0, remainder.toString().indexOf('.')) + ' mins';
+                            } else {
+                                remainder = (duration / 60) % 60;
+                                durationText = (((duration / 60) / 60).toString()).substring(0, ((duration / 60) / 60)
+                                        .toString().indexOf('.')) + ' hours ' +
+                                    (remainder.toString()).substring(0, remainder.toString().indexOf('.')) + ' mins';
+                            }
+                        } else {
+                            durationText = (duration / 60).toString() + ' mins';
+                        }
+                        this.routeOverview['duration']['text'] = durationText;
+                    };
+
+                    transformDuration();
+
+                    for (let i = 0; i < res['routes'][0]['legs'].length; i++) {
+                        for (let j = 0; j < res['routes'][0]['legs'][i]['steps'].length; j++) {
+                            const routeObject = {};
+                            routeObject['startLat'] = res['routes'][0]['legs'][i]['steps'][j]['start_point']['lat']();
+                            routeObject['startLng'] = res['routes'][0]['legs'][i]['steps'][j]['start_point']['lng']();
+                            routeObject['endLat'] = res['routes'][0]['legs'][i]['steps'][j]['end_point']['lat']();
+                            routeObject['endLng'] = res['routes'][0]['legs'][i]['steps'][j]['end_point']['lng']();
+                            routeObject['duration'] = {
+                                text: res['routes'][0]['legs'][i]['steps'][j]['duration']['text'],
+                                value: res['routes'][0]['legs'][i]['steps'][j]['duration']['value']
+                            };
+                            routeObject['distance'] = {
+                                text: res['routes'][0]['legs'][i]['steps'][j]['distance']['text'],
+                                value: res['routes'][0]['legs'][i]['steps'][j]['distance']['value']
+                            };
+                            routeObject['maneuver'] = res['routes'][0]['legs'][i]['steps'][j]['maneuver'];
+                            routeObject['instructions'] = res['routes'][0]['legs'][i]['steps'][j]['instructions'];
+                            routeObject['speech'] = htmlToPlaintext(res['routes'][0]['legs'][i]['steps'][j]['instructions']);
+
+                            this.routeOverview['index'] = i;
+                            this.routeObjects.push(routeObject);
+                        }
+                    }
                 }
+
                 this.routeActive = true;
                 console.log(this.routeObjects);
 
@@ -470,6 +546,7 @@ export class NavigationService {
         this.autocompleteStartPoint.input = '';
         this.routeForm.get('end_point').setValue('');
         this.autocompleteEndPoint.input = '';
+        this.currentDirections = null;
         while (this.wayPointArray.length !== 0) {
             this.wayPointArray.removeAt(0);
         }
@@ -541,7 +618,7 @@ export class NavigationService {
         });
     }
 
-    public addLoadingStationToRoute() {
+    public showNearbyLoadingStations() {
 
         for (let i = 0; this.stationInformation.length > i; i++) {
             const rad = (x) => {
@@ -563,8 +640,6 @@ export class NavigationService {
 
         this.stationDistance.sort((a, b) => (a.distance > b.distance) ? 1 : ((b.distance > a.distance) ? -1 : 0));
         this.stationDistance = this.stationDistance.slice(0, 20);
-
-        const test = [];
 
         for (let i = 0; this.stationDistance.length > i; i++) {
             const request = {
@@ -591,9 +666,11 @@ export class NavigationService {
         this.stationDistance = this.stationDistance.slice(0, 10);
         console.log(this.stationDistance);
         this.navCtrl.navigateForward('/tabs/(map:nearby-stations)');
+        this.map.setZoom(15);
     }
 
     public cancelNavigation() {
+        this.currentDirections = null;
         this.cancelRoute();
         this.markerInner.setMap(null);
         this.markerOuter.setMap(null);
@@ -608,6 +685,27 @@ export class NavigationService {
                 stationlat, stationlong, []);
             this.watchID.unsubscribe();
         });
+    }
+
+    public updateRoute(selectedStation) {
+        const stationObject = {
+            location: new google.maps.LatLng(selectedStation['lat'], selectedStation['long']),
+            stopover: true
+        };
+
+        this.currentDirections['waypoints'].push(stationObject);
+        this.directionsDisplay.setMap(null);
+        this.directionsService.route(this.currentDirections, (res, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+                this.directionsDisplay.setMap(this.map);
+                this.directionsDisplay.setDirections(res);
+                this.navCtrl.navigateBack('/tabs/(map:map)');
+            } else {
+                console.warn(status);
+            }
+        });
+        this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
+        this.map.setZoom(15);
     }
 
     public createRouteForm() {
