@@ -401,10 +401,6 @@ export class NavigationService {
             waypoints: waypts,
             optimizeWaypoints: true,
             travelMode: google.maps.TravelMode['DRIVING'],
-            /*drivingOptions: {
-                departureTime: new Date(Date.now() + N),  // for the time N milliseconds from now.
-                trafficModel: 'optimistic'
-            }*/
         };
 
         this.currentDirections = request;
@@ -424,7 +420,6 @@ export class NavigationService {
                 this.directionsDisplay.setMap(this.map);
                 this.markersShown = false;
                 this.markerCluster.clearMarkers();
-                // this.directionsDisplay.setPanel(document.getElementById('directionsPanel'));
                 this.directionsDisplay.setDirections(res);
 
                 const htmlToPlaintext = (text) => {
@@ -673,8 +668,7 @@ export class NavigationService {
         }
 
         this.stationDistance.sort((a, b) => parseFloat(a['duration_value']) - parseFloat(b['duration_value']));
-        // this.stationDistance.sort((a, b) => (a['duration_value'] > b['duration_value']) ? 1 :
-        // ((b['duration_value'] > a['duration_value']) ? -1 : 0));
+
         this.stationDistance = this.stationDistance.slice(0, 10);
         console.log(this.stationDistance);
         this.navCtrl.navigateForward('/tabs/(map:nearby-stations)');
