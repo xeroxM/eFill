@@ -64,6 +64,7 @@ export class NavigationService {
     public directionsService: any;
     public directionsDisplay: any;
     public currentDirections: any;
+    public lastStep = [];
 
     // array for all steps of route calculated
     public routeOverview = {};
@@ -414,6 +415,10 @@ export class NavigationService {
             this.watchID.unsubscribe();
         }
 
+        this.directionService(request);
+    }
+
+    public directionService(request) {
         this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
@@ -502,6 +507,7 @@ export class NavigationService {
                     transformDuration();
 
                     for (let i = 0; i < res['routes'][0]['legs'].length; i++) {
+                        this.lastStep.push(res['routes'][0]['legs'][i]['steps'][res['routes'][0]['legs'][i]['steps'].length - 1]);
                         for (let j = 0; j < res['routes'][0]['legs'][i]['steps'].length; j++) {
                             const routeObject = {};
                             routeObject['startLat'] = res['routes'][0]['legs'][i]['steps'][j]['start_point']['lat']();
@@ -528,6 +534,7 @@ export class NavigationService {
 
                 this.routeActive = true;
                 console.log(this.routeObjects);
+                console.log(this.lastStep);
 
             } else {
                 console.warn(status);
@@ -610,6 +617,11 @@ export class NavigationService {
 
             if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
+                if (this.lastStep[0]['end_point']['lat']() === this.routeObjects[this.routeStepIndex]['endLat'] &&
+                    this.lastStep[0]['end_point']['lat']() === this.routeObjects[this.routeStepIndex]['endLng']) {
+                    this.lastStep.shift();
+                    this.currentDirections['waypoints'].shift();
+                }
                 if (this.volumeOn) {
                     this.tts.directionsTextToSpeech(this.routeObjects[this.routeStepIndex]['speech']);
                 }
@@ -693,19 +705,16 @@ export class NavigationService {
             stopover: true
         };
 
-        this.currentDirections['waypoints'].push(stationObject);
+        this.currentDirections['origin'] = {lat: this.geoLocLat, lng: this.geoLocLong};
+        this.currentDirections['waypoints'].unshift(stationObject);
         this.directionsDisplay.setMap(null);
-        this.directionsService.route(this.currentDirections, (res, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-                this.directionsDisplay.setMap(this.map);
-                this.directionsDisplay.setDirections(res);
-                this.navCtrl.navigateBack('/tabs/(map:map)');
-            } else {
-                console.warn(status);
-            }
-        });
-        this.map.setCenter(new google.maps.LatLng(this.geoLocLat, this.geoLocLong));
-        this.map.setZoom(15);
+        this.directionService(this.currentDirections);
+        this.markerInner.setMap(null);
+        this.markerOuter.setMap(null);
+        this.watchID.unsubscribe();
+        this.startNavigation();
+        this.stationDistance = [];
+        this.navCtrl.navigateBack('/tabs/(map:map)');
     }
 
     public createRouteForm() {
