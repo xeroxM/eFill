@@ -489,7 +489,7 @@ export class NavigationService {
                         let durationText;
                         let remainder;
 
-                        if ((duration / 60) > 59) {
+                        if ((duration / 60) > 60) {
                             if (((duration / 60) / 60) < 2) {
                                 remainder = (duration / 60) % 60;
                                 durationText = (((duration / 60) / 60).toString()).substring(0, ((duration / 60) / 60)
