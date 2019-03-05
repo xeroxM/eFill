@@ -9,6 +9,9 @@ export class MapStyleService {
 
     public showSplash = true;
 
+    public showNormalChargingStations = true;
+    public showFastChargingStations = true;
+
     constructor() {
     }
 

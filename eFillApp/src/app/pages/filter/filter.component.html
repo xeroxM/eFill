@@ -1,3 +1,17 @@
-<p>
-  filter works!
-</p>
+<ion-list>
+    <ion-item>
+        <ion-label style="text-align: center" color="primary"><b>Filter</b></ion-label>
+    </ion-item>
+    <ion-item>
+        <ion-checkbox [checked]="this.mapStyleService.showNormalChargingStations"
+                      (ionChange)="this.mapStyleService.showNormalChargingStations = !this.mapStyleService.showNormalChargingStations"></ion-checkbox>
+        <ion-label style="text-align: center">Normalladestionen</ion-label>
+        <img src="assets/icon/charging.png" width="30">
+    </ion-item>
+    <ion-item>
+        <ion-checkbox [checked]="this.mapStyleService.showFastChargingStations"
+                      (ionChange)="this.mapStyleService.showFastChargingStations = !this.mapStyleService.showFastChargingStations"></ion-checkbox>
+        <ion-label style="text-align: center">Schnellladestationen</ion-label>
+        <img src="assets/icon/charging_fast.png" width="30">
+    </ion-item>
+</ion-list>
