@@ -29,6 +29,9 @@
             <ion-fab-button (click)="this.navigationService.showAndHideMarkers();" color="light" mini>
                 <ion-icon name="logo-ionic"></ion-icon>
             </ion-fab-button>
+            <ion-fab-button (click)="presentPopover($event)" color="light" mini>
+                <ion-icon name="options"></ion-icon>
+            </ion-fab-button>
             <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
                             color="light" (click)="this.navigationService.volumeOn = !this.navigationService.volumeOn"
                             mini>

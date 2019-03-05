@@ -61,6 +61,14 @@
   animation-delay: -1.0s;
 }
 
+.popover-class {
+  div.popover-content {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
 @-webkit-keyframes sk-bounce {
   0%, 100% {
     -webkit-transform: scale(0.0)

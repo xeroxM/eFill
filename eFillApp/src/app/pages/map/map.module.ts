@@ -7,10 +7,12 @@ import {MapPage} from './map.page';
 import {GoogleMapsComponent} from '../google-maps/google-maps.component';
 import {RoutePageModule} from '../route/route.module';
 import {NearbyLoadingStationsPageModule} from '../nearby-loading-stations/nearby-loading-stations.module';
+import {FilterComponent} from '../filter/filter.component';
 
 
 @NgModule({
-    declarations: [MapPage, GoogleMapsComponent],
+    declarations: [MapPage, GoogleMapsComponent, FilterComponent],
+    entryComponents: [FilterComponent],
     imports: [
         IonicModule,
         CommonModule,

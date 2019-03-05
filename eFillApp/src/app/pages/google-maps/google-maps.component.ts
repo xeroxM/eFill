@@ -2,7 +2,8 @@ import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {MapStyleService} from '../../services/map-style/map-style.service';
 import {NavigationService} from '../../services/navigation/navigation.service';
 import {DataImportService} from '../../services/data-import/data-import.service';
-import {NavController, Platform} from '@ionic/angular';
+import {NavController, Platform, PopoverController} from '@ionic/angular';
+import {FilterComponent} from '../filter/filter.component';
 
 declare let google: any;
 
@@ -15,12 +16,15 @@ export class GoogleMapsComponent implements OnInit {
 
     @ViewChild('map') mapRef: ElementRef;
 
+    public fabListActive = false;
+
     constructor(
         public mapStyleService: MapStyleService,
         public navigationService: NavigationService,
         public dataImport: DataImportService,
         private navCtrl: NavController,
-        private platform: Platform) {
+        private platform: Platform,
+        public popoverController: PopoverController) {
     }
 
     public moveToFavorites() {
@@ -49,6 +53,16 @@ export class GoogleMapsComponent implements OnInit {
             this.navigationService.map.mapTypes.set('day_map', this.mapStyleService.mapStyleDay);
             this.navigationService.map.setMapTypeId('day_map');
         }
+    }
+
+    async presentPopover(ev: any) {
+        const popover = await this.popoverController.create({
+            component: FilterComponent,
+            event: ev,
+            translucent: true,
+            cssClass: 'popover-class'
+        });
+        return await popover.present();
     }
 
     ngOnInit() {
