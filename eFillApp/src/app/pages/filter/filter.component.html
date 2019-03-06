@@ -4,13 +4,15 @@
     </ion-item>
     <ion-item>
         <ion-checkbox [checked]="this.mapStyleService.showNormalChargingStations"
-                      (ionChange)="this.mapStyleService.showNormalChargingStations = !this.mapStyleService.showNormalChargingStations"></ion-checkbox>
+                      (ionChange)="this.mapStyleService.showNormalChargingStations = !this.mapStyleService.showNormalChargingStations;
+                      this.navigationService.filterStations(this.mapStyleService.showNormalChargingStations, 'station_type', 'Normalladeeinrichtung')"></ion-checkbox>
         <ion-label style="text-align: center">Normalladestionen</ion-label>
         <img src="assets/icon/charging.png" width="30">
     </ion-item>
     <ion-item>
         <ion-checkbox [checked]="this.mapStyleService.showFastChargingStations"
-                      (ionChange)="this.mapStyleService.showFastChargingStations = !this.mapStyleService.showFastChargingStations"></ion-checkbox>
+                      (ionChange)="this.mapStyleService.showFastChargingStations = !this.mapStyleService.showFastChargingStations;
+                      this.navigationService.filterStations(this.mapStyleService.showFastChargingStations, 'station_type', 'Schnellladeeinrichtung')"></ion-checkbox>
         <ion-label style="text-align: center">Schnellladestationen</ion-label>
         <img src="assets/icon/charging_fast.png" width="30">
     </ion-item>
