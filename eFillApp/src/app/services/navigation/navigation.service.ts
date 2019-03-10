@@ -52,7 +52,6 @@ export class NavigationService {
 
     // determines markerClusterer
     public markerCluster: any;
-    public markerClusterSave: any;
     public markersShown = true;
 
     // Observable to .subscribe or .unsubscribe for geolocation
@@ -225,10 +224,16 @@ export class NavigationService {
 
             if (this.stationInformation[i]['station_type'] === 'Schnellladeeinrichtung') {
                 marker = this.addMarker(location, this.map,
-                    {url: 'assets/icon/charging_fast.png', scaledSize: new google.maps.Size(30, 30)});
+                    {
+                        url: 'assets/icon/charging_fast.png',
+                        scaledSize: new google.maps.Size(30, 30)
+                    }, this.stationInformation[i]['station_type']);
             } else {
                 marker = this.addMarker(location, this.map,
-                    {url: 'assets/icon/charging.png', scaledSize: new google.maps.Size(30, 30)});
+                    {
+                        url: 'assets/icon/charging.png',
+                        scaledSize: new google.maps.Size(30, 30)
+                    }, this.stationInformation[i]['station_type']);
             }
 
             this.stationMarkersSet.add(marker);
@@ -358,6 +363,10 @@ export class NavigationService {
         } else if (time >= 6 || time <= 19) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
         }
+        console.log(this.stationMarkers[0]['position']['lat']());
+        console.log(this.stationMarkers[0]['position']['lng']());
+        console.log(this.stationMarkers.length);
+        console.log(this.stationInformation.length);
     }
 
     public updateSearchResults(autocomplete) {
@@ -506,7 +515,7 @@ export class NavigationService {
                         let durationText;
                         let remainder;
 
-                        if ((duration / 60) > 59) {
+                        if ((duration / 60) > 60) {
                             if (((duration / 60) / 60) < 2) {
                                 remainder = (duration / 60) % 60;
                                 durationText = (((duration / 60) / 60).toString()).substring(0, ((duration / 60) / 60)
@@ -807,11 +816,15 @@ export class NavigationService {
         }
     }
 
-    public addMarker(position, map, iconstyle) {
-        return new google.maps.Marker({
+    public addMarker(position, map, iconstyle, station_type) {
+        const marker = new google.maps.Marker({
             position, map,
             icon: iconstyle
         });
+
+        marker['station_type'] = station_type;
+
+        return marker;
     }
 
     public clearMarkers() {
@@ -843,6 +856,50 @@ export class NavigationService {
                 this.map.setMapTypeId('night_map');
                 this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
             }
+        }
+    }
+
+    public filterStations(filter: boolean, element: string, info: string) {
+        this.markerCluster.clearMarkers();
+        if (!filter) {
+            for (let i = 0; i < this.stationInformation.length; i++) {
+                if (this.stationInformation[i][element] === info) {
+                    const index = this.stationMarkers.indexOf(this.stationMarkers.find(
+                        station => station[element] === this.stationInformation[i][element]));
+                    if (index > -1) {
+                        this.stationMarkers.splice(index, 1);
+                    }
+                }
+            }
+        } else {
+            for (let i = 0; i < this.stationInformation.length; i++) {
+                if (this.stationInformation[i][element] === info) {
+                    let marker;
+                    const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
+
+                    if (this.stationInformation[i]['station_type'] === 'Schnellladeeinrichtung') {
+                        marker = this.addMarker(location, this.map,
+                            {
+                                url: 'assets/icon/charging_fast.png',
+                                scaledSize: new google.maps.Size(30, 30)
+                            }, this.stationInformation[i]['station_type']);
+                    } else {
+                        marker = this.addMarker(location, this.map,
+                            {
+                                url: 'assets/icon/charging.png',
+                                scaledSize: new google.maps.Size(30, 30)
+                            }, this.stationInformation[i]['station_type']);
+                    }
+                    marker.setMap(this.map);
+                    this.stationMarkers.push(marker);
+                }
+            }
+        }
+        if (!this.isNight) {
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+
+        } else if (this.isNight) {
+            this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
         }
     }
 
