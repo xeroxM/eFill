@@ -76,6 +76,15 @@ export class NavigationService {
 
     public showInfoButton = false;
 
+    public userObject = [];
+    public userData = [];
+
+    public reach = '';
+    public driving_style = '';
+    public temperature = '';
+    public plug_types = '';
+    public station_type = false;
+
     // markers for geolocation
     public markerInner: any;
     public markerOuter: any;
@@ -191,6 +200,15 @@ export class NavigationService {
                 this.mapStyleService.showSplash = false;
             }
         );
+
+        this.userData = await this.dataImport.getAllUserEntries();
+
+        console.log('Hallo: ' + Object.values(this.userData[0]));
+        this.reach = this.userData[0]['reach'];
+        this.driving_style = this.userData[0]['driving_style'];
+        this.temperature = this.userData[0]['temperature'];
+        this.plug_types = this.userData[0]['plug_types'];
+        this.station_type = this.userData[0]['station_type'];
 
         const optionsSpidifier = {
             keepSpiderfied: true,
@@ -412,7 +430,6 @@ export class NavigationService {
         };
 
         this.currentDirections = request;
-
         if (this.markerInner && this.markerInner['visible'] === true) {
             this.markerInner.setMap(null);
             this.markerOuter.setMap(null);
@@ -723,7 +740,12 @@ export class NavigationService {
         this.routeForm = this.fb.group({
             start_point: ['', Validators.required],
             way_point: this.fb.array([]),
-            end_point: ['', Validators.required]
+            end_point: ['', Validators.required],
+            reach: ['', Validators.required],
+            driving_style: ['normal', Validators.required],
+            temperature: ['normal', Validators.required],
+            plug_types: ['', Validators.required],
+            station_type: ['false', Validators.required]
         });
     }
 
@@ -740,7 +762,7 @@ export class NavigationService {
         this.wayPointArray.removeAt(index);
     }
 
-    public convertObj(origin, destination, waypoint) {
+    public async convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
 
         this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
@@ -763,6 +785,18 @@ export class NavigationService {
 
         this.navCtrl.navigateBack('/tabs/(map:map)');
         this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
+    }
+
+    public saveUserData(reach, driving_style, temperature, plug_types, station_type) {
+        this.userObject.push(reach, driving_style, temperature, plug_types, station_type);
+        console.log('Hallo123:' + Object.values(this.userObject));
+        console.log('Hallo123:' + this.userObject[0]);
+        this.dataImport.database.executeSql(this.dataImport.saveUserData,
+            [this.userObject[0], this.userObject[1],
+                    this.userObject[2], this.userObject[3],
+                    this.userObject[4]])
+            .then(() => console.log('Truncate Table Success'))
+            .catch(e => console.log(e));
     }
 
     public getDirections() {

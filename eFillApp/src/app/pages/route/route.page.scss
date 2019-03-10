@@ -21,9 +21,19 @@
   z-index: 2;
 }
 
-.car-information {
+.car-information-title {
   margin-top: 10px;
   background-color: #f7f7f7;
+  border-style: none;
+}
+
+.car-information {
+  padding: 5px;
+  border: 1px solid #D8D8D8;
+}
+
+.no-border{
+  border: none !important;
 }
 
 ion-input {
