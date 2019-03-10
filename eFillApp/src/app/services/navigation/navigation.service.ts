@@ -8,6 +8,7 @@ import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Platform} from '@ionic/angular';
 import {TextToSpeechService} from '../text-to-speech/text-to-speech.service';
+import {FilterComponent} from '../../pages/filter/filter.component';
 
 
 declare let google: any;
@@ -220,6 +221,16 @@ export class NavigationService {
 
         for (let i = 0; i < this.stationInformation.length; i++) {
             let marker;
+
+            const str = this.stationInformation[i]['plug_type_1'] + ', ' + this.stationInformation[i]['plug_type_2'] + ', ' +
+                this.stationInformation[i]['plug_type_3'] + ', ' + this.stationInformation[i]['plug_type_4'];
+            let partsOfStr = str.split(', ');
+            partsOfStr = partsOfStr.filter((el) => {
+                return el !== '';
+            });
+
+            partsOfStr = Array.from(new Set(partsOfStr));
+
             const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
 
             if (this.stationInformation[i]['station_type'] === 'Schnellladeeinrichtung') {
@@ -227,13 +238,13 @@ export class NavigationService {
                     {
                         url: 'assets/icon/charging_fast.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformation[i]['station_type']);
+                    }, this.stationInformation[i]['station_type'], partsOfStr);
             } else {
                 marker = this.addMarker(location, this.map,
                     {
                         url: 'assets/icon/charging.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformation[i]['station_type']);
+                    }, this.stationInformation[i]['station_type'], partsOfStr);
             }
 
             this.stationMarkersSet.add(marker);
@@ -241,119 +252,7 @@ export class NavigationService {
 
             this.stationMarkers = Array.from(this.stationMarkersSet);
 
-            marker.addListener('click', () => {
-                if (this.currentWindow != null) {
-                    this.currentWindow.close();
-                }
-
-                const infowindow = new google.maps.InfoWindow({
-                    maxWidth: 320,
-                    content:
-                        `<ion-row style="margin-bottom: 7px">
-                            <ion-col size="auto">
-                                <button id="isNotFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
-                                <ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>
-                                <button id="isFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
-                                <ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>
-                            </ion-col>
-                            <ion-col size="auto" style="margin-left: 7px">
-                                ${this.stationInformation[i].operator}
-                            </ion-col>
-                        </ion-row>
-                        <ion-row style="margin-bottom: 7px">
-                            <ion-col style="border-right: 1px solid #989aa2; padding-right: 10px" size="auto">
-                                ${this.stationInformation[i]['adress']}<br/>
-                                ${this.stationInformation[i]['place']}
-                            </ion-col>
-                            <ion-col size="auto" style="padding-left: 10px">
-                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_1'].length > 0}">
-                                    plug_type_1
-                                </ion-row>
-                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_2'].length > 0}">
-                                    plug_type_2
-                                </ion-row>
-                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_3'].length > 0}">
-                                    plug_type_3
-                                </ion-row>
-                                <ion-row *ngIf="${this.stationInformation[i]['plug_type_4'].length > 0}">
-                                    plug_type_4
-                                </ion-row>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="auto">
-                                <a href="javascript:this.getRouteToStation(${this.stationInformation[i].lat},
-                                ${this.stationInformation[i].long});">Route berechnen</a>
-                            </ion-col>
-                        </ion-row>`
-                });
-
-                google.maps.event.addListenerOnce(infowindow, 'domready', () => {
-
-                    const result = this.favorites.find(station => JSON.stringify(station) === JSON.stringify(this.stationInformation[i]));
-
-                    if (this.favorites.length === 0) {
-                        document.getElementById('isFavorite').style.visibility = 'hidden';
-                    } else {
-                        if (result) {
-                            document.getElementById('isNotFavorite').style.visibility = 'hidden';
-                            document.getElementById('isFavorite').style.visibility = 'visible';
-                        } else {
-                            document.getElementById('isFavorite').style.visibility = 'hidden';
-                            document.getElementById('isNotFavorite').style.visibility = 'visible';
-                        }
-                    }
-
-                    document.getElementById('isNotFavorite').addEventListener('click', () => {
-                        this.favorites.push(this.stationInformation[i]);
-                        this.dataImport.database.executeSql(this.dataImport.addFav,
-                            [this.stationInformation[i]['operator'],
-                                this.stationInformation[i]['adress'],
-                                this.stationInformation[i]['place'],
-                                this.stationInformation[i]['long'],
-                                this.stationInformation[i]['lat'],
-                                this.stationInformation[i]['commissioning_date'],
-                                this.stationInformation[i]['power_consumption'],
-                                this.stationInformation[i]['station_type'],
-                                this.stationInformation[i]['number_of_charging_points'],
-                                this.stationInformation[i]['plug_type_1'],
-                                this.stationInformation[i]['kW_1'],
-                                this.stationInformation[i]['public_key_1'],
-                                this.stationInformation[i]['plug_type_2'],
-                                this.stationInformation[i]['kW_2'],
-                                this.stationInformation[i]['public_key_2'],
-                                this.stationInformation[i]['plug_type_3'],
-                                this.stationInformation[i]['kW_3'],
-                                this.stationInformation[i]['public_key_3'],
-                                this.stationInformation[i]['plug_type_4'],
-                                this.stationInformation[i]['kW_4'],
-                                this.stationInformation[i]['public_key_4'],
-                                this.stationInformation[i]['station_type']]);
-
-                        document.getElementById('isNotFavorite').style.visibility = 'hidden';
-                        document.getElementById('isFavorite').style.visibility = 'visible';
-                    });
-                    document.getElementById('isFavorite').addEventListener('click', () => {
-                        for (let j = 0; j < this.favorites.length; j++) {
-                            if (JSON.stringify(this.favorites[j]) === JSON.stringify(this.stationInformation[i])) {
-                                this.favorites.splice(j, 1);
-                                const rowid = j + 1;
-                                this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid).catch((data) => {
-                                    console.log(data);
-                                });
-                                this.dataImport.database.executeSql(`VACUUM`).catch((data) => {
-                                    console.log(data);
-                                });
-                            }
-                        }
-                        document.getElementById('isFavorite').style.visibility = 'hidden';
-                        document.getElementById('isNotFavorite').style.visibility = 'visible';
-                    });
-                });
-
-                infowindow.open(this.map, marker);
-                this.currentWindow = infowindow;
-            });
+            this.addInfoWindow(marker, this.stationInformation[i]);
         }
 
         const time = new Date().getHours();
@@ -816,13 +715,14 @@ export class NavigationService {
         }
     }
 
-    public addMarker(position, map, iconstyle, station_type) {
+    public addMarker(position, map, iconstyle, station_type, plug_types) {
         const marker = new google.maps.Marker({
             position, map,
             icon: iconstyle
         });
 
         marker['station_type'] = station_type;
+        marker['plug_types'] = plug_types;
 
         return marker;
     }
@@ -877,21 +777,32 @@ export class NavigationService {
                     let marker;
                     const location = new google.maps.LatLng(this.stationInformation[i].lat, this.stationInformation[i].long);
 
+                    const str = this.stationInformation[i]['plug_type_1'] + ', ' + this.stationInformation[i]['plug_type_2'] + ', ' +
+                        this.stationInformation[i]['plug_type_3'] + ', ' + this.stationInformation[i]['plug_type_4'];
+                    let partsOfStr = str.split(', ');
+                    partsOfStr = partsOfStr.filter((el) => {
+                        return el !== '';
+                    });
+
+                    partsOfStr = Array.from(new Set(partsOfStr));
+
                     if (this.stationInformation[i]['station_type'] === 'Schnellladeeinrichtung') {
                         marker = this.addMarker(location, this.map,
                             {
                                 url: 'assets/icon/charging_fast.png',
                                 scaledSize: new google.maps.Size(30, 30)
-                            }, this.stationInformation[i]['station_type']);
+                            }, this.stationInformation[i]['station_type'], partsOfStr);
                     } else {
                         marker = this.addMarker(location, this.map,
                             {
                                 url: 'assets/icon/charging.png',
                                 scaledSize: new google.maps.Size(30, 30)
-                            }, this.stationInformation[i]['station_type']);
+                            }, this.stationInformation[i]['station_type'], partsOfStr);
                     }
                     marker.setMap(this.map);
                     this.stationMarkers.push(marker);
+
+                    this.addInfoWindow(marker, this.stationInformation[i]);
                 }
             }
         }
@@ -901,6 +812,147 @@ export class NavigationService {
         } else if (this.isNight) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
         }
+    }
+
+    public addInfoWindow(marker, stationInformation) {
+        marker.addListener('click', () => {
+            if (this.currentWindow != null) {
+                this.currentWindow.close();
+            }
+
+            let plug_type_tag = '';
+
+            for (const result of marker['plug_types']) {
+                switch (result) {
+                    case 'AC Schuko':
+                        plug_type_tag += `<ion-row><img src="assets/icon/schuko.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'AC CEE 3 polig':
+                        plug_type_tag += `<ion-row><img src="assets/icon/cee_blue.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'AC CEE 5 polig':
+                        plug_type_tag += `<ion-row><img src="assets/icon/cee_red.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'AC Kupplung Typ 2':
+                        plug_type_tag += `<ion-row><img src="assets/icon/type2.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'AC Steckdose Typ 2':
+                        plug_type_tag += `<ion-row><img src="assets/icon/type2.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'DC Kupplung Combo':
+                        plug_type_tag += `<ion-row><img src="assets/icon/ccs.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'DC CHAdeMO':
+                        plug_type_tag += `<ion-row><img src="assets/icon/chademo.png" width="17" height="17"></ion-row>`;
+                        break;
+                    case 'Steckdose Typ 1':
+                        plug_type_tag += `<ion-row><img src="assets/icon/type1.png" width="17" height="17"></ion-row>`;
+                        break;
+                    default:
+                        console.log('sorry this plug_type does not exist');
+                }
+            }
+
+            const infowindow = new google.maps.InfoWindow({
+                maxWidth: 320,
+                content: `<ion-row style="margin-bottom: 7px">
+                            <ion-col size="auto">
+                                <button id="isNotFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
+                                <ion-icon name="star-outline" style="font-size: 19px; color: #868e96"></ion-icon></button>
+                                <button id="isFavorite" style="background: none; position: absolute; top: 1px; left: -5px">
+                                <ion-icon name="star" style="font-size: 19px; color: #007bff"></ion-icon></button>
+                            </ion-col>
+                            <ion-col size="auto" style="margin-left: 7px">
+                                ${stationInformation.operator}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row style="margin-bottom: 7px">
+                            <ion-col style="border-right: 1px solid #989aa2; padding-right: 10px" size="auto">
+                                ${stationInformation['adress']}<br/>
+                                ${stationInformation['place']}
+                            </ion-col>
+                            <ion-col size="auto" style="padding-left: 10px">
+                               ${plug_type_tag}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="auto">
+                                <a href="javascript:this.getRouteToStation(${stationInformation.lat},
+                                ${stationInformation.long});">Route berechnen</a>
+                            </ion-col>
+                        </ion-row>`
+            });
+
+            google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+
+                console.log(this.favorites)
+
+                const result = this.favorites.find(station => JSON.stringify(station) === JSON.stringify(stationInformation));
+                console.log(stationInformation);
+
+                if (this.favorites.length === 0) {
+                    document.getElementById('isFavorite').style.visibility = 'hidden';
+                } else {
+                    if (result) {
+                        document.getElementById('isNotFavorite').style.visibility = 'hidden';
+                        document.getElementById('isFavorite').style.visibility = 'visible';
+                    } else {
+                        document.getElementById('isFavorite').style.visibility = 'hidden';
+                        document.getElementById('isNotFavorite').style.visibility = 'visible';
+                    }
+                }
+
+                document.getElementById('isNotFavorite').addEventListener('click', () => {
+                    this.favorites.push(stationInformation);
+                    this.dataImport.database.executeSql(this.dataImport.addFav,
+                        [stationInformation['operator'],
+                            stationInformation['adress'],
+                            stationInformation['place'],
+                            stationInformation['long'],
+                            stationInformation['lat'],
+                            stationInformation['commissioning_date'],
+                            stationInformation['power_consumption'],
+                            stationInformation['station_type'],
+                            stationInformation['number_of_charging_points'],
+                            stationInformation['plug_type_1'],
+                            stationInformation['kW_1'],
+                            stationInformation['public_key_1'],
+                            stationInformation['plug_type_2'],
+                            stationInformation['kW_2'],
+                            stationInformation['public_key_2'],
+                            stationInformation['plug_type_3'],
+                            stationInformation['kW_3'],
+                            stationInformation['public_key_3'],
+                            stationInformation['plug_type_4'],
+                            stationInformation['kW_4'],
+                            stationInformation['public_key_4'],
+                            stationInformation['station_type']]);
+
+                    document.getElementById('isNotFavorite').style.visibility = 'hidden';
+                    document.getElementById('isFavorite').style.visibility = 'visible';
+                });
+                document.getElementById('isFavorite').addEventListener('click', () => {
+                    for (let j = 0; j < this.favorites.length; j++) {
+                        if (JSON.stringify(this.favorites[j]) === JSON.stringify(stationInformation)) {
+                            this.favorites.splice(j, 1);
+                            const rowid = j + 1;
+                            this.dataImport.database.executeSql(`DELETE FROM favorites WHERE rowid=` + rowid).catch((data) => {
+                                console.log(data);
+                            });
+                            this.dataImport.database.executeSql(`VACUUM`).catch((data) => {
+                                console.log(data);
+                            });
+                        }
+                    }
+                    document.getElementById('isFavorite').style.visibility = 'hidden';
+                    document.getElementById('isNotFavorite').style.visibility = 'visible';
+                });
+            });
+
+            infowindow.open(this.map, marker);
+            this.currentWindow = infowindow;
+            console.log(marker);
+        });
     }
 
     public changeMapStyle() {
