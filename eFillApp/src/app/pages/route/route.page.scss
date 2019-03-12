@@ -30,11 +30,17 @@
 .car-information {
   padding: 5px;
   border: 1px solid #D8D8D8;
+  padding-bottom: 0px !important;
 }
 
-.no-border{
-  border: none !important;
+.item-checkbox-img{
+  vertical-align: middle;
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  height:100%;
 }
+
 
 ion-input {
   margin-left: 5px;

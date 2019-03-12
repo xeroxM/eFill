@@ -75,6 +75,7 @@ export class NavigationService {
     public volumeOn = true;
 
     public showInfoButton = false;
+    public showPlugTypes = false;
 
     public userObject = [];
     public userData = [];
@@ -120,6 +121,17 @@ export class NavigationService {
     // object for added waypoint
     public wayPointObject: Validators = {
         way_point_address: ['', Validators.required]
+    };
+
+    public plugTypeObject: Validators = {
+        schuko: ['', Validators.required],
+        cee3: ['', Validators.required],
+        cee5: ['', Validators.required],
+        type2: ['', Validators.required],
+        kupplung2: ['', Validators.required],
+        chademo: ['', Validators.required],
+        ccs: ['', Validators.required],
+        type1: ['', Validators.required]
     };
 
     constructor(
@@ -202,8 +214,6 @@ export class NavigationService {
         );
 
         this.userData = await this.dataImport.getAllUserEntries();
-
-        console.log('Hallo: ' + Object.values(this.userData[0]));
         this.reach = this.userData[0]['reach'];
         this.driving_style = this.userData[0]['driving_style'];
         this.temperature = this.userData[0]['temperature'];
@@ -485,6 +495,9 @@ export class NavigationService {
         while (this.wayPointArray.length !== 0) {
             this.wayPointArray.removeAt(0);
         }
+        while (this.plugTypeArray.length !== 0) {
+            this.plugTypeArray.removeAt(0);
+        }
         this.showAndHideMarkers();
     }
 
@@ -649,10 +662,10 @@ export class NavigationService {
             start_point: ['', Validators.required],
             way_point: this.fb.array([]),
             end_point: ['', Validators.required],
-            reach: ['', Validators.required],
+            reach: ['', Validators.minLength(1)],
             driving_style: ['normal', Validators.required],
             temperature: ['normal', Validators.required],
-            plug_types: ['', Validators.required],
+            plug_types: this.fb.array([]),
             station_type: ['false', Validators.required]
         });
     }
@@ -669,6 +682,16 @@ export class NavigationService {
     public removeWaypoint(index) {
         this.wayPointArray.removeAt(index);
     }
+
+    get plugTypeArray() {
+        return this.routeForm.get('plug_types') as FormArray;
+    }
+
+    public addPlugType() {
+        const newInstance = this.fb.group({...this.plugTypeObject});
+        this.plugTypeArray.push(newInstance);
+    }
+
 
     public async convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
@@ -695,16 +718,28 @@ export class NavigationService {
         this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
-    public saveUserData(reach, driving_style, temperature, plug_types, station_type) {
+    public async saveUserData(reach, driving_style, temperature, plug_types, station_type) {
+        const plugtypeArray = [];
+        if (plug_types[0]['schuko'] === true) {plugtypeArray.push(plug_types[0]['schuko']); }
+        if (plug_types[0]['cee3'] === true) {plugtypeArray.push(plug_types[0]['cee3']); }
+        if (plug_types[0]['cee5'] === true) {plugtypeArray.push(plug_types[0]['cee5']); }
+        if (plug_types[0]['kupplung2'] === true) {plugtypeArray.push(plug_types[0]['kupplung2']); }
+        if (plug_types[0]['type2'] === true) {plugtypeArray.push(plug_types[0]['type2']); }
+        if (plug_types[0]['chademo'] === true) {plugtypeArray.push(plug_types[0]['chademo']); }
+        if (plug_types[0]['ccs'] === true) {plugtypeArray.push(plug_types[0]['ccs']); }
+        if (plug_types[0]['type1'] === true) {plugtypeArray.push(plug_types[0]['type1']); }
+        console.log(plugtypeArray);
+
         this.userObject.push(reach, driving_style, temperature, plug_types, station_type);
-        console.log('Hallo123:' + Object.values(this.userObject));
-        console.log('Hallo123:' + this.userObject[0]);
+        this.userData = await this.dataImport.getAllUserEntries();
+        if (this.userObject[0] === '') {this.userObject[0] = this.userData[0]['reach']; }
+       // if (this.userObject[1] === 'normal') {this.userObject[1] = this.userData[0]['driving_style']; }
+        //if (this.userObject[2] === 'normal') {this.userObject[2] = this.userData[0]['temperature']; }
+
         this.dataImport.database.executeSql(this.dataImport.saveUserData,
             [this.userObject[0], this.userObject[1],
-                    this.userObject[2], this.userObject[3],
-                    this.userObject[4]])
-            .then(() => console.log('Truncate Table Success'))
-            .catch(e => console.log(e));
+                    this.userObject[2], Object.values(this.userObject[3]),
+                    this.userObject[4]]);
     }
 
     public getDirections() {
@@ -885,7 +920,7 @@ export class NavigationService {
 
             google.maps.event.addListenerOnce(infowindow, 'domready', () => {
 
-                console.log(this.favorites)
+                console.log(this.favorites);
 
                 const result = this.favorites.find(station => JSON.stringify(station) === JSON.stringify(stationInformation));
                 console.log(stationInformation);
