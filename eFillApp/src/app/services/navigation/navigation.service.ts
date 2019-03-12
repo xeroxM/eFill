@@ -124,14 +124,14 @@ export class NavigationService {
     };
 
     public plugTypeObject: Validators = {
-        schuko: ['', Validators.required],
-        cee3: ['', Validators.required],
-        cee5: ['', Validators.required],
-        type2: ['', Validators.required],
-        kupplung2: ['', Validators.required],
-        chademo: ['', Validators.required],
-        ccs: ['', Validators.required],
-        type1: ['', Validators.required]
+        schuko: [''],
+        cee3: [''],
+        cee5: [''],
+        type2: [''],
+        kupplung2: [''],
+        chademo: [''],
+        ccs: [''],
+        type1: ['']
     };
 
     constructor(
