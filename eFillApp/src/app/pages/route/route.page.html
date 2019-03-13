@@ -132,36 +132,121 @@
                 <ion-item *ngIf="this.navigationService.reach == ''">
                     <ion-input formControlName="reach" type="number" placeholder="aktuelle Reichweite in km"></ion-input>
                 </ion-item>
-                <ion-item>
-                    <ion-label>Fahrstil</ion-label>
-                    <ion-select formControlName="driving_style" interface="alert" cancelText="Abbrechen"
-                                value="{{this.navigationService.driving_style}}">
-                        <ion-select-option value="slow">Vorausschauend</ion-select-option>
-                        <ion-select-option value="normal">Normal</ion-select-option>
-                        <ion-select-option value="fast">Sportlich</ion-select-option>
-                    </ion-select>
+                <ion-item>Fahrstil
+                    <ion-button [hidden]="this.navigationService.showDrivingStyle != false"
+                                slot="end" size="small" fill="clear"
+                                (click)="this.navigationService.addDrivingStyle();
+                                            this.navigationService.showDrivingStyle = true;">
+                        <ion-icon color="dark" name="arrow-dropdown"></ion-icon>
+                    </ion-button>
+                    <ion-button *ngIf="this.navigationService.showDrivingStyle"
+                                [hidden]="this.navigationService.showDrivingStyle != true"
+                                slot="end" size="small" fill="clear"
+                                (click)="this.navigationService.removeDrivingStyle();
+                                            this.navigationService.showDrivingStyle = false;">
+                        <ion-icon color="dark" name="arrow-dropup"></ion-icon>
+                    </ion-button>
                 </ion-item>
-                <ion-item>
-                    <ion-label>Temperatur</ion-label>
-                    <ion-select formControlName="temperature" interface="alert" cancelText="Abbrechen"
-                                value="{{this.navigationService.temperature}}">
-                        <ion-select-option value="cold"><10°C</ion-select-option>
-                        <ion-select-option value="normal">10°-40°C</ion-select-option>
-                        <ion-select-option value="heat">>40°C</ion-select-option>
-                    </ion-select>
+                <div formArrayName="driving_style"
+                     *ngIf="this.navigationService.showDrivingStyle"
+                     [hidden]="this.navigationService.showDrivingStyle != true">
+                    <div *ngFor="let drivingStyleInstance of this.navigationService.drivingStyleArray.controls; let i = index"
+                         [formGroupName]="i">
+                        <ion-list>
+                            <ion-item>
+                                <ion-label>Vorausschauend</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/walk.svg">
+                                <ion-checkbox [hidden]="this.navigationService.driving_style != 'slow'"
+                                              (click)="this.navigationService.driving_style = '';"
+                                              slot="start" value="slow"
+                                              formControlName = "slow" checked></ion-checkbox>
+                                <ion-checkbox [hidden]="this.navigationService.driving_style == 'slow'"
+                                              (click)="this.navigationService.driving_style = 'slow';"
+                                              slot="start" value="slow"
+                                              formControlName = "slow"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Normal</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/car.svg">
+                                <ion-checkbox [hidden]="this.navigationService.driving_style != 'normal'"
+                                              (click)="this.navigationService.driving_style = '';"
+                                              slot="start" value="normal"
+                                              formControlName = "normal" checked></ion-checkbox>
+                                <ion-checkbox [hidden]="this.navigationService.driving_style == 'normal'"
+                                              (click)="this.navigationService.driving_style = 'normal';"
+                                              slot="start" value="normal"
+                                              formControlName = "normal"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>Sportlich</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/rocket.svg">
+                                <ion-checkbox [hidden]="this.navigationService.driving_style != 'fast'"
+                                              (click)="this.navigationService.driving_style = '';"
+                                              slot="start" value="fast"
+                                              formControlName = "fast" checked></ion-checkbox>
+                                <ion-checkbox [hidden]="this.navigationService.driving_style == 'fast'"
+                                              (click)="this.navigationService.driving_style = 'fast';"
+                                              slot="start" value="fast"
+                                              formControlName = "fast"></ion-checkbox>
+                            </ion-item>
+                        </ion-list>
+                    </div>
+                </div>
+                <ion-item>Temperatur
+                    <ion-button [hidden]="this.navigationService.showTemperature != false"
+                                slot="end" size="small" fill="clear"
+                                (click)="this.navigationService.addTemperature();
+                                            this.navigationService.showTemperature = true;">
+                        <ion-icon color="dark" name="arrow-dropdown"></ion-icon>
+                    </ion-button>
+                    <ion-button *ngIf="this.navigationService.showTemperature"
+                                [hidden]="this.navigationService.showTemperature != true"
+                                slot="end" size="small" fill="clear"
+                                (click)="this.navigationService.removeTemperature();
+                                            this.navigationService.showTemperature = false;">
+                        <ion-icon color="dark" name="arrow-dropup"></ion-icon>
+                    </ion-button>
                 </ion-item>
+                <div formArrayName="temperature"
+                     *ngIf="this.navigationService.showTemperature"
+                     [hidden]="this.navigationService.showTemperature != true">
+                    <div *ngFor="let temperatureInstance of this.navigationService.temperatureArray.controls; let i = index"
+                         [formGroupName]="i">
+                        <ion-list>
+                            <ion-item>
+                                <ion-label>unter 10°C</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/snow.svg">
+                                <ion-checkbox slot="start" value="cold"
+                                              formControlName = "cold"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>10° bis 40°C</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/sunny.svg">
+                                <ion-checkbox slot="start" value="usual"
+                                              formControlName = "usual"></ion-checkbox>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label>über 40°C</ion-label>
+                                <img class="item-checkbox-img" src="../../../assets/icon/flame.svg">
+                                <ion-checkbox slot="start" value="heat"
+                                              formControlName = "heat"></ion-checkbox>
+                            </ion-item>
+                        </ion-list>
+                    </div>
+                </div>
                 <ion-item>Steckertypen
                         <ion-button [hidden]="this.navigationService.showPlugTypes != false"
                                     slot="end" size="small" fill="clear"
                                     (click)="this.navigationService.addPlugType();
                                             this.navigationService.showPlugTypes = true;">
-                            <ion-icon name="arrow-dropdown"></ion-icon>
+                            <ion-icon color="dark" name="arrow-dropdown"></ion-icon>
                         </ion-button>
                         <ion-button *ngIf="this.navigationService.showPlugTypes"
                                     [hidden]="this.navigationService.showPlugTypes != true"
                                 slot="end" size="small" fill="clear"
-                                    (click)="this.navigationService.showPlugTypes = false;">
-                            <ion-icon name="arrow-dropup"></ion-icon>
+                                    (click)="this.navigationService.removePlugType();
+                                            this.navigationService.showPlugTypes = false;">
+                            <ion-icon color="dark" name="arrow-dropup"></ion-icon>
                         </ion-button>
                 </ion-item>
                 <div formArrayName="plug_types"
@@ -225,15 +310,18 @@
                         </ion-list>
                     </div>
                 </div>
-                <ion-item *ngIf="this.navigationService.station_type != false">
+                <ion-item [hidden]="this.navigationService.saveStationType != true">
                     <ion-label>nur Schnellladestationen</ion-label>
-                    <ion-toggle formControlName="station_type" checked></ion-toggle>
+                    <ion-toggle formControlName="station_type"
+                                (change)="this.navigationService.saveStationType = false;"
+                                checked></ion-toggle>
                 </ion-item>
-                <ion-item *ngIf="this.navigationService.station_type == false">
+                <ion-item [hidden]="this.navigationService.saveStationType != false">
                     <ion-label>nur Schnellladestationen</ion-label>
-                    <ion-toggle formControlName="station_type"></ion-toggle>
+                    <ion-toggle formControlName="station_type"
+                        (change)="this.navigationService.saveStationType = true;"></ion-toggle>
                 </ion-item>
-            </div>
+                </div>
         </ion-list>
 
 

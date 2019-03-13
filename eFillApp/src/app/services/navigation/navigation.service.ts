@@ -76,12 +76,15 @@ export class NavigationService {
 
     public showInfoButton = false;
     public showPlugTypes = false;
+    public showTemperature = false;
+    public showDrivingStyle = false;
+    public saveStationType = false;
 
     public userObject = [];
     public userData = [];
 
     public reach = '';
-    public driving_style = '';
+    public driving_style = 'normal';
     public temperature = '';
     public plug_types = '';
     public station_type = false;
@@ -132,6 +135,18 @@ export class NavigationService {
         chademo: [''],
         ccs: [''],
         type1: ['']
+    };
+
+    public temperatureObject: Validators = {
+        cold: [''],
+        usual: [''],
+        heat: ['']
+    };
+
+    public drivingStyleObject: Validators = {
+        slow: [''],
+        normal: [''],
+        fast: ['']
     };
 
     constructor(
@@ -219,6 +234,7 @@ export class NavigationService {
         this.temperature = this.userData[0]['temperature'];
         this.plug_types = this.userData[0]['plug_types'];
         this.station_type = this.userData[0]['station_type'];
+        console.log(this.reach, this.driving_style, this.temperature, this.plug_types, this.station_type);
 
         const optionsSpidifier = {
             keepSpiderfied: true,
@@ -663,8 +679,8 @@ export class NavigationService {
             way_point: this.fb.array([]),
             end_point: ['', Validators.required],
             reach: ['', Validators.minLength(1)],
-            driving_style: ['normal', Validators.required],
-            temperature: ['normal', Validators.required],
+            driving_style: this.fb.array([]),
+            temperature: this.fb.array([]),
             plug_types: this.fb.array([]),
             station_type: ['false', Validators.required]
         });
@@ -692,6 +708,35 @@ export class NavigationService {
         this.plugTypeArray.push(newInstance);
     }
 
+    public removePlugType() {
+        this.plugTypeArray;
+    }
+
+    get temperatureArray() {
+        return this.routeForm.get('temperature') as FormArray;
+    }
+
+    public addTemperature() {
+        const newInstance = this.fb.group({...this.temperatureObject});
+        this.temperatureArray.push(newInstance);
+    }
+
+    public removeTemperature() {
+        this.temperatureArray;
+    }
+
+    get drivingStyleArray() {
+        return this.routeForm.get('driving_style') as FormArray;
+    }
+
+    public addDrivingStyle() {
+        const newInstance = this.fb.group({...this.drivingStyleObject});
+        this.drivingStyleArray.push(newInstance);
+    }
+
+    public removeDrivingStyle() {
+        this.drivingStyleArray;
+    }
 
     public async convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
@@ -719,26 +764,33 @@ export class NavigationService {
     }
 
     public async saveUserData(reach, driving_style, temperature, plug_types, station_type) {
+        const driving_styleArray = [];
+        if (driving_style[0]['slow'] === true) {driving_styleArray.push('slow'); }
+        if (driving_style[0]['normal'] === true) {driving_styleArray.push('normal'); }
+        if (driving_style[0]['fast'] === true) {driving_styleArray.push('fast'); }
+        const temperatureArray = [];
+        if (temperature[0]['cold'] === true) {temperatureArray.push('cold'); }
+        if (temperature[0]['usual'] === true) {temperatureArray.push('usual'); }
+        if (temperature[0]['heat'] === true) {temperatureArray.push('heat'); }
         const plugtypeArray = [];
-        if (plug_types[0]['schuko'] === true) {plugtypeArray.push(plug_types[0]['schuko']); }
-        if (plug_types[0]['cee3'] === true) {plugtypeArray.push(plug_types[0]['cee3']); }
-        if (plug_types[0]['cee5'] === true) {plugtypeArray.push(plug_types[0]['cee5']); }
-        if (plug_types[0]['kupplung2'] === true) {plugtypeArray.push(plug_types[0]['kupplung2']); }
-        if (plug_types[0]['type2'] === true) {plugtypeArray.push(plug_types[0]['type2']); }
-        if (plug_types[0]['chademo'] === true) {plugtypeArray.push(plug_types[0]['chademo']); }
-        if (plug_types[0]['ccs'] === true) {plugtypeArray.push(plug_types[0]['ccs']); }
-        if (plug_types[0]['type1'] === true) {plugtypeArray.push(plug_types[0]['type1']); }
-        console.log(plugtypeArray);
-
+        if (plug_types[0]['schuko'] === true) {plugtypeArray.push('schuko'); }
+        if (plug_types[0]['cee3'] === true) {plugtypeArray.push('cee3'); }
+        if (plug_types[0]['cee5'] === true) {plugtypeArray.push('cee5'); }
+        if (plug_types[0]['kupplung2'] === true) {plugtypeArray.push('kupplung2'); }
+        if (plug_types[0]['type2'] === true) {plugtypeArray.push('type2'); }
+        if (plug_types[0]['chademo'] === true) {plugtypeArray.push('chademo'); }
+        if (plug_types[0]['ccs'] === true) {plugtypeArray.push('ccs'); }
+        if (plug_types[0]['type1'] === true) {plugtypeArray.push('type1'); }
+        console.log('drivingstyle: ' + driving_styleArray);
+        console.log('temperature: ' + temperatureArray);
+        console.log('plugtypes: ' + plugtypeArray);
         this.userObject.push(reach, driving_style, temperature, plug_types, station_type);
         this.userData = await this.dataImport.getAllUserEntries();
         if (this.userObject[0] === '') {this.userObject[0] = this.userData[0]['reach']; }
-       // if (this.userObject[1] === 'normal') {this.userObject[1] = this.userData[0]['driving_style']; }
-        //if (this.userObject[2] === 'normal') {this.userObject[2] = this.userData[0]['temperature']; }
 
         this.dataImport.database.executeSql(this.dataImport.saveUserData,
-            [this.userObject[0], this.userObject[1],
-                    this.userObject[2], Object.values(this.userObject[3]),
+            [this.userObject[0], driving_styleArray,
+                    temperatureArray, plugtypeArray,
                     this.userObject[4]]);
     }
 
