@@ -12,7 +12,6 @@ export class RoutePage implements OnInit {
     public saveWayPointIndex = 0;
     // public savePlugType = {};
     // public savePlugTypeIndex = 0;
-    public selected = true;
 
     constructor(public navigationService: NavigationService) {
     }

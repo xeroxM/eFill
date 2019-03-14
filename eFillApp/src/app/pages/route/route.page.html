@@ -117,32 +117,38 @@
                 <ion-input type="number" placeholder="aktuelle Reichweite in km"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-segment>
-                    <ion-segment-button value="cold">
+                <ion-segment formControlName="temperature">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'cold'"
+                                        value="cold">
                         <ion-icon name="snow"></ion-icon>
                         <ion-label>unter 15 C°</ion-label>
                     </ion-segment-button>
-                    <ion-segment-button value="usual">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'usual'"
+                                        value="usual">
                         <ion-icon name="sunny"></ion-icon>
                         <ion-label>15-40 C°</ion-label>
                     </ion-segment-button>
-                    <ion-segment-button value="hot">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'hot'"
+                                        value="hot">
                         <ion-icon name="flame"></ion-icon>
                         <ion-label>über 40 C°</ion-label>
                     </ion-segment-button>
                 </ion-segment>
             </ion-item>
             <ion-item>
-                <ion-segment>
-                    <ion-segment-button value="slow">
+                <ion-segment formControlName="driving_style">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['driving_style'] === 'slow'"
+                                        value="slow">
                         <ion-icon name="bed"></ion-icon>
                         <ion-label>gemütlich</ion-label>
                     </ion-segment-button>
-                    <ion-segment-button value="normal">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['driving_style'] === 'normal'"
+                                        value="normal">
                         <ion-icon name="car"></ion-icon>
                         <ion-label>normal</ion-label>
                     </ion-segment-button>
-                    <ion-segment-button value="fast">
+                    <ion-segment-button [checked]="this.navigationService.routeForm.value['driving_style'] === 'fast'"
+                                        value="fast">
                         <ion-icon name="rocket"></ion-icon>
                         <ion-label>sportlich</ion-label>
                     </ion-segment-button>
@@ -153,42 +159,53 @@
                     <ion-row>
                         <ion-col>
                             <img src="assets/icon/schuko.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_schuko']"
+                                          formControlName="plug_schuko"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/cee_blue.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_cee_blue']"
+                                          formControlName="plug_cee_blue"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/cee_red.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_cee_red']"
+                                          formControlName="plug_cee_red"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/type1.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_type1']"
+                                          formControlName="plug_type1"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/type2.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_type2']"
+                                          formControlName="plug_type2"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/ccs.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_ccs']"
+                                          formControlName="plug_ccs"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/chademo.png" width="35">
-                            <ion-checkbox></ion-checkbox>
+                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_chademo']"
+                                          formControlName="plug_chademo"></ion-checkbox>
                         </ion-col>
                     </ion-row>
                 </div>
             </ion-item>
             <ion-item>
-                <ion-checkbox style="margin-left: 18px"></ion-checkbox>
+                <ion-checkbox style="margin-left: 18px"
+                              [checked]="this.navigationService.routeForm.value['station_normal']"
+                              formControlName="station_normal"></ion-checkbox>
                 <ion-label style="text-align: center">Normalladestionen</ion-label>
                 <img src="assets/icon/charging.png" width="30" style="margin-right: 10px">
             </ion-item>
             <ion-item>
-                <ion-checkbox style="margin-left: 18px"></ion-checkbox>
+                <ion-checkbox style="margin-left: 18px"
+                              [checked]="this.navigationService.routeForm.value['station_fast']"
+                              formControlName="station_fast"></ion-checkbox>
                 <ion-label style="text-align: center">Schnellladestationen</ion-label>
                 <img src="assets/icon/charging_fast.png" width="30" style="margin-right: 10px">
             </ion-item>

@@ -125,6 +125,17 @@ export class NavigationService {
         way_point_address: ['', Validators.required]
     };
 
+    // routeForm elements
+    public plug_schuko = true;
+    public plug_cee_blue = true;
+    public plug_cee_red = true;
+    public plug_type1 = true;
+    public plug_type2 = true;
+    public plug_ccs = true;
+    public plug_chademo = true;
+    public station_fast = true;
+    public station_normal = true;
+
     /* plugTypeObject: Validators = {
         schuko: [''],
         cee3: [''],
@@ -678,18 +689,17 @@ export class NavigationService {
             way_point: this.fb.array([]),
             end_point: ['', Validators.required],
             reach: ['', Validators.minLength(1)],
-            driving_style: ['normal', Validators.required],
             temperature: ['usual', Validators.required],
-            schuko: [true],
-            cee3: [true],
-            cee5: [true],
-            type2: [true],
-            kupplung2: [true],
-            chademo: [true],
-            ccs: [true],
-            type1: [true],
-            normal_charging: [true],
-            fast_charging: [true]
+            driving_style: ['normal', Validators.required],
+            plug_schuko: [this.plug_schuko, Validators.required],
+            plug_cee_blue: [this.plug_cee_blue, Validators.required],
+            plug_cee_red: [this.plug_cee_red, Validators.required],
+            plug_type1: [this.plug_type1, Validators.required],
+            plug_type2: [this.plug_type2, Validators.required],
+            plug_ccs: [this.plug_ccs, Validators.required],
+            plug_chademo: [this.plug_chademo, Validators.required],
+            station_normal: [this.station_normal, Validators.required],
+            station_fast: [this.station_fast, Validators.required]
         });
     }
 
