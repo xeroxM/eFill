@@ -382,6 +382,7 @@ export class NavigationService {
         }
 
         this.directionService(request);
+        this.routeFilter();
     }
 
     public directionService(request) {
@@ -391,47 +392,6 @@ export class NavigationService {
                 this.markersShown = false;
                 this.markerCluster.clearMarkers();
                 this.directionsDisplay.setDirections(res);
-
-                console.log(this.stationMarkers);
-                this.stationMarkers = [];
-                console.log(this.stationMarkers);
-                const stationMarkersSet = new Set();
-                console.log(stationMarkersSet);
-
-                if (this.routeForm.value['plug_schuko'] === true) {
-                    this.routeFilter('plug_types', 'AC Schuko', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_cee_blue'] === true) {
-                    this.routeFilter('plug_types', 'AC CEE 3 polig', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_cee_red'] === true) {
-                    this.routeFilter('plug_types', 'AC CEE 5 polig', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_type1'] === true) {
-                    this.routeFilter('plug_types', 'Steckdose Typ 1', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_type2'] === true) {
-                    this.routeFilter('plug_types', 'AC Steckdose Typ 2', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_type2'] === true) {
-                    this.routeFilter('plug_types', 'AC Kupplung Typ 2', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_ccs'] === true) {
-                    this.routeFilter('plug_types', 'DC Kupplung Combo', stationMarkersSet);
-                }
-                if (this.routeForm.value['plug_chademo'] === true) {
-                    this.routeFilter('plug_types', 'DC CHAdeMO', stationMarkersSet);
-                }
-                /*if (this.routeForm.value['station_normal'] === true) {
-                    this.routeFilter('station_type', 'Normalladestation', stationMarkersSet);
-                }
-                if (this.routeForm.value['station_fast'] === true) {
-                    this.routeFilter('station_type', 'Schnellladestation', stationMarkersSet);
-                }*/
-
-                console.log(stationMarkersSet);
-                this.stationMarkers = Array.from(stationMarkersSet);
-                console.log(this.stationMarkers);
 
                 if (!this.isNight) {
                     this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
@@ -998,7 +958,10 @@ export class NavigationService {
         }
     }
 
-    public routeFilter(element: string, info: string, stationMarkersSet) {
+    public routeFilter() {
+
+        this.stationMarkers = [];
+        const stationMarkersSet = new Set();
 
         const addmarkers = (index) => {
             let marker;
@@ -1024,18 +987,73 @@ export class NavigationService {
         };
 
         for (let i = 0; i < this.stationInformationExtended.length; i++) {
-            if (element === 'station_type') {
-                if (this.stationInformationExtended[i][element] === info) {
+            if (this.routeForm.value['plug_schuko'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC Schuko');
+                if (result === 'AC Schuko') {
                     addmarkers(i);
+                    continue;
                 }
-            } else if (element === 'plug_types') {
-                for (let j = 0; j < this.stationInformationExtended[i]['plug_types'].length; j++) {
-                    if (this.stationInformationExtended[i]['plug_types'][j] === info) {
-                        addmarkers(i);
-                    }
+            }
+            if (this.routeForm.value['plug_cee_blue'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC CEE 3 polig');
+                if (result === 'AC CEE 3 polig') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_cee_red'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC CEE 5 polig');
+                if (result === 'AC CEE 5 polig') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_type1'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'Steckdose Typ 1');
+                if (result === 'Steckdose Typ 1') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_type2'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC Steckdose Typ 2');
+                if (result === 'AC Steckdose Typ 2') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_type2'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC Kupplung Typ 2');
+                if (result === 'AC Kupplung Typ 2') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_ccs'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'DC Kupplung Combo');
+                if (result === 'DC Kupplung Combo') {
+                    addmarkers(i);
+                    continue;
+                }
+            }
+            if (this.routeForm.value['plug_chademo'] === true) {
+                const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'DC CHAdeMO');
+                if (result === 'DC CHAdeMO') {
+                    addmarkers(i);
                 }
             }
         }
+
+        /*if (this.routeForm.value['station_normal'] === true) {
+            this.routeFilter('station_type', 'Normalladestation', stationMarkersSet);
+        }
+        if (this.routeForm.value['station_fast'] === true) {
+            this.routeFilter('station_type', 'Schnellladestation', stationMarkersSet);
+        }*/
+
+        console.log(stationMarkersSet);
+        this.stationMarkers = Array.from(stationMarkersSet);
+        console.log(this.stationMarkers);
     }
 
     public addInfoWindow(marker, stationInformation) {
