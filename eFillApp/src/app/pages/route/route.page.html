@@ -159,8 +159,10 @@
                     <ion-row>
                         <ion-col>
                             <img src="assets/icon/schuko.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_schuko']"
-                                          formControlName="plug_schuko"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_schuko = !this.navigationService.plug_schuko"
+                                    [checked]="this.navigationService.routeForm.value['plug_schuko']"
+                                    formControlName="plug_schuko"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/cee_blue.png" width="35">
@@ -197,6 +199,7 @@
             </ion-item>
             <ion-item>
                 <ion-checkbox style="margin-left: 18px"
+                              (ionChange)="this.navigationService.station_normal = !this.navigationService.station_normal"
                               [checked]="this.navigationService.routeForm.value['station_normal']"
                               formControlName="station_normal"></ion-checkbox>
                 <ion-label style="text-align: center">Normalladestionen</ion-label>
@@ -204,6 +207,7 @@
             </ion-item>
             <ion-item>
                 <ion-checkbox style="margin-left: 18px"
+                              (ionChange)="this.navigationService.station_fast = !this.navigationService.station_fast"
                               [checked]="this.navigationService.routeForm.value['station_fast']"
                               formControlName="station_fast"></ion-checkbox>
                 <ion-label style="text-align: center">Schnellladestationen</ion-label>

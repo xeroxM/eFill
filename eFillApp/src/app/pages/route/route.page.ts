@@ -16,6 +16,10 @@ export class RoutePage implements OnInit {
     constructor(public navigationService: NavigationService) {
     }
 
+    test() {
+        console.log(this.navigationService.routeForm.value);
+    }
+
     ngOnInit() {
     }
 

@@ -47,6 +47,7 @@ export class NavigationService {
 
     // array for station information from server
     public stationInformation = [];
+    public stationInformationExtended = [];
     public currentWindow = null;
 
     // determines markerClusterer
@@ -255,6 +256,8 @@ export class NavigationService {
 
         const markerSpiderfier = new OverlappingMarkerSpiderfier(this.map, optionsSpidifier);
 
+        this.stationInformationExtended = this.stationInformation;
+
         for (let i = 0; i < this.stationInformation.length; i++) {
             let marker;
 
@@ -283,6 +286,7 @@ export class NavigationService {
                     }, this.stationInformation[i]['station_type'], partsOfStr);
             }
 
+            this.stationInformationExtended[i]['plug_types'] = partsOfStr;
             this.stationMarkersSet.add(marker);
             markerSpiderfier.addMarker(marker);
 
@@ -298,10 +302,7 @@ export class NavigationService {
         } else if (time >= 6 || time <= 19) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
         }
-        console.log(this.stationMarkers[0]['position']['lat']());
-        console.log(this.stationMarkers[0]['position']['lng']());
-        console.log(this.stationMarkers.length);
-        console.log(this.stationInformation.length);
+        console.log(this.stationInformationExtended);
     }
 
     public updateSearchResults(autocomplete) {
@@ -390,6 +391,55 @@ export class NavigationService {
                 this.markersShown = false;
                 this.markerCluster.clearMarkers();
                 this.directionsDisplay.setDirections(res);
+
+                console.log(this.stationMarkers);
+                this.stationMarkers = [];
+                console.log(this.stationMarkers);
+                const stationMarkersSet = new Set();
+                console.log(stationMarkersSet);
+
+                if (this.routeForm.value['plug_schuko'] === true) {
+                    this.routeFilter('plug_types', 'AC Schuko', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_cee_blue'] === true) {
+                    this.routeFilter('plug_types', 'AC CEE 3 polig', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_cee_red'] === true) {
+                    this.routeFilter('plug_types', 'AC CEE 5 polig', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_type1'] === true) {
+                    this.routeFilter('plug_types', 'Steckdose Typ 1', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_type2'] === true) {
+                    this.routeFilter('plug_types', 'AC Steckdose Typ 2', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_type2'] === true) {
+                    this.routeFilter('plug_types', 'AC Kupplung Typ 2', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_ccs'] === true) {
+                    this.routeFilter('plug_types', 'DC Kupplung Combo', stationMarkersSet);
+                }
+                if (this.routeForm.value['plug_chademo'] === true) {
+                    this.routeFilter('plug_types', 'DC CHAdeMO', stationMarkersSet);
+                }
+                /*if (this.routeForm.value['station_normal'] === true) {
+                    this.routeFilter('station_type', 'Normalladestation', stationMarkersSet);
+                }
+                if (this.routeForm.value['station_fast'] === true) {
+                    this.routeFilter('station_type', 'Schnellladestation', stationMarkersSet);
+                }*/
+
+                console.log(stationMarkersSet);
+                this.stationMarkers = Array.from(stationMarkersSet);
+                console.log(this.stationMarkers);
+
+                if (!this.isNight) {
+                    this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
+
+                } else if (this.isNight) {
+                    this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+                }
+                this.markerCluster.clearMarkers();
 
                 const htmlToPlaintext = (text) => {
                     return text ? String(text).replace(/(<([^>]+)>)/ig, '') : '';
@@ -945,6 +995,46 @@ export class NavigationService {
 
         } else if (this.isNight) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
+        }
+    }
+
+    public routeFilter(element: string, info: string, stationMarkersSet) {
+
+        const addmarkers = (index) => {
+            let marker;
+            const location = new google.maps.LatLng(this.stationInformationExtended[index].lat,
+                this.stationInformationExtended[index].long);
+
+            if (this.stationInformationExtended[index]['station_type'] === 'Schnellladeeinrichtung') {
+                marker = this.addMarker(location, this.map,
+                    {
+                        url: 'assets/icon/charging_fast.png',
+                        scaledSize: new google.maps.Size(30, 30)
+                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types']);
+            } else {
+                marker = this.addMarker(location, this.map,
+                    {
+                        url: 'assets/icon/charging.png',
+                        scaledSize: new google.maps.Size(30, 30)
+                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types']);
+            }
+            marker.setMap(this.map);
+            this.addInfoWindow(marker, this.stationInformationExtended[index]);
+            stationMarkersSet.add(marker);
+        };
+
+        for (let i = 0; i < this.stationInformationExtended.length; i++) {
+            if (element === 'station_type') {
+                if (this.stationInformationExtended[i][element] === info) {
+                    addmarkers(i);
+                }
+            } else if (element === 'plug_types') {
+                for (let j = 0; j < this.stationInformationExtended[i]['plug_types'].length; j++) {
+                    if (this.stationInformationExtended[i]['plug_types'][j] === info) {
+                        addmarkers(i);
+                    }
+                }
+            }
         }
     }
 
