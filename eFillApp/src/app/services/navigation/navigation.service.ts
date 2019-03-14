@@ -534,7 +534,11 @@ export class NavigationService {
         /* while (this.plugTypeArray.length !== 0) {
             this.plugTypeArray.removeAt(0);
         } */
+        this.markerCluster.clearMarkers();
+        this.markersShown = false;
+        this.stationMarkers = Array.from(this.stationMarkersSet);
         this.showAndHideMarkers();
+        console.log(this.stationMarkers);
     }
 
     public startNavigation() {
@@ -959,7 +963,6 @@ export class NavigationService {
     }
 
     public routeFilter() {
-
         this.stationMarkers = [];
         const stationMarkersSet = new Set();
 
@@ -1044,16 +1047,26 @@ export class NavigationService {
             }
         }
 
-        /*if (this.routeForm.value['station_normal'] === true) {
-            this.routeFilter('station_type', 'Normalladestation', stationMarkersSet);
-        }
-        if (this.routeForm.value['station_fast'] === true) {
-            this.routeFilter('station_type', 'Schnellladestation', stationMarkersSet);
-        }*/
-
-        console.log(stationMarkersSet);
         this.stationMarkers = Array.from(stationMarkersSet);
-        console.log(this.stationMarkers);
+
+        if (this.routeForm.value['station_normal'] === false) {
+            this.stationMarkers.filter(station => {
+                if (station['station_type'] === 'Normalladeeinrichtung') {
+                    station.setMap(null);
+                }
+            });
+            this.stationMarkers = this.stationMarkers.filter(station => station['station_type'] === 'Schnellladeeinrichtung');
+            console.log(this.stationMarkers);
+        }
+        if (this.routeForm.value['station_fast'] === false) {
+            this.stationMarkers.filter(station => {
+                if (station['station_type'] === 'Schnellladeeinrichtung') {
+                    station.setMap(null);
+                }
+            });
+            this.stationMarkers = this.stationMarkers.filter(station => station['station_type'] === 'Normalladeeinrichtung');
+            console.log(this.stationMarkers);
+        }
     }
 
     public addInfoWindow(marker, stationInformation) {
