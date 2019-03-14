@@ -111,7 +111,86 @@
                 Zwischenstopp
             </ion-button>
         </div>
-        <div class="info-button"
+
+        <ion-list>
+            <ion-item>
+                <ion-segment>
+                    <ion-segment-button value="cold">
+                        <ion-icon name="snow"></ion-icon>
+                        <ion-label>unter 15 C°</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="usual">
+                        <ion-icon name="sunny"></ion-icon>
+                        <ion-label>15-40 C°</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="hot">
+                        <ion-icon name="flame"></ion-icon>
+                        <ion-label>über 40 C°</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+            </ion-item>
+            <ion-item>
+                <ion-segment>
+                    <ion-segment-button value="slow">
+                        <ion-icon name="bed"></ion-icon>
+                        <ion-label>gemütlich</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="normal">
+                        <ion-icon name="car"></ion-icon>
+                        <ion-label>normal</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="fast">
+                        <ion-icon name="rocket"></ion-icon>
+                        <ion-label>sportlich</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+            </ion-item>
+            <ion-item>
+                <div class="plug-types">
+                    <ion-row>
+                        <ion-col>
+                            <img src="assets/icon/schuko.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/cee_blue.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/cee_red.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/type1.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/type2.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/ccs.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                        <ion-col>
+                            <img src="assets/icon/chademo.png" width="35">
+                            <ion-checkbox></ion-checkbox>
+                        </ion-col>
+                    </ion-row>
+                </div>
+            </ion-item>
+            <ion-item>
+                <ion-checkbox style="margin-left: 18px"></ion-checkbox>
+                <ion-label style="text-align: center">Normalladestionen</ion-label>
+                <img src="assets/icon/charging.png" width="30" style="margin-right: 10px">
+            </ion-item>
+            <ion-item>
+                <ion-checkbox style="margin-left: 18px"></ion-checkbox>
+                <ion-label style="text-align: center">Schnellladestationen</ion-label>
+                <img src="assets/icon/charging_fast.png" width="30" style="margin-right: 10px">
+            </ion-item>
+        </ion-list>
+        <!-- div class="info-button"
              [hidden]="this.navigationService.showInfoButton != false">
             <ion-button slot="start" size="small" shape="round" color="primary" fill="clear"
                         (click)="this.navigationService.showInfoButton = true;">
@@ -322,7 +401,7 @@
                         (change)="this.navigationService.saveStationType = true;"></ion-toggle>
                 </ion-item>
                 </div>
-        </ion-list>
+        </ion-list -->
 
 
         <div class="start-button" text-center>
@@ -331,16 +410,17 @@
                     slot="end" shape="round" color="primary" fill="outline"
                     (click)="this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
                          this.navigationService.routeForm.value['end_point'],
-                         this.navigationService.routeForm.value['way_point']);
-                         this.navigationService.saveUserData(this.navigationService.routeForm.value['reach'],
-                         this.navigationService.routeForm.value['driving_style'],
-                         this.navigationService.routeForm.value['temperature'],
-                         this.navigationService.routeForm.value['plug_types'],
-                         this.navigationService.routeForm.value['station_type']);
-                         this.navigationService.showInfoButton = false;">
+                         this.navigationService.routeForm.value['way_point'])">
                 <ion-icon slot="start" name="car"></ion-icon>
                 Route berechnen
             </ion-button>
         </div>
     </ion-list>
 </ion-content>
+
+<!-- this.navigationService.saveUserData(this.navigationService.routeForm.value['reach'],
+                         this.navigationService.routeForm.value['driving_style'],
+                         this.navigationService.routeForm.value['temperature'],
+                         this.navigationService.routeForm.value['plug_types'],
+                         this.navigationService.routeForm.value['station_type']);
+                         this.navigationService.showInfoButton = false; -->

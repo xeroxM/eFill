@@ -126,7 +126,7 @@ export class NavigationService {
         way_point_address: ['', Validators.required]
     };
 
-    public plugTypeObject: Validators = {
+    /* plugTypeObject: Validators = {
         schuko: [''],
         cee3: [''],
         cee5: [''],
@@ -147,7 +147,7 @@ export class NavigationService {
         slow: [''],
         normal: [''],
         fast: ['']
-    };
+    }; */
 
     constructor(
         public navCtrl: NavController,
@@ -511,9 +511,9 @@ export class NavigationService {
         while (this.wayPointArray.length !== 0) {
             this.wayPointArray.removeAt(0);
         }
-        while (this.plugTypeArray.length !== 0) {
+        /* while (this.plugTypeArray.length !== 0) {
             this.plugTypeArray.removeAt(0);
-        }
+        } */
         this.showAndHideMarkers();
     }
 
@@ -679,10 +679,18 @@ export class NavigationService {
             way_point: this.fb.array([]),
             end_point: ['', Validators.required],
             reach: ['', Validators.minLength(1)],
-            driving_style: this.fb.array([]),
-            temperature: this.fb.array([]),
-            plug_types: this.fb.array([]),
-            station_type: ['false', Validators.required]
+            driving_style: ['normal', Validators.required],
+            temperature: ['usual', Validators.required],
+            schuko: [true],
+            cee3: [true],
+            cee5: [true],
+            type2: [true],
+            kupplung2: [true],
+            chademo: [true],
+            ccs: [true],
+            type1: [true],
+            normal_charging: [true],
+            fast_charging: [true]
         });
     }
 
@@ -699,7 +707,7 @@ export class NavigationService {
         this.wayPointArray.removeAt(index);
     }
 
-    get plugTypeArray() {
+    /* get plugTypeArray() {
         return this.routeForm.get('plug_types') as FormArray;
     }
 
@@ -736,7 +744,7 @@ export class NavigationService {
 
     public removeDrivingStyle() {
         this.drivingStyleArray;
-    }
+    } */
 
     public async convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
@@ -763,36 +771,66 @@ export class NavigationService {
         this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
 
-    public async saveUserData(reach, driving_style, temperature, plug_types, station_type) {
+    /* public async saveUserData(reach, driving_style, temperature, plug_types, station_type) {
         const driving_styleArray = [];
-        if (driving_style[0]['slow'] === true) {driving_styleArray.push('slow'); }
-        if (driving_style[0]['normal'] === true) {driving_styleArray.push('normal'); }
-        if (driving_style[0]['fast'] === true) {driving_styleArray.push('fast'); }
+        if (driving_style[0]['slow'] === true) {
+            driving_styleArray.push('slow');
+        }
+        if (driving_style[0]['normal'] === true) {
+            driving_styleArray.push('normal');
+        }
+        if (driving_style[0]['fast'] === true) {
+            driving_styleArray.push('fast');
+        }
         const temperatureArray = [];
-        if (temperature[0]['cold'] === true) {temperatureArray.push('cold'); }
-        if (temperature[0]['usual'] === true) {temperatureArray.push('usual'); }
-        if (temperature[0]['heat'] === true) {temperatureArray.push('heat'); }
+        if (temperature[0]['cold'] === true) {
+            temperatureArray.push('cold');
+        }
+        if (temperature[0]['usual'] === true) {
+            temperatureArray.push('usual');
+        }
+        if (temperature[0]['heat'] === true) {
+            temperatureArray.push('heat');
+        }
         const plugtypeArray = [];
-        if (plug_types[0]['schuko'] === true) {plugtypeArray.push('schuko'); }
-        if (plug_types[0]['cee3'] === true) {plugtypeArray.push('cee3'); }
-        if (plug_types[0]['cee5'] === true) {plugtypeArray.push('cee5'); }
-        if (plug_types[0]['kupplung2'] === true) {plugtypeArray.push('kupplung2'); }
-        if (plug_types[0]['type2'] === true) {plugtypeArray.push('type2'); }
-        if (plug_types[0]['chademo'] === true) {plugtypeArray.push('chademo'); }
-        if (plug_types[0]['ccs'] === true) {plugtypeArray.push('ccs'); }
-        if (plug_types[0]['type1'] === true) {plugtypeArray.push('type1'); }
+        if (plug_types[0]['schuko'] === true) {
+            plugtypeArray.push('schuko');
+        }
+        if (plug_types[0]['cee3'] === true) {
+            plugtypeArray.push('cee3');
+        }
+        if (plug_types[0]['cee5'] === true) {
+            plugtypeArray.push('cee5');
+        }
+        if (plug_types[0]['kupplung2'] === true) {
+            plugtypeArray.push('kupplung2');
+        }
+        if (plug_types[0]['type2'] === true) {
+            plugtypeArray.push('type2');
+        }
+        if (plug_types[0]['chademo'] === true) {
+            plugtypeArray.push('chademo');
+        }
+        if (plug_types[0]['ccs'] === true) {
+            plugtypeArray.push('ccs');
+        }
+        if (plug_types[0]['type1'] === true) {
+            plugtypeArray.push('type1');
+        }
         console.log('drivingstyle: ' + driving_styleArray);
         console.log('temperature: ' + temperatureArray);
         console.log('plugtypes: ' + plugtypeArray);
         this.userObject.push(reach, driving_style, temperature, plug_types, station_type);
         this.userData = await this.dataImport.getAllUserEntries();
-        if (this.userObject[0] === '') {this.userObject[0] = this.userData[0]['reach']; }
+        if (this.userObject[0] === '') {
+            this.userObject[0] = this.userData[0]['reach'];
+        }
 
         this.dataImport.database.executeSql(this.dataImport.saveUserData,
             [this.userObject[0], driving_styleArray,
-                    temperatureArray, plugtypeArray,
-                    this.userObject[4]]);
-    }
+                temperatureArray, plugtypeArray,
+                this.userObject[4]]);
+    } */
 
     public getDirections() {
         if ((document.getElementById('directionsPanel').style.display) === 'none') {
