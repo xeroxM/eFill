@@ -8,8 +8,6 @@ import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Platform} from '@ionic/angular';
 import {TextToSpeechService} from '../text-to-speech/text-to-speech.service';
-import {FilterComponent} from '../../pages/filter/filter.component';
-
 
 declare let google: any;
 
@@ -74,7 +72,7 @@ export class NavigationService {
     public navigationActive = false;
     public volumeOn = true;
 
-    public showInfoButton = false;
+    /* public showInfoButton = false;
     public showPlugTypes = false;
     public showTemperature = false;
     public showDrivingStyle = false;
@@ -88,6 +86,7 @@ export class NavigationService {
     public temperature = '';
     public plug_types = '';
     public station_type = false;
+    */
 
     // markers for geolocation
     public markerInner: any;
@@ -228,13 +227,13 @@ export class NavigationService {
             }
         );
 
-        this.userData = await this.dataImport.getAllUserEntries();
+        /* this.userData = await this.dataImport.getAllUserEntries();
         this.reach = this.userData[0]['reach'];
         this.driving_style = this.userData[0]['driving_style'];
         this.temperature = this.userData[0]['temperature'];
         this.plug_types = this.userData[0]['plug_types'];
         this.station_type = this.userData[0]['station_type'];
-        console.log(this.reach, this.driving_style, this.temperature, this.plug_types, this.station_type);
+        console.log(this.reach, this.driving_style, this.temperature, this.plug_types, this.station_type); */
 
         const optionsSpidifier = {
             keepSpiderfied: true,
