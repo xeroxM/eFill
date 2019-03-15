@@ -277,13 +277,15 @@ export class NavigationService {
                     {
                         url: 'assets/icon/charging_fast.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformation[i]['station_type'], partsOfStr);
+                    }, this.stationInformation[i]['station_type'], partsOfStr, this.stationInformation[i]['operator'],
+                    this.stationInformation[i]['adress'], this.stationInformation[i]['place']);
             } else {
                 marker = this.addMarker(location, this.map,
                     {
                         url: 'assets/icon/charging.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformation[i]['station_type'], partsOfStr);
+                    }, this.stationInformation[i]['station_type'], partsOfStr, this.stationInformation[i]['operator'],
+                    this.stationInformation[i]['adress'], this.stationInformation[i]['place']);
             }
 
             this.stationInformationExtended[i]['plug_types'] = partsOfStr;
@@ -381,11 +383,11 @@ export class NavigationService {
             this.watchID.unsubscribe();
         }
 
-        this.directionService(request);
+        this.directionHandler(request);
         this.routeFilter();
     }
 
-    public directionService(request) {
+    public directionHandler(request) {
         this.directionsService.route(request, (res, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsDisplay.setMap(this.map);
@@ -480,8 +482,16 @@ export class NavigationService {
 
                     transformDuration();
 
+                    let saveIndex;
+
+                    console.log('hallo');
+
                     for (let i = 0; i < res['routes'][0]['legs'].length; i++) {
                         this.lastStep.push(res['routes'][0]['legs'][i]['steps'][res['routes'][0]['legs'][i]['steps'].length - 1]);
+                        console.log('sdf');
+                        console.log(res['routes'][0]['legs'][i]['steps'].length - 1);
+                        console.log(res['routes'][0]['legs'][i]['steps'][res['routes'][0]['legs'][i]['steps'].length - 1]);
+                        console.log('ghj');
                         for (let j = 0; j < res['routes'][0]['legs'][i]['steps'].length; j++) {
                             const routeObject = {};
                             routeObject['startLat'] = res['routes'][0]['legs'][i]['steps'][j]['start_point']['lat']();
@@ -502,6 +512,7 @@ export class NavigationService {
 
                             this.routeOverview['index'] = i;
                             this.routeObjects.push(routeObject);
+                            saveIndex = i;
                         }
                     }
                 }
@@ -598,8 +609,9 @@ export class NavigationService {
 
             if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
-                if (this.lastStep[0]['end_point']['lat']() === this.routeObjects[this.routeStepIndex]['endLat'] &&
-                    this.lastStep[0]['end_point']['lat']() === this.routeObjects[this.routeStepIndex]['endLng']) {
+                if (this.lastStep[0] &&
+                    this.lastStep[0]['end_point']['lat']() === this.routeObjects[this.routeStepIndex]['endLat'] &&
+                    this.lastStep[0]['end_point']['lng']() === this.routeObjects[this.routeStepIndex]['endLng']) {
                     this.lastStep.shift();
                     this.currentDirections['waypoints'].shift();
                 }
@@ -613,21 +625,21 @@ export class NavigationService {
 
     public showNearbyLoadingStations() {
 
-        for (let i = 0; this.stationInformation.length > i; i++) {
+        for (let i = 0; this.stationMarkers.length > i; i++) {
             const rad = (x) => {
                 return x * Math.PI / 180;
             };
 
             const earthRadius = 6378137;
-            const distanceLat = rad(this.stationInformation[i]['lat'] - this.geoLocLat);
-            const distanceLong = rad(this.stationInformation[i]['long'] - this.geoLocLong);
+            const distanceLat = rad(this.stationMarkers[i]['position']['lat']() - this.geoLocLat);
+            const distanceLong = rad(this.stationMarkers[i]['position']['lng']() - this.geoLocLong);
             const a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
-                Math.cos(rad(this.geoLocLat)) * Math.cos(rad(this.stationInformation[i]['lat'])) *
+                Math.cos(rad(this.geoLocLat)) * Math.cos(rad(this.stationMarkers[i]['position']['lat']())) *
                 Math.sin(distanceLong / 2) * Math.sin(distanceLong / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             const distance = earthRadius * c;
 
-            this.stationDistance.push(this.stationInformation[i]);
+            this.stationDistance.push(this.stationMarkers[i]);
             this.stationDistance[i].distance = distance;
         }
 
@@ -637,7 +649,8 @@ export class NavigationService {
         for (let i = 0; this.stationDistance.length > i; i++) {
             const request = {
                 origin: {lat: this.geoLocLat, lng: this.geoLocLong},
-                destination: new google.maps.LatLng(this.stationDistance[i]['lat'], this.stationDistance[i]['long']),
+                destination: new google.maps.LatLng(this.stationDistance[i]['position']['lat'](),
+                    this.stationDistance[i]['position']['lng']()),
                 travelMode: google.maps.TravelMode['DRIVING'],
             };
 
@@ -663,10 +676,10 @@ export class NavigationService {
 
     public cancelNavigation() {
         this.currentDirections = null;
-        this.cancelRoute();
         this.markerInner.setMap(null);
         this.markerOuter.setMap(null);
         this.watchID.unsubscribe();
+        this.cancelRoute();
     }
 
     public getRouteToStation(stationlat, stationlong) {
@@ -681,20 +694,21 @@ export class NavigationService {
 
     public updateRoute(selectedStation) {
         const stationObject = {
-            location: new google.maps.LatLng(selectedStation['lat'], selectedStation['long']),
+            location: new google.maps.LatLng(selectedStation['position']['lat'](), selectedStation['position']['lng']()),
             stopover: true
         };
 
         this.currentDirections['origin'] = {lat: this.geoLocLat, lng: this.geoLocLong};
         this.currentDirections['waypoints'].unshift(stationObject);
         this.directionsDisplay.setMap(null);
-        this.directionService(this.currentDirections);
+        this.directionHandler(this.currentDirections);
         this.markerInner.setMap(null);
         this.markerOuter.setMap(null);
         this.watchID.unsubscribe();
         this.startNavigation();
         this.stationDistance = [];
         this.navCtrl.navigateBack('/tabs/(map:map)');
+        this.map.setZoom(15);
     }
 
     public createRouteForm() {
@@ -702,7 +716,7 @@ export class NavigationService {
             start_point: ['', Validators.required],
             way_point: this.fb.array([]),
             end_point: ['', Validators.required],
-            reach: ['', Validators.minLength(1)],
+            reach: ['', Validators.required],
             temperature: ['usual', Validators.required],
             driving_style: ['normal', Validators.required],
             plug_schuko: [this.plug_schuko, Validators.required],
@@ -863,7 +877,7 @@ export class NavigationService {
         }
     }
 
-    public addMarker(position, map, iconstyle, station_type, plug_types) {
+    public addMarker(position, map, iconstyle, station_type, plug_types, operator, adress, place) {
         const marker = new google.maps.Marker({
             position, map,
             icon: iconstyle
@@ -871,6 +885,9 @@ export class NavigationService {
 
         marker['station_type'] = station_type;
         marker['plug_types'] = plug_types;
+        marker['operator'] = operator;
+        marker['adress'] = adress;
+        marker['place'] = place;
 
         return marker;
     }
@@ -939,13 +956,15 @@ export class NavigationService {
                             {
                                 url: 'assets/icon/charging_fast.png',
                                 scaledSize: new google.maps.Size(30, 30)
-                            }, this.stationInformation[i]['station_type'], partsOfStr);
+                            }, this.stationInformation[i]['station_type'], partsOfStr, this.stationInformation[i]['operator'],
+                            this.stationInformation[i]['adress'], this.stationInformation[i]['place']);
                     } else {
                         marker = this.addMarker(location, this.map,
                             {
                                 url: 'assets/icon/charging.png',
                                 scaledSize: new google.maps.Size(30, 30)
-                            }, this.stationInformation[i]['station_type'], partsOfStr);
+                            }, this.stationInformation[i]['station_type'], partsOfStr, this.stationInformation[i]['operator'],
+                            this.stationInformation[i]['adress'], this.stationInformation[i]['place']);
                     }
                     marker.setMap(this.map);
                     this.stationMarkers.push(marker);
@@ -976,13 +995,17 @@ export class NavigationService {
                     {
                         url: 'assets/icon/charging_fast.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types']);
+                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types'],
+                    this.stationInformationExtended[index]['operator'], this.stationInformationExtended[index]['adress'],
+                    this.stationInformationExtended[index]['place']);
             } else {
                 marker = this.addMarker(location, this.map,
                     {
                         url: 'assets/icon/charging.png',
                         scaledSize: new google.maps.Size(30, 30)
-                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types']);
+                    }, this.stationInformationExtended[index]['station_type'], this.stationInformationExtended[index]['plug_types'],
+                    this.stationInformationExtended[index]['operator'], this.stationInformationExtended[index]['adress'],
+                    this.stationInformationExtended[index]['place']);
             }
             marker.setMap(this.map);
             this.addInfoWindow(marker, this.stationInformationExtended[index]);
