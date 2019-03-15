@@ -18,9 +18,6 @@ export class DataImportService {
         'plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4, station_type) ' +
         'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
-    public saveUserData = 'UPDATE userprofile SET reach = ?, driving_style = ?, temperature = ?, plug_types = ?, station_type = ?' +
-                            'WHERE rowid = 1';
-
     constructor(private http: HttpClient,
                 private sqlitePorter: SQLitePorter,
                 private storage: Storage,
@@ -105,19 +102,5 @@ export class DataImportService {
             }
         });
         return temp2;
-    }
-
-    public async getAllUserEntries() {
-        const temp3 = [];
-        await this.database.executeSql('SELECT * FROM userprofile WHERE rowid = 1').then(data => {
-            for (let i = 0; i < data.rows.length; i++) {
-                temp3.push(data.rows.item(i));
-            }
-        }).catch(data => {
-            for (let i = 0; i < data.rows.length; i++) {
-                temp3.push(data.rows.item(i));
-            }
-        });
-        return temp3;
     }
 }

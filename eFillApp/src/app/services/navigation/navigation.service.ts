@@ -73,22 +73,6 @@ export class NavigationService {
     public navigationActive = false;
     public volumeOn = true;
 
-    /* public showInfoButton = false;
-    public showPlugTypes = false;
-    public showTemperature = false;
-    public showDrivingStyle = false;
-    public saveStationType = false;
-
-    public userObject = [];
-    public userData = [];
-
-    public reach = '';
-    public driving_style = 'normal';
-    public temperature = '';
-    public plug_types = '';
-    public station_type = false;
-    */
-
     // markers for geolocation
     public markerInner: any;
     public markerOuter: any;
@@ -141,29 +125,6 @@ export class NavigationService {
     public greenCircle;
     public yellowCircle;
     public redCircle;
-
-    /* plugTypeObject: Validators = {
-        schuko: [''],
-        cee3: [''],
-        cee5: [''],
-        type2: [''],
-        kupplung2: [''],
-        chademo: [''],
-        ccs: [''],
-        type1: ['']
-    };
-
-    public temperatureObject: Validators = {
-        cold: [''],
-        usual: [''],
-        heat: ['']
-    };
-
-    public drivingStyleObject: Validators = {
-        slow: [''],
-        normal: [''],
-        fast: ['']
-    }; */
 
     constructor(
         public navCtrl: NavController,
@@ -243,14 +204,6 @@ export class NavigationService {
                 this.mapStyleService.showSplash = false;
             }
         );
-
-        /* this.userData = await this.dataImport.getAllUserEntries();
-        this.reach = this.userData[0]['reach'];
-        this.driving_style = this.userData[0]['driving_style'];
-        this.temperature = this.userData[0]['temperature'];
-        this.plug_types = this.userData[0]['plug_types'];
-        this.station_type = this.userData[0]['station_type'];
-        console.log(this.reach, this.driving_style, this.temperature, this.plug_types, this.station_type); */
 
         const optionsSpidifier = {
             keepSpiderfied: true,
@@ -551,9 +504,7 @@ export class NavigationService {
         while (this.wayPointArray.length !== 0) {
             this.wayPointArray.removeAt(0);
         }
-        /* while (this.plugTypeArray.length !== 0) {
-            this.plugTypeArray.removeAt(0);
-        } */
+
         this.markerCluster.clearMarkers();
         this.markersShown = false;
         this.stationMarkers = Array.from(this.stationMarkersSet);
@@ -753,45 +704,6 @@ export class NavigationService {
         this.wayPointArray.removeAt(index);
     }
 
-    /* get plugTypeArray() {
-        return this.routeForm.get('plug_types') as FormArray;
-    }
-
-    public addPlugType() {
-        const newInstance = this.fb.group({...this.plugTypeObject});
-        this.plugTypeArray.push(newInstance);
-    }
-
-    public removePlugType() {
-        this.plugTypeArray;
-    }
-
-    get temperatureArray() {
-        return this.routeForm.get('temperature') as FormArray;
-    }
-
-    public addTemperature() {
-        const newInstance = this.fb.group({...this.temperatureObject});
-        this.temperatureArray.push(newInstance);
-    }
-
-    public removeTemperature() {
-        this.temperatureArray;
-    }
-
-    get drivingStyleArray() {
-        return this.routeForm.get('driving_style') as FormArray;
-    }
-
-    public addDrivingStyle() {
-        const newInstance = this.fb.group({...this.drivingStyleObject});
-        this.drivingStyleArray.push(newInstance);
-    }
-
-    public removeDrivingStyle() {
-        this.drivingStyleArray;
-    } */
-
     public async convertObj(origin, destination, waypoint) {
         let originlat, originlong, destinationlat, destinationlong;
 
@@ -816,67 +728,6 @@ export class NavigationService {
         this.navCtrl.navigateBack('/tabs/(map:map)');
         this.calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint);
     }
-
-    /* public async saveUserData(reach, driving_style, temperature, plug_types, station_type) {
-        const driving_styleArray = [];
-        if (driving_style[0]['slow'] === true) {
-            driving_styleArray.push('slow');
-        }
-        if (driving_style[0]['normal'] === true) {
-            driving_styleArray.push('normal');
-        }
-        if (driving_style[0]['fast'] === true) {
-            driving_styleArray.push('fast');
-        }
-        const temperatureArray = [];
-        if (temperature[0]['cold'] === true) {
-            temperatureArray.push('cold');
-        }
-        if (temperature[0]['usual'] === true) {
-            temperatureArray.push('usual');
-        }
-        if (temperature[0]['heat'] === true) {
-            temperatureArray.push('heat');
-        }
-        const plugtypeArray = [];
-        if (plug_types[0]['schuko'] === true) {
-            plugtypeArray.push('schuko');
-        }
-        if (plug_types[0]['cee3'] === true) {
-            plugtypeArray.push('cee3');
-        }
-        if (plug_types[0]['cee5'] === true) {
-            plugtypeArray.push('cee5');
-        }
-        if (plug_types[0]['kupplung2'] === true) {
-            plugtypeArray.push('kupplung2');
-        }
-        if (plug_types[0]['type2'] === true) {
-            plugtypeArray.push('type2');
-        }
-        if (plug_types[0]['chademo'] === true) {
-            plugtypeArray.push('chademo');
-        }
-        if (plug_types[0]['ccs'] === true) {
-            plugtypeArray.push('ccs');
-        }
-        if (plug_types[0]['type1'] === true) {
-            plugtypeArray.push('type1');
-        }
-        console.log('drivingstyle: ' + driving_styleArray);
-        console.log('temperature: ' + temperatureArray);
-        console.log('plugtypes: ' + plugtypeArray);
-        this.userObject.push(reach, driving_style, temperature, plug_types, station_type);
-        this.userData = await this.dataImport.getAllUserEntries();
-        if (this.userObject[0] === '') {
-            this.userObject[0] = this.userData[0]['reach'];
-        }
-
-        this.dataImport.database.executeSql(this.dataImport.saveUserData,
-            [this.userObject[0], driving_styleArray,
-                temperatureArray, plugtypeArray,
-                this.userObject[4]]);
-    } */
 
     public getDirections() {
         if ((document.getElementById('directionsPanel').style.display) === 'none') {
