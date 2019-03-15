@@ -385,6 +385,7 @@ export class NavigationService {
 
         this.directionHandler(request);
         this.routeFilter();
+        this.calculateReach();
     }
 
     public directionHandler(request) {
@@ -979,6 +980,84 @@ export class NavigationService {
         } else if (this.isNight) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsNight);
         }
+    }
+
+    public calculateReach() {
+        const reachOriginal = this.routeForm.value['reach'];
+        let reachCalculatedGreen = this.routeForm.value['reach'];
+        let reachCalculatedYellow = this.routeForm.value['reach'];
+        let reachCalculatedRed = this.routeForm.value['reach'];
+
+        // margin
+        const marginGreen = (reachOriginal / 100) * 10;
+        const marginYellow = (reachOriginal / 100) * 5;
+        const marginRed = 0;
+
+        // calculation of cold weather (under 10C°)
+        const coldGreen = (reachOriginal / 100) * 40;
+        const coldYellow = (reachOriginal / 100) * 26;
+        const coldRed = (reachOriginal / 100) * 12;
+
+        // calculation of normal weather (between 10 and 35 C°)
+        const usualGreen = (reachOriginal / 100) * 10;
+        const usualYellow = (reachOriginal / 100) * 5;
+        const usualRed = 0;
+
+        // calculation of hot weather (over 35C°)
+        const hotGreen = (reachOriginal / 100) * 17;
+        const hotYellow = (reachOriginal / 100) * 11;
+        const hotRed = (reachOriginal / 100) * 5;
+
+        // slow driving Style
+        const slowGreen = 0;
+        const slowYellow = 0;
+        const slowRed = 0;
+
+        // normal driving Style
+        const normalGreen = (reachOriginal / 100) * 10;
+        const normalYellow = (reachOriginal / 100) * 5;
+        const normalRed = 0;
+
+        // fast driving Style
+        const fastGreen = (reachOriginal / 100) * 20;
+        const fastYellow = (reachOriginal / 100) * 15;
+        const fastRed = (reachOriginal / 100) * 10;
+
+        if (this.routeForm.value['temperature'] === 'cold') {
+            reachCalculatedGreen = reachCalculatedGreen - coldGreen;
+            reachCalculatedYellow = reachCalculatedYellow - coldYellow;
+            reachCalculatedRed = reachCalculatedRed - coldRed;
+        } else if (this.routeForm.value['temperature'] === 'usual') {
+            reachCalculatedGreen = reachCalculatedGreen - usualGreen;
+            reachCalculatedYellow = reachCalculatedYellow - usualYellow;
+            reachCalculatedRed = reachCalculatedRed - usualRed;
+        } else {
+            reachCalculatedGreen = reachCalculatedGreen - hotGreen;
+            reachCalculatedYellow = reachCalculatedYellow - hotYellow;
+            reachCalculatedRed = reachCalculatedRed - hotRed;
+        }
+
+        if (this.routeForm.value['driving_style'] === 'slow') {
+            reachCalculatedGreen = reachCalculatedGreen - slowGreen;
+            reachCalculatedYellow = reachCalculatedYellow - slowYellow;
+            reachCalculatedRed = reachCalculatedRed - slowRed;
+        } else if (this.routeForm.value['driving_style'] === 'normal') {
+            reachCalculatedGreen = reachCalculatedGreen - normalGreen;
+            reachCalculatedYellow = reachCalculatedYellow - normalYellow;
+            reachCalculatedRed = reachCalculatedRed - normalRed;
+        } else {
+            reachCalculatedGreen = reachCalculatedGreen - fastGreen;
+            reachCalculatedYellow = reachCalculatedYellow - fastYellow;
+            reachCalculatedRed = reachCalculatedRed - fastRed;
+        }
+
+        reachCalculatedGreen = reachCalculatedGreen - marginGreen;
+        reachCalculatedYellow = reachCalculatedYellow - marginYellow;
+        reachCalculatedRed = reachCalculatedRed - marginRed;
+
+        console.log(reachCalculatedGreen);
+        console.log(reachCalculatedYellow);
+        console.log(reachCalculatedRed);
     }
 
     public routeFilter() {

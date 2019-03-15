@@ -121,17 +121,17 @@
                     <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'cold'"
                                         value="cold">
                         <ion-icon name="snow"></ion-icon>
-                        <ion-label>unter 15 C°</ion-label>
+                        <ion-label>unter 10 C°</ion-label>
                     </ion-segment-button>
                     <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'usual'"
                                         value="usual">
                         <ion-icon name="sunny"></ion-icon>
-                        <ion-label>15-40 C°</ion-label>
+                        <ion-label>10-35 C°</ion-label>
                     </ion-segment-button>
                     <ion-segment-button [checked]="this.navigationService.routeForm.value['temperature'] === 'hot'"
                                         value="hot">
                         <ion-icon name="flame"></ion-icon>
-                        <ion-label>über 40 C°</ion-label>
+                        <ion-label>über 35 C°</ion-label>
                     </ion-segment-button>
                 </ion-segment>
             </ion-item>
