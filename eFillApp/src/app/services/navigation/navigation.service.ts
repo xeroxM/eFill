@@ -137,6 +137,11 @@ export class NavigationService {
     public station_fast = true;
     public station_normal = true;
 
+    // circles which show reach
+    public greenCircle;
+    public yellowCircle;
+    public redCircle;
+
     /* plugTypeObject: Validators = {
         schuko: [''],
         cee3: [''],
@@ -531,6 +536,9 @@ export class NavigationService {
     public cancelRoute() {
         const location = new google.maps.LatLng(51.133481, 10.018343);
         this.directionsDisplay.setMap(null);
+        this.greenCircle.setMap(null);
+        this.yellowCircle.setMap(null);
+        this.redCircle.setMap(null);
         this.map.setCenter(location);
         this.map.setZoom(5.4);
         this.routeActive = false;
@@ -1058,6 +1066,49 @@ export class NavigationService {
         console.log(reachCalculatedGreen);
         console.log(reachCalculatedYellow);
         console.log(reachCalculatedRed);
+
+        const drawCircle = (green, yellow, red, reachGreen, reachYellow, reachRed) => {
+            const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
+            this.redCircle = new google.maps.Circle({
+                strokeColor: red,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: red,
+                fillOpacity: 0.35,
+                map: this.map,
+                radius: reachRed * 1000
+            });
+            this.yellowCircle = new google.maps.Circle({
+                strokeColor: yellow,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: yellow,
+                fillOpacity: 0.35,
+                map: this.map,
+                radius: reachYellow * 1000
+            });
+            this.greenCircle = new google.maps.Circle({
+                strokeColor: green,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: green,
+                fillOpacity: 0.35,
+                map: this.map,
+                radius: reachGreen * 1000
+            });
+
+            console.log(this.redCircle);
+
+            this.redCircle.setCenter(location);
+            this.yellowCircle.setCenter(location);
+            this.greenCircle.setCenter(location);
+        };
+
+        drawCircle('#0F9D58', '#F4B400', '#DB4437', reachCalculatedGreen, reachCalculatedYellow, reachCalculatedRed);
+
+        console.log(this.greenCircle);
+        console.log(this.yellowCircle);
+        console.log(this.redCircle);
     }
 
     public routeFilter() {
