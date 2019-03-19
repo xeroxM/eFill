@@ -1,19 +1,19 @@
-#eFill
+# eFill
 
 Die App eFill soll Nutzern helfen, schnell und einfach zu nahegelegenen und für ihre Elektroautos kompatiblen Ladestationen zu finden. Dabei werden Features zur Routenberechnung und Reichweitenschätzung angeboten.
 
-##Technische Hintergründe
+## Technische Hintergründe
 
 Die App wurde mit Hilfe des kostenlosen Frameworks Ionic entwickelt, das auf Angular basiert. Ionic bietet den Vorteil, dass damit entwickelte Apps plattformunabhängig, also sowohl auf Endgeräten mit Android als auch mit iOS nutzbar sind. Bisher ist die App in keinem Appstore verfügbar. Sollten wir sie zum Download bereitstellen, werden wir uns wohl für den Google Playstore entscheiden, da uns die Ressourcen für einen Apple Developer Account fehlen, der benötigt wird, um Apps im Applestore hochzuladen. Die App wurde in der Programmiersprache Typescript entwickelt. Die Daten speichern wir in einer SQLite-Datenbank. Für die Karte, die Routenplanung sowie für die Navigation nutzen wir die Google Maps JS API. Diese liefert uns unteranderem die Navigation in Textform. Zum Vorlesen dieses Textes nutzen wir die Text-to-Speech-Funktion von Ionic.
 
 
-##Datenherkunft
+## Datenherkunft
 
 Informationen zu den einzelnen Ladestationen, wie Steckertyp, Koordinaten, Betreiber, u.a., speichern wir in einer SQLite-Datenbank. Wir importieren die Daten aus einer Exceltabelle heraus, die von der Bundesnetzagentur frei zur Verfügung gestellte wird (https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/HandelundVertrieb/Ladesaeulenkarte/Ladesaeulenkarte_node.html). Die Tabelle wird scheinbar nur unregelmäßig aktualisiert. Zudem sind einige Breitengrade falsch angegeben. Offensichtlich falsche Breitengrade, beispielsweise mitten im Atlantik, werden nicht von uns in die Datenbank importiert. Auf eine Anfrage bei der Bundesnetzagentur zu den Fehlern in den Koordinaten und zur Aktualisierung der Tabelle haben wir keine Antwort erhalten.
 Eine Überlegung zur Verbesserung der Usability war ein Feature zum Anlegen eines Autoprofils. Der User sollte die Möglichkeit haben aus einer Liste von Autoprofilen sein eigenes Modell wählen zu können und bei Anlegen eines neuen Profils unsere Tabelle zu erweitern. Die Autoprofile, die von der App vorgeschlagen werden sollten, wurden von uns selbst recherchiert, waren jedoch nicht vollständig. Tiefergehende Informationen, zum Beispiel zur genauen Reichweite der Modelle und darauf einwirkende Faktoren, werden von den Autoherstellern leider nicht zur Verfügung gestellt. Mit Hilfe der Beratung erfahrener Ingenieure aus der Elektroautoherstellung konnten wir jedoch wichtige Faktoren identifizieren und in unsere Reichweitenberechnung mit einbeziehen. Das Feature zum Anlegen eines Autoprofils haben wir letztendlich nicht eingefügt, da uns am Ende die Zeit und auch eine Menge von Informationen gefehlt haben. Beides hätten wir gebraucht, um die Funktion erfolgreich und qualitativ hochwertig integrieren zu können. Zur Routenberechnung nutzen wir die Google Maps JS API.
 
 
-##Reichweitenschätzung
+## Reichweitenschätzung
 
 Die Reichweite eines Elektroautos ist eine komplizierte und schwer zu schätzende Angelegenheit. Es spielen viele Faktoren hinein, deren Ausmaße wir gar nicht oder nur in begrenztem Umfang wissen. Bekannt ist, dass sich die Außentemperatur sowie die Temperatur der Klimatechnik im Auto stark auf einen Elektromotor auswirken. Die optimale Temperatur liegt hier zwischen 20°C - 25°C (AAA research 2019). Nach Rücksprache mit Experten aus der Elektroautoindustrie rechnen wir mit einem Betriebstemperaturbereich von 10°C – 35°C. Temperaturen außerhalb dieses Bereichs reduzieren die Reichweite beträchtlich. 
 Weitere Faktoren sind hügeliges Gelände, Wetter, Verkehr, Automodell, Fahrstil, Art der Straße (Autobahn, Landstraße, etc.), Wind, Tageszeit, u.a. 
