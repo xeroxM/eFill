@@ -121,6 +121,8 @@ export class NavigationService {
     public station_fast = true;
     public station_normal = true;
 
+    public routeParameters;
+
     // circles which show reach
     public greenCircle;
     public yellowCircle;
@@ -152,8 +154,6 @@ export class NavigationService {
             window['getRouteToStation'] = (stationlat, stationlong) => {
                 this.getRouteToStation(stationlat, stationlong);
             };
-
-            this.createRouteForm();
         });
     }
 
@@ -197,13 +197,30 @@ export class NavigationService {
     }
 
     public async loadStationLocations() {
+        this.routeParameters = await this.dataImport.getRouteParameters();
         this.favorites = await this.dataImport.getAllFavEntries();
         this.stationInformation = await this.dataImport.getAllDBEntries();
+
+        console.log(this.routeParameters);
 
         await this.dataImport.getAllDBEntries().then(() => {
                 this.mapStyleService.showSplash = false;
             }
         );
+
+        if (this.routeParameters[0]) {
+            this.plug_schuko = this.routeParameters[0]['plug_schuko'].toLowerCase() === 'true';
+            this.plug_cee_blue = this.routeParameters[0]['plug_cee_blue'].toLowerCase() === 'true';
+            this.plug_cee_red = this.routeParameters[0]['plug_cee_red'].toLowerCase() === 'true';
+            this.plug_type1 = this.routeParameters[0]['plug_type1'].toLowerCase() === 'true';
+            this.plug_type2 = this.routeParameters[0]['plug_type2'].toLowerCase() === 'true';
+            this.plug_ccs = this.routeParameters[0]['plug_ccs'].toLowerCase() === 'true';
+            this.plug_chademo = this.routeParameters[0]['plug_chademo'].toLowerCase() === 'true';
+            this.station_fast = this.routeParameters[0]['station_fast'].toLowerCase() === 'true';
+            this.station_normal = this.routeParameters[0]['station_normal'].toLowerCase() === 'true';
+        }
+
+        this.createRouteForm();
 
         const optionsSpidifier = {
             keepSpiderfied: true,
@@ -344,6 +361,7 @@ export class NavigationService {
         this.directionHandler(request);
         this.routeFilter();
         this.calculateReach();
+        console.log(this.routeForm);
     }
 
     public directionHandler(request) {
@@ -689,6 +707,18 @@ export class NavigationService {
             station_normal: [this.station_normal, Validators.required],
             station_fast: [this.station_fast, Validators.required]
         });
+
+        this.routeForm.controls['plug_schuko'].setValue(this.plug_schuko);
+        this.routeForm.controls['plug_cee_blue'].setValue(this.plug_cee_blue);
+        this.routeForm.controls['plug_cee_red'].setValue(this.plug_cee_red);
+        this.routeForm.controls['plug_type1'].setValue(this.plug_type1);
+        this.routeForm.controls['plug_type2'].setValue(this.plug_type2);
+        this.routeForm.controls['plug_ccs'].setValue(this.plug_ccs);
+        this.routeForm.controls['plug_chademo'].setValue(this.plug_chademo);
+        this.routeForm.controls['station_normal'].setValue(this.station_normal);
+        this.routeForm.controls['station_fast'].setValue(this.station_fast);
+
+        console.log(this.routeForm.value);
     }
 
     get wayPointArray() {
@@ -993,6 +1023,8 @@ export class NavigationService {
             stationMarkersSet.add(marker);
         };
 
+        console.log(this.routeForm.value);
+        console.log(this.stationInformationExtended.length);
         for (let i = 0; i < this.stationInformationExtended.length; i++) {
             if (this.routeForm.value['plug_schuko'] === true) {
                 const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC Schuko');
@@ -1052,6 +1084,10 @@ export class NavigationService {
         }
 
         this.stationMarkers = Array.from(stationMarkersSet);
+        console.log('markers');
+        console.log(this.stationMarkers);
+        console.log('set');
+        console.log(stationMarkersSet);
 
         if (this.routeForm.value['station_normal'] === false) {
             this.stationMarkers.filter(station => {
@@ -1071,6 +1107,23 @@ export class NavigationService {
             this.stationMarkers = this.stationMarkers.filter(station => station['station_type'] === 'Normalladeeinrichtung');
             console.log(this.stationMarkers);
         }
+
+        const saveFilterOptions = () => {
+            this.dataImport.database.executeSql('DELETE FROM routeparameters WHERE rowid=1');
+            this.dataImport.database.executeSql('VACUUM');
+            this.dataImport.database.executeSql(this.dataImport.addRouteParameters,
+                [this.plug_schuko,
+                    this.plug_cee_blue,
+                    this.plug_cee_red,
+                    this.plug_type1,
+                    this.plug_type2,
+                    this.plug_ccs,
+                    this.plug_chademo,
+                    this.station_normal,
+                    this.station_fast]);
+        };
+
+        saveFilterOptions();
     }
 
     public addInfoWindow(marker, stationInformation) {

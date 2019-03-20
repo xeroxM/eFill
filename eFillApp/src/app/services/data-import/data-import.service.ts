@@ -18,6 +18,9 @@ export class DataImportService {
         'plug_type_2, kW_2, public_key_2, plug_type_3, kW_3, public_key_3, plug_type_4, kW_4, public_key_4, station_type) ' +
         'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
+    public addRouteParameters = 'INSERT INTO routeparameters (plug_schuko, plug_cee_blue, plug_cee_red, plug_type1, ' +
+        'plug_type2, plug_ccs, plug_chademo, station_normal, station_fast) VALUES(?,?,?,?,?,?,?,?,?)';
+
     constructor(private http: HttpClient,
                 private sqlitePorter: SQLitePorter,
                 private storage: Storage,
@@ -38,7 +41,7 @@ export class DataImportService {
                 this.database = db;
                 this.storage.set('database_filled', await this.checkTableExists('loadingstations'));
                 this.storage.set('database_filled', await this.checkTableExists('favorites'));
-                this.storage.set('database_filled', await this.checkTableExists('userprofile'));
+                this.storage.set('database_filled', await this.checkTableExists('routeparameters'));
                 this.storage.get('database_filled').then(async val => {
                     if (val) {
                         this.databaseReady.next(true);
@@ -102,5 +105,19 @@ export class DataImportService {
             }
         });
         return temp2;
+    }
+
+    public async getRouteParameters() {
+        const temp3 = [];
+        await this.database.executeSql('SELECT * FROM routeparameters').then(data => {
+            for (let i = 0; i < data.rows.length; i++) {
+                temp3.push(data.rows.item(i));
+            }
+        }).catch(data => {
+            for (let i = 0; i < data.rows.length; i++) {
+                temp3.push(data.rows.item(i));
+            }
+        });
+        return temp3;
     }
 }

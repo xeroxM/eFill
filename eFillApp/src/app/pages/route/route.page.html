@@ -166,33 +166,45 @@
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/cee_blue.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_cee_blue']"
-                                          formControlName="plug_cee_blue"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_cee_blue = !this.navigationService.plug_cee_blue"
+                                    [checked]="this.navigationService.routeForm.value['plug_cee_blue']"
+                                    formControlName="plug_cee_blue"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/cee_red.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_cee_red']"
-                                          formControlName="plug_cee_red"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_cee_red = !this.navigationService.plug_cee_red"
+                                    [checked]="this.navigationService.routeForm.value['plug_cee_red']"
+                                    formControlName="plug_cee_red"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/type1.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_type1']"
-                                          formControlName="plug_type1"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_type1 = !this.navigationService.plug_type1"
+                                    [checked]="this.navigationService.routeForm.value['plug_type1']"
+                                    formControlName="plug_type1"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/type2.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_type2']"
-                                          formControlName="plug_type2"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_type2 = !this.navigationService.plug_type2"
+                                    [checked]="this.navigationService.routeForm.value['plug_type2']"
+                                    formControlName="plug_type2"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/ccs.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_ccs']"
-                                          formControlName="plug_ccs"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_ccs = !this.navigationService.plug_ccs"
+                                    [checked]="this.navigationService.routeForm.value['plug_ccs']"
+                                    formControlName="plug_ccs"></ion-checkbox>
                         </ion-col>
                         <ion-col>
                             <img src="assets/icon/chademo.png" width="35">
-                            <ion-checkbox [checked]="this.navigationService.routeForm.value['plug_chademo']"
-                                          formControlName="plug_chademo"></ion-checkbox>
+                            <ion-checkbox
+                                    (ionChange)="this.navigationService.plug_chademo = !this.navigationService.plug_chademo"
+                                    [checked]="this.navigationService.routeForm.value['plug_chademo']"
+                                    formControlName="plug_chademo"></ion-checkbox>
                         </ion-col>
                     </ion-row>
                 </div>
