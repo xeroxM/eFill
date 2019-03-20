@@ -649,8 +649,6 @@ export class NavigationService {
     }
 
     public getRouteToStation(stationlat, stationlong) {
-        console.log(stationlat);
-        console.log(stationlong);
         this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;

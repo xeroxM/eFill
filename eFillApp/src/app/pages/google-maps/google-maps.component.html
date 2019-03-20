@@ -30,7 +30,8 @@
             <ion-fab-button (click)="this.navigationService.showAndHideMarkers();" color="light" mini>
                 <ion-icon name="logo-ionic"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button (click)="presentFilterPopover($event)" color="light" mini>
+            <ion-fab-button *ngIf="!this.navigationService.routeActive && !this.navigationService.navigationActive"
+                            (click)="presentFilterPopover($event)" color="light" mini>
                 <ion-icon name="options"></ion-icon>
             </ion-fab-button>
             <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
@@ -38,11 +39,6 @@
                             mini>
                 <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
                 <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button
-                    *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive && !this.navigationService.routeToStation"
-                    (click)="presentReachPopover($event)" color="light" mini>
-                <ion-icon name="pulse"></ion-icon>
             </ion-fab-button>
         </ion-fab-list>
     </ion-fab>
@@ -59,6 +55,14 @@
     <ion-fab *ngIf="!this.navigationService.routeActive" vertical="bottom" horizontal="end">
         <ion-fab-button (click)="this.navigationService.getCurrentLocation()" color="light" mini>
             <ion-icon name="md-locate"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab
+            *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive && !this.navigationService.routeToStation"
+            vertical="bottom" horizontal="end">
+        <ion-fab-button
+                (click)="presentReachPopover($event)" color="light" mini>
+            <ion-icon name="pulse"></ion-icon>
         </ion-fab-button>
     </ion-fab>
     <ion-fab class="place-list">

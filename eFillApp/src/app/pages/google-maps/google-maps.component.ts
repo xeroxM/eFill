@@ -80,11 +80,8 @@ export class GoogleMapsComponent implements OnInit {
         this.platform.ready().then(() => {
             this.showMap();
             this.dataImport.databaseReady.subscribe((data) => {
-                console.log(data);
                 if (data === true) {
                     this.navigationService.loadStationLocations();
-                    console.log(this.dataImport.getAllDBEntries());
-                    console.log(this.dataImport.getAllFavEntries());
                 }
             });
         });

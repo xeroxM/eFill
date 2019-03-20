@@ -55,12 +55,12 @@ export class DataImportService {
     public async fillDatabase() {
         await this.http.get('assets/data/efillDB.sql', {responseType: 'text' as 'text'}).subscribe(sql => {
             const time = Date.now();
-            console.log('Starting DB import');
+            // console.log('Starting DB import');
             this.sqlitePorter.importSqlToDb(this.database._objectInstance, sql)
                 .then(async () => {
                     this.databaseReady.next(true);
                     this.storage.set('database_filled', true);
-                    console.log(`Importing DB took ${Date.now() - time} milliseconds`);
+                    // console.log(`Importing DB took ${Date.now() - time} milliseconds`);
                 }).catch(e => console.error(e));
         });
     }
