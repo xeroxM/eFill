@@ -201,8 +201,6 @@ export class NavigationService {
         this.favorites = await this.dataImport.getAllFavEntries();
         this.stationInformation = await this.dataImport.getAllDBEntries();
 
-        console.log(this.routeParameters);
-
         await this.dataImport.getAllDBEntries().then(() => {
                 this.mapStyleService.showSplash = false;
             }
@@ -279,7 +277,6 @@ export class NavigationService {
         } else if (time >= 6 || time <= 19) {
             this.markerCluster = new MarkerClusterer(this.map, this.stationMarkers, this.mcOptionsDay);
         }
-        console.log(this.stationInformationExtended);
     }
 
     public updateSearchResults(autocomplete) {
@@ -317,8 +314,6 @@ export class NavigationService {
                 });
             }
         });
-
-        console.log(this.routeForm);
     }
 
     public calculateRoute(originlat, originlong, destinationlat, destinationlong, waypoint) {
@@ -361,7 +356,6 @@ export class NavigationService {
         this.directionHandler(request);
         this.routeFilter();
         this.calculateReach();
-        console.log(this.routeForm);
     }
 
     public directionHandler(request) {
@@ -383,8 +377,6 @@ export class NavigationService {
                 const htmlToPlaintext = (text) => {
                     return text ? String(text).replace(/(<([^>]+)>)/ig, '') : '';
                 };
-
-                console.log(res);
 
                 if (res['routes'][0]['legs'].length === 1) {
                     this.routeOverview = {
@@ -461,14 +453,8 @@ export class NavigationService {
 
                     let saveIndex;
 
-                    console.log('hallo');
-
                     for (let i = 0; i < res['routes'][0]['legs'].length; i++) {
                         this.lastStep.push(res['routes'][0]['legs'][i]['steps'][res['routes'][0]['legs'][i]['steps'].length - 1]);
-                        console.log('sdf');
-                        console.log(res['routes'][0]['legs'][i]['steps'].length - 1);
-                        console.log(res['routes'][0]['legs'][i]['steps'][res['routes'][0]['legs'][i]['steps'].length - 1]);
-                        console.log('ghj');
                         for (let j = 0; j < res['routes'][0]['legs'][i]['steps'].length; j++) {
                             const routeObject = {};
                             routeObject['startLat'] = res['routes'][0]['legs'][i]['steps'][j]['start_point']['lat']();
@@ -495,8 +481,6 @@ export class NavigationService {
                 }
 
                 this.routeActive = true;
-                console.log(this.routeObjects);
-                console.log(this.lastStep);
 
             } else {
                 console.warn(status);
@@ -527,7 +511,6 @@ export class NavigationService {
         this.markersShown = false;
         this.stationMarkers = Array.from(this.stationMarkersSet);
         this.showAndHideMarkers();
-        console.log(this.stationMarkers);
     }
 
     public startNavigation() {
@@ -583,7 +566,6 @@ export class NavigationService {
                 Math.sin(distanceLong / 2) * Math.sin(distanceLong / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             const distance = earthRadius * c;
-            console.log(distance);
 
             if (distance < 50) {
                 this.routeStepIndex = this.routeStepIndex + 1;
@@ -647,7 +629,6 @@ export class NavigationService {
         this.stationDistance.sort((a, b) => parseFloat(a['duration_value']) - parseFloat(b['duration_value']));
 
         this.stationDistance = this.stationDistance.slice(0, 10);
-        console.log(this.stationDistance);
         this.navCtrl.navigateForward('/tabs/(map:nearby-stations)');
         this.map.setZoom(15);
     }
@@ -717,8 +698,6 @@ export class NavigationService {
         this.routeForm.controls['plug_chademo'].setValue(this.plug_chademo);
         this.routeForm.controls['station_normal'].setValue(this.station_normal);
         this.routeForm.controls['station_fast'].setValue(this.station_fast);
-
-        console.log(this.routeForm.value);
     }
 
     get wayPointArray() {
@@ -944,10 +923,6 @@ export class NavigationService {
         reachCalculatedYellow = reachCalculatedYellow - marginYellow;
         reachCalculatedRed = reachCalculatedRed - marginRed;
 
-        console.log(reachCalculatedGreen);
-        console.log(reachCalculatedYellow);
-        console.log(reachCalculatedRed);
-
         const drawCircle = (green, yellow, red, reachGreen, reachYellow, reachRed) => {
             const location = new google.maps.LatLng(this.geoLocLat, this.geoLocLong);
             this.redCircle = new google.maps.Circle({
@@ -978,18 +953,12 @@ export class NavigationService {
                 radius: reachGreen * 1000
             });
 
-            console.log(this.redCircle);
-
             this.redCircle.setCenter(location);
             this.yellowCircle.setCenter(location);
             this.greenCircle.setCenter(location);
         };
 
         drawCircle('#0F9D58', '#F4B400', '#DB4437', reachCalculatedGreen, reachCalculatedYellow, reachCalculatedRed);
-
-        console.log(this.greenCircle);
-        console.log(this.yellowCircle);
-        console.log(this.redCircle);
     }
 
     public routeFilter() {
@@ -1023,8 +992,6 @@ export class NavigationService {
             stationMarkersSet.add(marker);
         };
 
-        console.log(this.routeForm.value);
-        console.log(this.stationInformationExtended.length);
         for (let i = 0; i < this.stationInformationExtended.length; i++) {
             if (this.routeForm.value['plug_schuko'] === true) {
                 const result = this.stationInformationExtended[i]['plug_types'].find(plug => plug === 'AC Schuko');
@@ -1084,10 +1051,6 @@ export class NavigationService {
         }
 
         this.stationMarkers = Array.from(stationMarkersSet);
-        console.log('markers');
-        console.log(this.stationMarkers);
-        console.log('set');
-        console.log(stationMarkersSet);
 
         if (this.routeForm.value['station_normal'] === false) {
             this.stationMarkers.filter(station => {
@@ -1096,7 +1059,6 @@ export class NavigationService {
                 }
             });
             this.stationMarkers = this.stationMarkers.filter(station => station['station_type'] === 'Schnellladeeinrichtung');
-            console.log(this.stationMarkers);
         }
         if (this.routeForm.value['station_fast'] === false) {
             this.stationMarkers.filter(station => {
@@ -1105,7 +1067,6 @@ export class NavigationService {
                 }
             });
             this.stationMarkers = this.stationMarkers.filter(station => station['station_type'] === 'Normalladeeinrichtung');
-            console.log(this.stationMarkers);
         }
 
         const saveFilterOptions = () => {
@@ -1197,10 +1158,7 @@ export class NavigationService {
 
             google.maps.event.addListenerOnce(infowindow, 'domready', () => {
 
-                console.log(this.favorites);
-
                 const result = this.favorites.find(station => JSON.stringify(station) === JSON.stringify(stationInformation));
-                console.log(stationInformation);
 
                 if (this.favorites.length === 0) {
                     document.getElementById('isFavorite').style.visibility = 'hidden';
@@ -1263,7 +1221,6 @@ export class NavigationService {
 
             infowindow.open(this.map, marker);
             this.currentWindow = infowindow;
-            console.log(marker);
         });
     }
 
