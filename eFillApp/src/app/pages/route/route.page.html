@@ -231,7 +231,8 @@
             <ion-button
                     [disabled]="!this.navigationService.routeForm.valid"
                     slot="end" shape="round" color="primary" fill="outline"
-                    (click)="this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
+                    (click)="this.navigationService.routeToStation = false;
+                         this.navigationService.convertObj(this.navigationService.routeForm.value['start_point'],
                          this.navigationService.routeForm.value['end_point'],
                          this.navigationService.routeForm.value['way_point'])">
                 <ion-icon slot="start" name="car"></ion-icon>

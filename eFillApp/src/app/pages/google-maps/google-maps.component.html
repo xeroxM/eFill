@@ -7,7 +7,8 @@
         </ion-fab-button>
     </ion-fab>
     <ion-fab class="navigation-fab"
-             *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive" vertical="bottom"
+             *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive && !this.navigationService.routeToStation"
+             vertical="bottom"
              horizontal="center">
         <ion-fab-button color="light" (click)="this.navigationService.showNearbyLoadingStations()">
             <ion-icon name="battery-charging"></ion-icon>
@@ -38,8 +39,9 @@
                 <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
                 <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
-                            (click)="presentReachPopover($event)" color="light" mini>
+            <ion-fab-button
+                    *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive && !this.navigationService.routeToStation"
+                    (click)="presentReachPopover($event)" color="light" mini>
                 <ion-icon name="pulse"></ion-icon>
             </ion-fab-button>
         </ion-fab-list>

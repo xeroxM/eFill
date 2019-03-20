@@ -65,6 +65,8 @@ export class NavigationService {
     public currentDirections: any;
     public lastStep = [];
 
+    public routeToStation = true;
+
     // array for all steps of route calculated
     public routeOverview = {};
     public routeObjects = [];
@@ -322,12 +324,12 @@ export class NavigationService {
         if (originlong === null) {
             start = originlat;
         } else {
-            start = {lat: originlat, lng: originlong};
+            start = new google.maps.LatLng(originlat, originlong);
         }
         if (destinationlong === null) {
             end = destinationlat;
         } else {
-            end = {lat: destinationlat, lng: destinationlong};
+            end = new google.maps.LatLng(destinationlat, destinationlong);
         }
 
         const waypts = [];
@@ -354,8 +356,10 @@ export class NavigationService {
         }
 
         this.directionHandler(request);
-        this.routeFilter();
-        this.calculateReach(this.routeForm.value['reach']);
+        if (this.routeToStation === false) {
+            this.routeFilter();
+            this.calculateReach(this.routeForm.value['reach']);
+        }
     }
 
     public directionHandler(request) {
@@ -491,9 +495,12 @@ export class NavigationService {
     public cancelRoute() {
         const location = new google.maps.LatLng(51.133481, 10.018343);
         this.directionsDisplay.setMap(null);
-        this.greenCircle.setMap(null);
-        this.yellowCircle.setMap(null);
-        this.redCircle.setMap(null);
+        if (this.routeToStation === false) {
+            this.greenCircle.setMap(null);
+            this.yellowCircle.setMap(null);
+            this.redCircle.setMap(null);
+        }
+        this.routeToStation = true;
         this.map.setCenter(location);
         this.map.setZoom(5.4);
         this.routeActive = false;
@@ -642,6 +649,8 @@ export class NavigationService {
     }
 
     public getRouteToStation(stationlat, stationlong) {
+        console.log(stationlat);
+        console.log(stationlong);
         this.watchID = this.geolocation.watchPosition(this.locationOptions).subscribe(pos => {
             this.geoLocLat = pos.coords.latitude;
             this.geoLocLong = pos.coords.longitude;
@@ -930,7 +939,7 @@ export class NavigationService {
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: red,
-                fillOpacity: 0.35,
+                fillOpacity: 0.15,
                 map: this.map,
                 radius: reachRed * 1000
             });
@@ -939,7 +948,7 @@ export class NavigationService {
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: yellow,
-                fillOpacity: 0.35,
+                fillOpacity: 0.15,
                 map: this.map,
                 radius: reachYellow * 1000
             });
@@ -948,7 +957,7 @@ export class NavigationService {
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillColor: green,
-                fillOpacity: 0.35,
+                fillOpacity: 0.15,
                 map: this.map,
                 radius: reachGreen * 1000
             });
