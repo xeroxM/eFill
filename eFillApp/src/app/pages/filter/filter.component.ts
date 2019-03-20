@@ -12,7 +12,6 @@ export class FilterComponent implements OnInit {
     constructor(public mapStyleService: MapStyleService, public navigationService: NavigationService) {
     }
 
-
     ngOnInit() {
     }
 

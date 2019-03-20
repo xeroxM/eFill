@@ -29,7 +29,7 @@
             <ion-fab-button (click)="this.navigationService.showAndHideMarkers();" color="light" mini>
                 <ion-icon name="logo-ionic"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button (click)="presentPopover($event)" color="light" mini>
+            <ion-fab-button (click)="presentFilterPopover($event)" color="light" mini>
                 <ion-icon name="options"></ion-icon>
             </ion-fab-button>
             <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
@@ -37,6 +37,10 @@
                             mini>
                 <ion-icon *ngIf="this.navigationService.volumeOn" name="volume-high"></ion-icon>
                 <ion-icon *ngIf="!this.navigationService.volumeOn" name="volume-off"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button *ngIf="this.navigationService.routeActive && this.navigationService.navigationActive"
+                            (click)="presentReachPopover($event)" color="light" mini>
+                <ion-icon name="pulse"></ion-icon>
             </ion-fab-button>
         </ion-fab-list>
     </ion-fab>

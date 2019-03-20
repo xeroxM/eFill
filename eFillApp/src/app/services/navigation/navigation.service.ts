@@ -355,7 +355,7 @@ export class NavigationService {
 
         this.directionHandler(request);
         this.routeFilter();
-        this.calculateReach();
+        this.calculateReach(this.routeForm.value['reach']);
     }
 
     public directionHandler(request) {
@@ -850,11 +850,11 @@ export class NavigationService {
         }
     }
 
-    public calculateReach() {
-        const reachOriginal = this.routeForm.value['reach'];
-        let reachCalculatedGreen = this.routeForm.value['reach'];
-        let reachCalculatedYellow = this.routeForm.value['reach'];
-        let reachCalculatedRed = this.routeForm.value['reach'];
+    public calculateReach(reach) {
+        const reachOriginal = reach;
+        let reachCalculatedGreen = reach;
+        let reachCalculatedYellow = reach;
+        let reachCalculatedRed = reach;
 
         // margin
         const marginGreen = (reachOriginal / 100) * 10;

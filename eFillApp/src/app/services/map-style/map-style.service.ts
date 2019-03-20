@@ -12,6 +12,8 @@ export class MapStyleService {
     public showNormalChargingStations = true;
     public showFastChargingStations = true;
 
+    public reachPopover;
+
     constructor() {
     }
 

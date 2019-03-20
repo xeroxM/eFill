@@ -4,6 +4,7 @@ import {NavigationService} from '../../services/navigation/navigation.service';
 import {DataImportService} from '../../services/data-import/data-import.service';
 import {NavController, Platform, PopoverController} from '@ionic/angular';
 import {FilterComponent} from '../filter/filter.component';
+import {ReachPopoverComponent} from '../reach-popover/reach-popover.component';
 
 declare let google: any;
 
@@ -55,9 +56,19 @@ export class GoogleMapsComponent implements OnInit {
         }
     }
 
-    async presentPopover(ev: any) {
+    async presentFilterPopover(ev: any) {
         const popover = await this.popoverController.create({
             component: FilterComponent,
+            event: ev,
+            translucent: true,
+            cssClass: 'popover-class'
+        });
+        return await popover.present();
+    }
+
+    async presentReachPopover(ev: any) {
+        const popover = await this.popoverController.create({
+            component: ReachPopoverComponent,
             event: ev,
             translucent: true,
             cssClass: 'popover-class'

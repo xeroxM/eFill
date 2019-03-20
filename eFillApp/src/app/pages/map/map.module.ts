@@ -8,11 +8,12 @@ import {GoogleMapsComponent} from '../google-maps/google-maps.component';
 import {RoutePageModule} from '../route/route.module';
 import {NearbyLoadingStationsPageModule} from '../nearby-loading-stations/nearby-loading-stations.module';
 import {FilterComponent} from '../filter/filter.component';
+import {ReachPopoverComponent} from '../reach-popover/reach-popover.component';
 
 
 @NgModule({
-    declarations: [MapPage, GoogleMapsComponent, FilterComponent],
-    entryComponents: [FilterComponent],
+    declarations: [MapPage, GoogleMapsComponent, FilterComponent, ReachPopoverComponent],
+    entryComponents: [FilterComponent, ReachPopoverComponent],
     imports: [
         IonicModule,
         CommonModule,
